@@ -1,0 +1,1516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important} img{max-width:100%}</style>
+</head>
+<body>
+<title>OS Forge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=VT323&display=swap">
+<style>
+/* Layout: workshop bench. Mission list on the left, brief on top, editor + simulated PC side by side, roadmap below. */
+:root{
+  --bg:#e8ebe4; --panel:#f6f7f2; --ink:#161a17; --muted:#596159; --line:#c7cdc3;
+  --accent:#a84f08; --accent-ink:#ffffff; --accent-soft:#f3e2cf;
+  --good:#1c7443; --good-soft:#d6eedf; --bad:#b0261d; --bad-soft:#f6dcd9;
+  --code-bg:#fbfcf8; --code-ink:#1d221e; --gutter:#9aa398;
+  --crt-bg:#0a0d0b; --crt-fg:#ffb000; --crt-dim:#8c6200; --bezel:#2a2f2b;
+  --f-display:"Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --f-crt:"VT323", "IBM Plex Mono", monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1210; --panel:#161a17; --ink:#e4e8e1; --muted:#97a095; --line:#2a312c;
+  --accent:#ffab4a; --accent-ink:#1b1206; --accent-soft:#3a2a16;
+  --good:#5cc98a; --good-soft:#163222; --bad:#ff7b72; --bad-soft:#3a1714;
+  --code-bg:#0c0f0d; --code-ink:#dfe5dc; --gutter:#56605a; --bezel:#252a26; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1210; --panel:#161a17; --ink:#e4e8e1; --muted:#97a095; --line:#2a312c;
+  --accent:#ffab4a; --accent-ink:#1b1206; --accent-soft:#3a2a16;
+  --good:#5cc98a; --good-soft:#163222; --bad:#ff7b72; --bad-soft:#3a1714;
+  --code-bg:#0c0f0d; --code-ink:#dfe5dc; --gutter:#56605a; --bezel:#252a26; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 40px}
+code,kbd{font-family:var(--f-mono);font-size:.88em;background:var(--accent-soft);padding:1px 5px;border-radius:4px}
+button{font:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible,canvas:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{max-width:1440px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.brand h1{font-family:var(--f-display);font-weight:700;font-size:28px;margin:0;letter-spacing:.01em}
+.brand .addr{font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prog{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.bar{width:160px;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:20px;align-items:start}
+nav.missions{display:flex;flex-direction:column;gap:4px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+.phase-label{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:6px 0 4px}
+.mbtn{display:grid;grid-template-columns:28px 1fr 12px;align-items:center;gap:8px;text-align:left;border:1px solid transparent;background:transparent;color:var(--ink);padding:7px 8px;border-radius:8px}
+.mbtn:hover{background:var(--panel)}
+.mbtn[aria-current="true"]{background:var(--panel);border-color:var(--line)}
+.mbtn .n{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.mbtn .dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--line)}
+.mbtn.done .dot{background:var(--good);border-color:var(--good)}
+.locked-list{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:2px;padding-left:8px}
+main{display:flex;flex-direction:column;gap:18px;min-width:0}
+.brief{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.brief h2{font-family:var(--f-display);font-size:26px;margin:0;text-wrap:balance}
+.story{margin:0;max-width:70ch;color:var(--muted)}
+.learn{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.learn div{border-top:2px solid var(--accent);padding-top:8px;min-width:0}
+.learn b{font-family:var(--f-mono);font-size:13px;display:block;margin-bottom:2px}
+.learn p{margin:0;font-size:14px}
+.task{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;background:var(--accent-soft);border-radius:10px;padding:12px 14px}
+.task strong{font-family:var(--f-display);text-transform:uppercase;font-size:13px;letter-spacing:.1em;color:var(--accent);padding-top:1px}
+.task p{margin:0;flex:1 1 300px;min-width:0}
+.task .acts{display:flex;gap:8px;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:5px 12px;border-radius:7px;font-size:13px}
+.ghost:hover{border-color:var(--accent)}
+.hintbox{font-size:14px;border-left:3px solid var(--accent);padding:4px 12px}
+.win{background:var(--good-soft);border:1px solid var(--good);border-radius:12px;padding:14px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.win b{font-family:var(--f-display);font-size:18px;color:var(--good)}
+.win p{margin:0;flex:1 1 280px}
+.bench{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.pane{display:flex;flex-direction:column;gap:10px;min-width:0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.run{background:var(--accent);color:var(--accent-ink);border:0;padding:8px 18px;border-radius:8px;font-weight:600}
+.tool{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 14px;border-radius:8px}
+.tool:hover{border-color:var(--accent)}
+.toolbar .sp{flex:1}
+.editor{display:flex;border:1px solid var(--line);border-radius:10px;background:var(--code-bg);overflow:hidden;height:440px}
+.gutter{font-family:var(--f-mono);font-size:13px;line-height:20px;color:var(--gutter);text-align:right;padding:10px 8px 10px 10px;margin:0;user-select:none;overflow:hidden;white-space:pre;min-width:42px;border-right:1px solid var(--line)}
+textarea#code{flex:1;min-width:0;border:0;resize:none;background:transparent;color:var(--code-ink);font-family:var(--f-mono);font-size:13px;line-height:20px;padding:10px 12px;white-space:pre;overflow:auto;tab-size:4}
+textarea#code:focus{outline:none}
+.console{font-family:var(--f-mono);font-size:12.5px;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:8px 12px;min-height:64px;max-height:150px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.console .err{color:var(--bad)} .console .ok{color:var(--good)} .console .info{color:var(--muted)}
+.console button{background:none;border:0;color:inherit;text-decoration:underline;padding:0;font:inherit;text-align:left}
+.monitor{background:var(--bezel);border-radius:14px;padding:14px 14px 10px}
+canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-width:100%;background:var(--crt-bg);border-radius:6px;image-rendering:pixelated}
+.mon-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;font-family:var(--f-mono);font-size:11px;color:#9aa39a;letter-spacing:.06em;flex-wrap:wrap}
+.led{display:inline-flex;align-items:center;gap:6px}
+.led i{width:8px;height:8px;border-radius:50%;background:#444}
+.led.on i{background:#4ade80;box-shadow:0 0 6px #4ade80}
+.led.wait i{background:#ffb000;box-shadow:0 0 6px #ffb000}
+.led.err i{background:#ef4444;box-shadow:0 0 6px #ef4444}
+.keys{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.keys input{flex:1 1 160px;min-width:0;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:7px 10px;font-family:var(--f-mono);font-size:13px}
+.keys small{color:var(--muted);flex-basis:100%;font-size:12px}
+.regs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.reg{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:5px 8px;min-width:0}
+.reg span{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:var(--muted)}
+.reg b{font-family:var(--f-mono);font-weight:500;font-size:14px;font-variant-numeric:tabular-nums}
+.reg b em{font-style:normal;color:var(--accent)}
+.reg.flash{border-color:var(--accent)}
+.flags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}
+.flag{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--muted)}
+.flag.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.nextins{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);overflow-x:auto;white-space:pre}
+.road{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.road h3{font-family:var(--f-display);margin:0 0 4px;font-size:20px}
+.road > p{margin:0 0 14px;color:var(--muted);max-width:70ch}
+.phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.ph{min-width:0}
+.ph h4{margin:0 0 6px;font-family:var(--f-display);font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+.ph h4 small{display:block;font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:none;font-weight:400}
+.ph ol{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:3px;font-size:14px}
+.ph li{display:grid;grid-template-columns:26px 1fr;gap:4px}
+.ph li span{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:2px}
+.ph.live h4{color:var(--accent)}
+.ph.later li{color:var(--muted)}
+.realpc{margin-top:16px;border-top:1px dashed var(--line);padding-top:12px;font-size:14px}
+.realpc pre{font-family:var(--f-mono);font-size:12.5px;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;margin:8px 0 0}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
+.tab{border:0;background:transparent;color:var(--muted);padding:8px 16px;font-family:var(--f-display);font-weight:700;font-size:15px;letter-spacing:.04em;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.lesson{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px 28px;display:flex;flex-direction:column;gap:14px;min-height:440px}
+.lhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.dots{display:flex;gap:5px;flex-wrap:wrap}.dots i{width:22px;height:5px;border-radius:3px;background:var(--line)}.dots i.on{background:var(--accent)}
+.lesson h2{font-family:var(--f-display);font-size:30px;margin:0;text-wrap:balance}
+.lbody{display:flex;flex-direction:column;gap:12px;font-size:17px;line-height:1.6;max-width:68ch;min-width:0}
+.lbody p{margin:0}
+.snip{font-family:var(--f-mono);font-size:14px;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:0;overflow-x:auto;line-height:1.55}
+.analogy{background:var(--accent-soft);border-radius:10px;padding:12px 16px}
+.analogy b{font-family:var(--f-display);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}
+.analogy p{margin:4px 0 0}
+.cellwrap{overflow-x:auto}
+.cells{display:flex;gap:6px;flex-wrap:wrap}
+.cell{border:1px solid var(--line);background:var(--code-bg);border-radius:6px;padding:6px 10px;text-align:center;min-width:56px}
+.cell b{display:block;font-family:var(--f-mono);font-size:16px}
+.cell small{display:block;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.cell.hl{border-color:var(--accent);background:var(--accent-soft)}
+.cap{font-size:13px;color:var(--muted);margin-top:6px}
+.tblwrap{overflow-x:auto}
+.tbl{border-collapse:collapse;font-size:15px}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:6px 18px 6px 0;text-align:left}
+.tbl th{font-family:var(--f-display);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.quiz{border:2px dashed var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;max-width:68ch}
+.quiz .qh{font-family:var(--f-display);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.quiz .q{font-weight:600;font-size:16px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.opt{border:1px solid var(--line);background:var(--code-bg);color:var(--ink);border-radius:8px;padding:9px 12px;text-align:left;font-size:15px}
+.opt:hover{border-color:var(--accent)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{font-size:15px;margin:0}.fb.right{color:var(--good)}.fb.wrong{color:var(--bad)}
+.lnav{display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:6px}
+.run:disabled,.tool:disabled{opacity:.45;cursor:not-allowed}
+#buildView{display:flex;flex-direction:column;gap:18px}
+@media (max-width:1100px){ .bench{grid-template-columns:minmax(0,1fr)} .editor{height:380px} }
+@media (max-width:860px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  nav.missions{position:static;flex-direction:row;overflow-x:auto;padding-bottom:4px}
+  .phase-label,.locked-list{display:none}
+  .mbtn{grid-template-columns:auto auto 10px;white-space:nowrap;border-color:var(--line)}
+  .regs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .brief h2{font-size:22px}
+  .lesson{padding:18px} .lesson h2{font-size:24px} .lbody{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){ .bar i{transition:none} }
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand"><h1>OS Forge</h1><span class="addr">BUILDING FORGEOS FROM 0x7C00 UP</span></div>
+    <div class="prog"><span id="progText">0 / 8 missions</span><div class="bar"><i id="progBar"></i></div></div>
+  </header>
+
+  <div class="layout">
+    <nav class="missions" id="nav" aria-label="Missions"></nav>
+
+    <main>
+      <div class="tabs" role="tablist" aria-label="Mission steps">
+        <button class="tab" role="tab" id="tabLearn" type="button" aria-selected="true">1 · Learn</button>
+        <button class="tab" role="tab" id="tabBuild" type="button" aria-selected="false">2 · Build</button>
+      </div>
+
+      <section class="lesson" id="learnView" aria-live="polite">
+        <div class="lhead"><span class="eyebrow" id="lEyebrow"></span><div class="dots" id="lDots"></div></div>
+        <h2 id="lTitle"></h2>
+        <div class="lbody" id="lBody"></div>
+        <div class="quiz" id="lQuiz" hidden></div>
+        <div class="lnav"><button class="tool" id="lPrev" type="button">← Back</button><button class="run" id="lNext" type="button">Next →</button></div>
+      </section>
+
+      <div id="buildView" hidden>
+      <section class="brief" aria-live="polite">
+        <div class="eyebrow" id="eyebrow"></div>
+        <h2 id="mTitle"></h2>
+        <p class="story" id="mStory"></p>
+        <div class="learn" id="mLearn"></div>
+        <div class="task">
+          <strong>Task</strong>
+          <p id="mTask"></p>
+          <div class="acts">
+            <button class="ghost" id="hintBtn" type="button">Hint</button>
+            <button class="ghost" id="solBtn" type="button">Load solution</button>
+          </div>
+        </div>
+        <div class="hintbox" id="hintBox" hidden></div>
+      </section>
+
+      <div class="win" id="win" hidden>
+        <b>Mission complete</b>
+        <p id="winText"></p>
+        <button class="run" id="nextBtn" type="button">Next mission</button>
+      </div>
+
+      <section class="bench">
+        <div class="pane">
+          <div class="toolbar">
+            <button class="run" id="runBtn" type="button">Boot ▸</button>
+            <button class="tool" id="stepBtn" type="button" title="Run one instruction">Step</button>
+            <button class="tool" id="stopBtn" type="button">Stop</button>
+            <span class="sp"></span>
+            <button class="tool" id="resetBtn" type="button">Reset code</button>
+          </div>
+          <div class="editor">
+            <pre class="gutter" id="gutter" aria-hidden="true">1</pre>
+            <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Assembly code editor"></textarea>
+          </div>
+          <div class="console" id="console" role="log"></div>
+        </div>
+
+        <div class="pane">
+          <div class="monitor">
+            <canvas id="screen" width="720" height="400" tabindex="0" aria-label="Simulated PC screen. Click it, then type to send keys."></canvas>
+            <div class="mon-foot">
+              <span class="led" id="led"><i></i><span id="ledText">POWER OFF</span></span>
+              <span>VGA TEXT 80×25 · REAL MODE</span>
+            </div>
+          </div>
+          <div class="keys">
+            <input id="kbd" type="text" placeholder="Type keys here (or click the screen)" autocapitalize="off" autocomplete="off" spellcheck="false" aria-label="Keyboard input for the simulated PC">
+            <button class="tool" id="enterKey" type="button">Enter</button>
+            <button class="tool" id="bsKey" type="button">Backspace</button>
+          </div>
+          <div class="regs" id="regs"></div>
+          <div class="flags" id="flags"></div>
+          <div class="nextins" id="nextins"></div>
+        </div>
+      </section>
+      </div>
+
+      <section class="road">
+        <h3>The road to ForgeOS</h3>
+        <p>Every mission adds a real piece to the same operating system. Phase 1 runs right here in your browser. Later phases switch the CPU into 32-bit mode and you run them in QEMU, the same emulator OS developers use.</p>
+        <div class="phases" id="phases"></div>
+        <div class="realpc">
+          <b>Run your code on a real PC emulator</b> (works for every Phase 1 mission). Install <code>nasm</code> and <code>qemu</code>, save your code as <code>forge.asm</code>, then:
+          <pre>nasm -f bin forge.asm -o forge.bin
+qemu-system-x86_64 -drive format=raw,file=forge.bin</pre>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* =====================  MISSIONS  ===================== */
+const HDR = "[bits 16]\n[org 0x7c00]\n\n";
+const FOOT = "\ntimes 510-($-$$) db 0\ndw 0xaa55\n";
+const PRINT_STRING =
+"; print_string: prints the 0-terminated text at SI\n" +
+"print_string:\n" +
+"    mov ah, 0x0e\n" +
+".loop:\n" +
+"    lodsb\n" +
+"    cmp al, 0\n" +
+"    je .done\n" +
+"    int 0x10\n" +
+"    jmp .loop\n" +
+".done:\n" +
+"    ret\n";
+
+const M = [
+{
+  title:"Power On",
+  story:"You press the power button. The BIOS wakes up, tests the hardware, then looks at the disk for something to boot. Give it something.",
+  learn:[
+    ["512 bytes","The BIOS copies the first 512-byte sector of the disk to address <code>0x7C00</code> and jumps there. That sector is your whole OS for now."],
+    ["55 AA","The BIOS only boots a sector whose last two bytes are 55 AA. <code>dw 0xaa55</code> writes them (x86 stores the low byte first)."],
+    ["jmp $","<code>$</code> means \"the address of this line\". Jumping to yourself parks the CPU forever."]
+  ],
+  task:"Press Boot and read the error on the screen. Then add the boot signature as the last line so the BIOS accepts your disk.",
+  hint:"Under the <code>times</code> line, add: <code>dw 0xaa55</code>",
+  starter:
+"; ForgeOS - boot sector\n" +
+"[bits 16]          ; the CPU starts in 16-bit real mode\n" +
+"[org 0x7c00]       ; the BIOS loads us at address 0x7C00\n\n" +
+"jmp $              ; hang here forever\n\n" +
+"times 510-($-$$) db 0   ; fill with zeros up to byte 510\n" +
+"; TODO: write the 2-byte boot signature on the next line\n",
+  solution:
+"; ForgeOS - boot sector\n" + HDR + "jmp $              ; hang here forever\n" + FOOT,
+  check:c=>c.booted && (c.state==="idle"||c.state==="halted"),
+  win:"The BIOS accepted your disk. ForgeOS now exists: 512 bytes that boot."
+},
+{
+  title:"First Words",
+  story:"Your OS boots but the screen is silent. Before you write a screen driver, borrow one: the BIOS has a built-in service for printing characters.",
+  learn:[
+    ["Registers","Tiny storage boxes inside the CPU. <code>AX</code> is 16 bits, split into <code>AH</code> (high byte) and <code>AL</code> (low byte)."],
+    ["mov","<code>mov al, 'O'</code> copies a value into a register. Characters are just numbers: 'O' is 79."],
+    ["int 0x10","Calls the BIOS video service. With <code>AH = 0x0E</code> it prints the character in <code>AL</code> and moves the cursor."]
+  ],
+  task:"Make the screen say OK. The code already prints the O.",
+  hint:"AH is still 0x0E, so you only need two lines: <code>mov al, 'K'</code> and <code>int 0x10</code>",
+  starter: HDR +
+"mov ah, 0x0e       ; AH = 0x0E: BIOS \"print a character\" service\n" +
+"mov al, 'O'        ; AL = the character to print\n" +
+"int 0x10           ; call the BIOS video service\n\n" +
+"; TODO: print a 'K' the same way\n\n" +
+"jmp $\n" + FOOT,
+  solution: HDR +
+"mov ah, 0x0e\n" +
+"mov al, 'O'\n" +
+"int 0x10\n" +
+"mov al, 'K'\n" +
+"int 0x10\n\n" +
+"jmp $\n" + FOOT,
+  check:c=>c.prog.includes("OK"),
+  win:"Your OS can talk. Every kernel's first job is showing that it's alive."
+},
+{
+  title:"Counting",
+  story:"A boot screen that counts proves the CPU is really making decisions. You'll need loops for everything that follows: reading disks, clearing memory, scanning keys.",
+  learn:[
+    ["inc","<code>inc al</code> adds 1. Since '0' is 48 and '1' is 49, adding 1 to a digit gives the next digit."],
+    ["cmp","<code>cmp al, '9'+1</code> subtracts without saving the result. It only sets flags, like ZF (zero flag) when both sides are equal."],
+    ["jne","<code>jne count</code> jumps to the label <code>count</code> when ZF is off (not equal). That makes a loop."]
+  ],
+  task:"Print 0123456789 using a loop, not ten separate prints.",
+  hint:"Inside the loop after <code>int 0x10</code>: <code>inc al</code>, then <code>cmp al, '9'+1</code>, then <code>jne count</code>. Press Step a few times to watch AL change.",
+  starter: HDR +
+"mov ah, 0x0e\n" +
+"mov al, '0'        ; start at the character '0' (number 48)\n\n" +
+"count:\n" +
+"    int 0x10       ; print AL\n" +
+"    ; TODO: add 1 to AL\n" +
+"    ; TODO: compare AL with '9'+1\n" +
+"    ; TODO: if not equal, jump back to count\n\n" +
+"jmp $\n" + FOOT,
+  solution: HDR +
+"mov ah, 0x0e\n" +
+"mov al, '0'\n\n" +
+"count:\n" +
+"    int 0x10\n" +
+"    inc al\n" +
+"    cmp al, '9'+1\n" +
+"    jne count\n\n" +
+"jmp $\n" + FOOT,
+  check:c=>c.prog.includes("0123456789"),
+  win:"Loops work. Your CPU now makes decisions on its own."
+},
+{
+  title:"Strings in Memory",
+  story:"Printing one letter at a time won't scale. Real OSes keep text in memory and walk through it. Time for ForgeOS's boot message.",
+  learn:[
+    ["db","<code>db 'Hi', 0</code> writes bytes straight into your disk image. The 0 at the end marks where the text stops."],
+    ["SI","A pointer register. <code>mov si, msg</code> puts the address of <code>msg</code> into SI."],
+    ["lodsb","Loads the byte at address SI into AL, then adds 1 to SI. One instruction, two jobs."]
+  ],
+  task:"Finish the loop so it stops at the 0 byte and prints \"ForgeOS booting...\". Try booting before you fix it and watch what happens without a stop condition.",
+  hint:"After <code>lodsb</code>: <code>cmp al, 0</code> then <code>je done</code>",
+  starter: HDR +
+"mov ah, 0x0e\n" +
+"mov si, msg        ; SI = address of the first character\n\n" +
+"print:\n" +
+"    lodsb          ; AL = byte at [SI], then SI = SI + 1\n" +
+"    ; TODO: if AL is 0, jump to done\n" +
+"    int 0x10\n" +
+"    jmp print\n\n" +
+"done:\n" +
+"    jmp $\n\n" +
+"msg: db 'ForgeOS booting...', 0\n" + FOOT,
+  solution: HDR +
+"mov ah, 0x0e\n" +
+"mov si, msg\n\n" +
+"print:\n" +
+"    lodsb\n" +
+"    cmp al, 0\n" +
+"    je done\n" +
+"    int 0x10\n" +
+"    jmp print\n\n" +
+"done:\n" +
+"    jmp $\n\n" +
+"msg: db 'ForgeOS booting...', 0\n" + FOOT,
+  check:c=>c.state==="idle" && c.prog.includes("ForgeOS booting..."),
+  win:"That's how every OS prints: walk through bytes until the 0. C strings work exactly this way."
+},
+{
+  title:"Functions",
+  story:"You'll print a lot of text from now on. Write the printing code once and call it from anywhere. This is the first real kernel function of ForgeOS.",
+  learn:[
+    ["call","<code>call print_string</code> pushes the return address onto the stack, then jumps to the function."],
+    ["ret","Pops that address back off the stack and jumps to it, so the CPU continues right after the call."],
+    ["13, 10","Carriage return (back to column 0) plus line feed (down one row). Together they make a new line."]
+  ],
+  task:"Print two lines, \"ForgeOS v0.1\" and \"Kernel: ready\", by calling print_string twice.",
+  hint:"After the first call: <code>mov si, status</code> then <code>call print_string</code>",
+  starter: HDR +
+"mov si, banner\n" +
+"call print_string  ; push return address, jump to print_string\n" +
+"; TODO: print the status line too\n\n" +
+"jmp $\n\n" + PRINT_STRING + "\n" +
+"banner: db 'ForgeOS v0.1', 13, 10, 0     ; 13,10 = new line\n" +
+"status: db 'Kernel: ready', 13, 10, 0\n" + FOOT,
+  solution: HDR +
+"mov si, banner\n" +
+"call print_string\n" +
+"mov si, status\n" +
+"call print_string\n\n" +
+"jmp $\n\n" + PRINT_STRING + "\n" +
+"banner: db 'ForgeOS v0.1', 13, 10, 0\n" +
+"status: db 'Kernel: ready', 13, 10, 0\n" + FOOT,
+  check:c=>{ if(c.state!=="idle") return false; const a=c.lines.findIndex(l=>l.includes("ForgeOS v0.1")); const b=c.lines.findIndex(l=>l.includes("Kernel: ready")); return a>=0 && b>a; },
+  win:"You wrote and called your first kernel function. The stack just did its first real job."
+},
+{
+  title:"Listen",
+  story:"An OS that only talks is a poster. Make ForgeOS listen to the keyboard.",
+  learn:[
+    ["int 0x16","The BIOS keyboard service. With <code>AH = 0</code> it waits until a key is pressed."],
+    ["AL","After the call, AL holds the character you typed. AH holds the key's scan code."],
+    ["Echo","Print the key straight back so you can see it. Every terminal you've used does this."]
+  ],
+  task:"Echo every key. Boot it, click the screen (or use the box under it) and type at least 3 characters.",
+  hint:"In the loop after <code>int 0x16</code>: <code>mov ah, 0x0e</code> then <code>int 0x10</code>. You must set AH again because the keyboard call changed it.",
+  starter: HDR +
+"mov si, banner\n" +
+"call print_string\n\n" +
+"main_loop:\n" +
+"    mov ah, 0x00   ; BIOS keyboard: wait for a key\n" +
+"    int 0x16       ; -> AL = the character typed\n" +
+"    ; TODO: print AL with the teletype service\n" +
+"    jmp main_loop\n\n" + PRINT_STRING + "\n" +
+"banner: db 'ForgeOS v0.1 - type something:', 13, 10, 0\n" + FOOT,
+  solution: HDR +
+"mov si, banner\n" +
+"call print_string\n\n" +
+"main_loop:\n" +
+"    mov ah, 0x00\n" +
+"    int 0x16\n" +
+"    mov ah, 0x0e\n" +
+"    int 0x10\n" +
+"    jmp main_loop\n\n" + PRINT_STRING + "\n" +
+"banner: db 'ForgeOS v0.1 - type something:', 13, 10, 0\n" + FOOT,
+  check:c=>{ const i=c.prog.indexOf("type something:"); if(i<0) return false; const rest=c.prog.slice(i+15).replace(/[\s\0]/g,""); return c.typedCount>=3 && rest.length>=3; },
+  win:"Input and output both work. Your OS is now interactive."
+},
+{
+  title:"The Prompt",
+  story:"Raw echo isn't a terminal yet. Enter should start a fresh line with a prompt, and Backspace should erase mistakes.",
+  learn:[
+    ["Key codes","Enter sends 13. Backspace sends 8. Compare AL against them to decide what to do."],
+    ["Erasing","Printing 8 only moves the cursor back. To erase, print 8, then a space, then 8 again."],
+    ["Local labels","Labels starting with a dot, like <code>.enter</code>, belong to the label above them, so names don't clash."]
+  ],
+  task:"Make Enter print a new line and a fresh \"> \" prompt, and make Backspace erase. Boot it, type a word, press Enter.",
+  hint:"In <code>.enter</code>: <code>mov si, newline</code>, <code>call print_string</code>, <code>jmp prompt</code>. In <code>.backspace</code>: <code>mov ah, 0x0e</code>, then print 8, ' ', 8 with <code>mov al, ...</code> and <code>int 0x10</code> each.",
+  starter: HDR +
+"start:\n" +
+"    mov si, banner\n" +
+"    call print_string\n" +
+"prompt:\n" +
+"    mov si, prompt_str\n" +
+"    call print_string\n" +
+"main_loop:\n" +
+"    mov ah, 0x00\n" +
+"    int 0x16\n" +
+"    cmp al, 13          ; Enter key?\n" +
+"    je .enter\n" +
+"    cmp al, 8           ; Backspace key?\n" +
+"    je .backspace\n" +
+"    mov ah, 0x0e\n" +
+"    int 0x10            ; normal key: echo it\n" +
+"    jmp main_loop\n" +
+".enter:\n" +
+"    ; TODO: print a new line, then jump back to prompt\n" +
+"    jmp main_loop\n" +
+".backspace:\n" +
+"    ; TODO: print 8, ' ', 8  (back, erase, back)\n" +
+"    jmp main_loop\n\n" + PRINT_STRING + "\n" +
+"banner:     db 'ForgeOS v0.1', 13, 10, 0\n" +
+"prompt_str: db '> ', 0\n" +
+"newline:    db 13, 10, 0\n" + FOOT,
+  solution: HDR +
+"start:\n" +
+"    mov si, banner\n" +
+"    call print_string\n" +
+"prompt:\n" +
+"    mov si, prompt_str\n" +
+"    call print_string\n" +
+"main_loop:\n" +
+"    mov ah, 0x00\n" +
+"    int 0x16\n" +
+"    cmp al, 13\n" +
+"    je .enter\n" +
+"    cmp al, 8\n" +
+"    je .backspace\n" +
+"    mov ah, 0x0e\n" +
+"    int 0x10\n" +
+"    jmp main_loop\n" +
+".enter:\n" +
+"    mov si, newline\n" +
+"    call print_string\n" +
+"    jmp prompt\n" +
+".backspace:\n" +
+"    mov ah, 0x0e\n" +
+"    mov al, 8\n" +
+"    int 0x10\n" +
+"    mov al, ' '\n" +
+"    int 0x10\n" +
+"    mov al, 8\n" +
+"    int 0x10\n" +
+"    jmp main_loop\n\n" + PRINT_STRING + "\n" +
+"banner:     db 'ForgeOS v0.1', 13, 10, 0\n" +
+"prompt_str: db '> ', 0\n" +
+"newline:    db 13, 10, 0\n" + FOOT,
+  check:c=>c.lines.filter(l=>l.startsWith(">")).length>=2,
+  win:"You have a real prompt. It looks like a terminal because it now works like one."
+},
+{
+  title:"Your First Shell",
+  story:"Final step of Phase 1: remember what the user typed and run it as a command. A command shell inside a single 512-byte sector.",
+  learn:[
+    ["stosb","Stores AL at address DI, then adds 1 to DI. The shell uses it to save each key into <code>buffer</code>."],
+    ["[si]","Square brackets mean \"the memory at this address\". <code>mov al, [si]</code> reads the byte SI points to."],
+    ["String compare","Two strings are equal when every byte matches up to and including the 0 at the end."]
+  ],
+  task:"Write str_equal so commands work. Boot, type help and press Enter, then type something random like ls and press Enter. You should see the command list and then \"Unknown command\".",
+  hint:"<code>mov al, [si]</code> · <code>cmp al, [di]</code> · <code>jne .done</code> · <code>cmp al, 0</code> · <code>je .done</code> · <code>inc si</code> · <code>inc di</code> · <code>jmp .loop</code>. The flags left by the last cmp tell the caller the answer.",
+  starter: HDR +
+"start:\n" +
+"    mov si, banner\n" +
+"    call print_string\n" +
+"new_cmd:\n" +
+"    mov si, prompt_str\n" +
+"    call print_string\n" +
+"    mov di, buffer          ; DI = where the next key goes\n" +
+"read_key:\n" +
+"    mov ah, 0\n" +
+"    int 0x16\n" +
+"    cmp al, 13\n" +
+"    je run_cmd\n" +
+"    cmp al, 8\n" +
+"    je backspace\n" +
+"    cmp di, buffer+30       ; buffer full? ignore the key\n" +
+"    je read_key\n" +
+"    stosb                   ; save AL into the buffer\n" +
+"    mov ah, 0x0e\n" +
+"    int 0x10\n" +
+"    jmp read_key\n" +
+"backspace:\n" +
+"    cmp di, buffer          ; nothing to erase?\n" +
+"    je read_key\n" +
+"    dec di\n" +
+"    mov ah, 0x0e\n" +
+"    mov al, 8\n" +
+"    int 0x10\n" +
+"    mov al, ' '\n" +
+"    int 0x10\n" +
+"    mov al, 8\n" +
+"    int 0x10\n" +
+"    jmp read_key\n\n" +
+"run_cmd:\n" +
+"    mov al, 0\n" +
+"    stosb                   ; end the command with a 0\n" +
+"    mov si, newline\n" +
+"    call print_string\n" +
+"    cmp byte [buffer], 0    ; empty line?\n" +
+"    je new_cmd\n" +
+"    mov si, buffer\n" +
+"    mov di, cmd_help\n" +
+"    call str_equal\n" +
+"    je do_help\n" +
+"    mov si, buffer\n" +
+"    mov di, cmd_clear\n" +
+"    call str_equal\n" +
+"    je do_clear\n" +
+"    mov si, unknown\n" +
+"    call print_string\n" +
+"    jmp new_cmd\n" +
+"do_help:\n" +
+"    mov si, help_text\n" +
+"    call print_string\n" +
+"    jmp new_cmd\n" +
+"do_clear:\n" +
+"    mov ah, 0x00            ; BIOS: set video mode\n" +
+"    mov al, 0x03            ; mode 3 = 80x25 text (clears it)\n" +
+"    int 0x10\n" +
+"    jmp new_cmd\n\n" +
+"; str_equal: compares the strings at SI and DI.\n" +
+"; Returns with ZF = 1 (je works) if they are equal.\n" +
+"str_equal:\n" +
+".loop:\n" +
+"    ; TODO: load the byte at [si] into al\n" +
+"    ; TODO: compare al with the byte at [di]; if different, jump to .done\n" +
+"    ; TODO: if al is 0 (both ended), jump to .done\n" +
+"    ; TODO: step si and di to the next byte, jump to .loop\n" +
+".done:\n" +
+"    ret\n\n" + PRINT_STRING + "\n" +
+"banner:     db 'ForgeOS v0.1 - type help', 13, 10, 0\n" +
+"prompt_str: db '> ', 0\n" +
+"newline:    db 13, 10, 0\n" +
+"unknown:    db 'Unknown command', 13, 10, 0\n" +
+"help_text:  db 'Commands: help clear', 13, 10, 0\n" +
+"cmd_help:   db 'help', 0\n" +
+"cmd_clear:  db 'clear', 0\n" +
+"buffer:     times 32 db 0\n" + FOOT,
+  solution:null, // filled below
+  check:c=>c.prog.includes("Commands: help clear") && c.prog.includes("Unknown command"),
+  win:"Phase 1 complete. You wrote a boot-sector shell that reads, stores and runs commands. Real operating systems started exactly like this."
+}
+];
+M[7].solution = M[7].starter.replace(
+"    ; TODO: load the byte at [si] into al\n" +
+"    ; TODO: compare al with the byte at [di]; if different, jump to .done\n" +
+"    ; TODO: if al is 0 (both ended), jump to .done\n" +
+"    ; TODO: step si and di to the next byte, jump to .loop\n",
+"    mov al, [si]\n" +
+"    cmp al, [di]\n" +
+"    jne .done              ; different -> ZF = 0\n" +
+"    cmp al, 0\n" +
+"    je .done               ; both ended -> ZF = 1\n" +
+"    inc si\n" +
+"    inc di\n" +
+"    jmp .loop\n");
+
+const ROADMAP = [
+  {name:"Boot sector", sub:"Real mode · runs here", live:true, items:M.map(m=>m.title)},
+  {name:"Beyond 512 bytes", sub:"Real mode · QEMU", items:["Read sectors with int 0x13","Segments and the memory map","A second-stage loader"]},
+  {name:"Protected mode", sub:"32-bit · QEMU", items:["The GDT","Switch into 32-bit mode","VGA driver at 0xB8000","Hand off to a C kernel"]},
+  {name:"The kernel", sub:"32-bit · QEMU", items:["Interrupts and the IDT","Keyboard driver (IRQ 1)","Timer (PIT)","Physical memory manager","Paging","kmalloc heap"]},
+  {name:"Becoming an OS", sub:"32-bit · QEMU", items:["Multitasking","System calls and user mode","A filesystem","Load and run programs (ELF)","Userspace shell: ForgeOS 1.0"]}
+];
+
+/* =====================  ASSEMBLER  ===================== */
+const R16 = ["ax","bx","cx","dx","si","di","sp","bp"];
+const R8 = {al:["ax",0],ah:["ax",8],bl:["bx",0],bh:["bx",8],cl:["cx",0],ch:["cx",8],dl:["dx",0],dh:["dx",8]};
+const SEG = ["cs","ds","es","ss","fs","gs"];
+const JCC = {je:f=>f.ZF,jz:f=>f.ZF,jne:f=>!f.ZF,jnz:f=>!f.ZF,jb:f=>f.CF,jc:f=>f.CF,jnae:f=>f.CF,jae:f=>!f.CF,jnb:f=>!f.CF,jnc:f=>!f.CF,
+  ja:f=>!f.CF&&!f.ZF,jnbe:f=>!f.CF&&!f.ZF,jbe:f=>f.CF||f.ZF,jna:f=>f.CF||f.ZF,js:f=>f.SF,jns:f=>!f.SF};
+const ARGC = {mov:2,add:2,sub:2,cmp:2,and:2,or:2,xor:2,shl:2,shr:2,inc:1,dec:1,push:1,pop:1,jmp:1,call:1,loop:1,int:1,
+  ret:0,hlt:0,cli:0,sti:0,cld:0,std:0,nop:0,lodsb:0,stosb:0,cmpsb:0};
+for(const k in JCC) ARGC[k]=1;
+const SUPPORTED = "mov add sub cmp and or xor shl shr inc dec push pop jmp je jne jz jnz jb jae ja jbe call ret loop int lodsb stosb cmpsb hlt cli sti nop";
+
+function stripComment(line){
+  let q=null;
+  for(let i=0;i<line.length;i++){ const c=line[i];
+    if(q){ if(c===q) q=null; } else if(c==="'"||c==='"') q=c; else if(c===";") return line.slice(0,i); }
+  return line;
+}
+function splitArgs(s){
+  const out=[]; let cur="", q=null, depth=0;
+  for(const c of s){
+    if(q){ cur+=c; if(c===q) q=null; continue; }
+    if(c==="'"||c==='"'){ q=c; cur+=c; continue; }
+    if(c==="[") depth++; if(c==="]") depth--;
+    if(c===","&&depth===0){ out.push(cur.trim()); cur=""; continue; }
+    cur+=c;
+  }
+  if(cur.trim()!=="") out.push(cur.trim());
+  if(q) throw "A quote is missing its closing partner";
+  return out;
+}
+function tokenize(s){
+  const toks=[]; let i=0;
+  while(i<s.length){ const c=s[i];
+    if(/\s/.test(c)){ i++; continue; }
+    if(c==="'"||c==='"'){ const j=s.indexOf(c,i+1); if(j<0) throw "A quote is missing its closing partner"; toks.push({t:"str",v:s.slice(i+1,j)}); i=j+1; continue; }
+    if("+-*()".includes(c)){ toks.push({t:c}); i++; continue; }
+    if(c==="$"){ if(s[i+1]==="$"){ toks.push({t:"$$"}); i+=2; } else { toks.push({t:"$"}); i++; } continue; }
+    const m=/^[A-Za-z0-9_.]+/.exec(s.slice(i));
+    if(m){ toks.push({t:"id",v:m[0]}); i+=m[0].length; continue; }
+    throw "I can't read '"+c+"' here";
+  }
+  return toks;
+}
+function idValue(s,ctx){
+  if(/^0x[0-9a-f]+$/i.test(s)) return parseInt(s.slice(2),16);
+  if(/^0b[01]+$/i.test(s)) return parseInt(s.slice(2),2);
+  if(/^[0-9][0-9a-f]*h$/i.test(s)) return parseInt(s.slice(0,-1),16);
+  if(/^[0-9]+$/.test(s)) return parseInt(s,10);
+  if(/^[0-9]/.test(s)) throw "'"+s+"' is not a valid number";
+  const low=s.toLowerCase();
+  if(R16.includes(low)||R8[low]) throw "Register "+low+" can't be used inside a number here";
+  const name=s.startsWith(".")? ctx.scope+s : s;
+  if(ctx.labels[name]!==undefined) return ctx.labels[name];
+  if(ctx.pass1) throw "Label '"+s+"' has to be defined above this line";
+  throw "Unknown label '"+s+"'. Check the spelling (labels are case-sensitive).";
+}
+function evalExpr(src,ctx){
+  const toks=tokenize(src); let p=0;
+  const peek=()=>toks[p], next=()=>toks[p++];
+  function factor(){ const t=next(); if(!t) throw "A value is missing";
+    if(t.t==="-") return -factor(); if(t.t==="+") return factor();
+    if(t.t==="("){ const v=expr(); const c=next(); if(!c||c.t!==")") throw "Missing )"; return v; }
+    if(t.t==="$") return ctx.here; if(t.t==="$$") return ctx.start;
+    if(t.t==="str"){ if(!t.v.length) throw "Empty character ''"; let v=0; for(let i=Math.min(t.v.length,2)-1;i>=0;i--) v=(v<<8)|(t.v.charCodeAt(i)&0xff); return v; }
+    if(t.t==="id") return idValue(t.v,ctx);
+    throw "Unexpected '"+t.t+"'"; }
+  function term(){ let v=factor(); while(peek()&&peek().t==="*"){ next(); v*=factor(); } return v; }
+  function expr(){ let v=term(); while(peek()&&(peek().t==="+"||peek().t==="-")){ const o=next().t, w=term(); v=o==="+"?v+w:v-w; } return v; }
+  const v=expr(); if(p<toks.length) throw "I couldn't understand '"+src+"'"; return v;
+}
+function parseOperand(raw){
+  let s=raw.trim(), size=null;
+  const sm=/^(byte|word)\s+(.*)$/i.exec(s);
+  if(sm){ size=sm[1].toLowerCase()==="byte"?8:16; s=sm[2].trim(); }
+  const low=s.toLowerCase();
+  if(R16.includes(low)) return {t:"reg",name:low,size:16};
+  if(R8[low]) return {t:"reg",name:low,size:8};
+  if(SEG.includes(low)) return {t:"seg",name:low,size:16};
+  if(s.startsWith("[")){
+    if(!s.endsWith("]")) throw "Missing ] in "+s;
+    let inner=s.slice(1,-1).trim(), base=null;
+    if(/^[a-z]s\s*:/i.test(inner)) inner=inner.replace(/^[a-z]s\s*:/i,"");
+    const rm=inner.match(/\b(ax|bx|cx|dx|si|di|sp|bp|al|ah|bl|bh|cl|ch|dl|dh)\b/gi);
+    if(rm){
+      if(rm.length>1) throw "This simulator allows one register inside [ ]";
+      const r=rm[0].toLowerCase();
+      if(!["bx","si","di","bp"].includes(r)) throw "Only bx, si, di or bp can point into memory, not "+r;
+      base=r; inner=inner.replace(new RegExp("\\b"+r+"\\b","i"),"0");
+    }
+    return {t:"mem",size,base,disp:inner||"0"};
+  }
+  return {t:"imm",expr:s,size};
+}
+function dataBytes(kind,argstr,ctx){
+  const out=[];
+  for(const a of splitArgs(argstr)){
+    if(kind==="db" && (a[0]==="'"||a[0]==='"') && a.endsWith(a[0]) && a.length>=2){
+      for(const ch of a.slice(1,-1)) out.push(ch.charCodeAt(0)&0xff);
+    } else {
+      const v=evalExpr(a,ctx);
+      if(kind==="db") out.push(v&0xff); else out.push(v&0xff,(v>>8)&0xff);
+    }
+  }
+  return out;
+}
+function insLen(op,args){
+  if(!args.length) return 1;
+  if(op==="int"||JCC[op]||op==="jmp"||op==="loop") return 2;
+  if(op==="call") return 3;
+  if(args.length===1) return args[0].t==="mem"?4:(args[0].t==="imm"?3:1);
+  if(args.some(a=>a.t==="mem")) return 4;
+  if(args[1].t==="imm") return args[0].size===8?2:3;
+  return 2;
+}
+
+function assemble(src){
+  const lines=src.split("\n"), labels={}, errors=[], code=new Map(), mem=new Uint8Array(65536), instrs=[];
+  let start=0x7C00, addr=start, scope="", sawContent=false;
+  const err=(n,m)=>errors.push({line:n+1,msg:String(m)});
+  for(let n=0;n<lines.length;n++){
+    let line=stripComment(lines[n]).trim(); if(!line) continue;
+    try{
+      let m;
+      if((m=/^\[?\s*bits\s+(\w+)\s*\]?$/i.exec(line))){ if(m[1]!=="16") throw "Phase 1 runs in 16-bit real mode. Use [bits 16]."; continue; }
+      if((m=/^\[?\s*org\s+([^\]]+?)\s*\]?$/i.exec(line))){ if(sawContent) throw "Put [org ...] at the top, before any code"; start=addr=evalExpr(m[1],{labels,here:addr,start,scope,pass1:true}); continue; }
+      let colon=true;
+      if((m=/^([A-Za-z_.][\w.]*)\s*:\s*(.*)$/.exec(line)) || ((colon=false), (m=/^([A-Za-z_][\w.]*)\s+((?:db|dw|times)\s.*)$/i.exec(line)))){
+        let name=m[1];
+        if(!colon && (ARGC[name.toLowerCase()]!==undefined || /^(db|dw|times)$/i.test(name))) { /* not a label */ }
+        else {
+          if(name.startsWith(".")) name=scope+name; else scope=name;
+          if(labels[name]!==undefined) throw "Label '"+m[1]+"' is defined twice";
+          if(ARGC[name.toLowerCase()]!==undefined || R16.includes(name.toLowerCase()) || R8[name.toLowerCase()]) throw "'"+m[1]+"' is a reserved word, pick another label name";
+          labels[name]=addr; line=m[2].trim(); if(!line) continue;
+        }
+      }
+      sawContent=true;
+      const ctx={labels,here:addr,start,scope,pass1:true};
+      if((m=/^times\s+(.+?)\s+(db|dw)\s+(.*)$/i.exec(line))){
+        const cnt=evalExpr(m[1],ctx);
+        if(cnt<0) throw "Your boot sector is bigger than 512 bytes. The BIOS only loads 512, so shrink the code or text.";
+        const unit=dataBytes(m[2].toLowerCase(),m[3],ctx);
+        for(let i=0;i<cnt;i++) for(const b of unit) mem[(addr++)&0xffff]=b;
+        continue;
+      }
+      if((m=/^(db|dw)\s+(.*)$/i.exec(line))){
+        for(const b of dataBytes(m[1].toLowerCase(),m[2],ctx)) mem[(addr++)&0xffff]=b;
+        continue;
+      }
+      const sp=line.search(/\s/);
+      const op=(sp<0?line:line.slice(0,sp)).toLowerCase();
+      const rest=sp<0?"":line.slice(sp+1).trim();
+      if(ARGC[op]===undefined){
+        if(/^(org|bits|section|global|extern|equ)$/.test(op)) throw "'"+op+"' isn't needed in Phase 1";
+        throw "I don't know the instruction '"+op+"' yet. Phase 1 supports: "+SUPPORTED;
+      }
+      const args=rest?splitArgs(rest).map(parseOperand):[];
+      if(args.length!==ARGC[op]) throw op+" needs "+ARGC[op]+" operand"+(ARGC[op]===1?"":"s")+", you gave "+args.length;
+      const ins={op,args,line:n,addr,scope,src:line};
+      ins.len=insLen(op,args);
+      code.set(addr,ins); instrs.push(ins); addr+=ins.len;
+    }catch(e){ err(n,e); }
+  }
+  // pass 2: resolve values and check operand rules
+  for(const ins of instrs){
+    try{
+      const ctx={labels,here:ins.addr,start,scope:ins.scope};
+      for(const a of ins.args){
+        if(a.t==="imm") a.val=evalExpr(a.expr,ctx);
+        if(a.t==="mem") a.dval=evalExpr(a.disp,ctx)&0xffff;
+      }
+      validate(ins);
+    }catch(e){ err(ins.line,e); }
+  }
+  const end=addr;
+  if(!errors.length && end-start>512) errors.push({line:lines.length,msg:"Image is "+(end-start)+" bytes. A boot sector must be exactly 512."});
+  return {mem,code,labels,start,end,errors,count:instrs.length};
+}
+function validate(ins){
+  const {op,args}=ins; const [a,b]=args;
+  const two=["mov","add","sub","cmp","and","or","xor"];
+  if(two.includes(op)){
+    if(a.t==="imm") throw "The first operand of "+op+" can't be a number. It's where the result goes.";
+    if(a.t==="mem"&&b.t==="mem") throw "x86 can't use two memory operands at once. Load one into a register first.";
+    if((a.t==="seg"||b.t==="seg")&&op!=="mov") throw "Segment registers only work with mov";
+    if(a.t==="seg"&&b.t==="imm") throw "You can't mov a number straight into "+a.name+". Use mov ax, value then mov "+a.name+", ax";
+    if(a.t==="reg"&&b.t==="reg"&&a.size!==b.size) throw "Size mismatch: "+a.name+" is "+a.size+"-bit but "+b.name+" is "+b.size+"-bit";
+    let S=(a.t==="reg"||a.t==="seg")?a.size:(b.t==="reg"||b.t==="seg")?b.size:(a.size||b.size);
+    if(a.t==="mem"&&a.size&&b.t==="reg"&&a.size!==b.size) throw "Size mismatch between "+a.size+"-bit memory and "+b.name;
+    if(!S) throw "Size not specified. Add byte or word, for example: cmp byte [si], 0";
+    if(b.t==="imm") rangeCheck(b.val,S);
+    ins.size=S; return;
+  }
+  if(op==="shl"||op==="shr"){
+    if(a.t==="imm") throw "Can't shift a number";
+    if(!(b.t==="imm"||(b.t==="reg"&&b.name==="cl"))) throw op+" count must be a number or cl";
+    ins.size=a.size; if(!ins.size) throw "Size not specified. Add byte or word"; return;
+  }
+  if(op==="inc"||op==="dec"){ if(a.t==="imm") throw "Can't "+op+" a number"; ins.size=a.size; if(!ins.size) throw "Size not specified. Add byte or word, for example: inc byte [count]"; return; }
+  if(op==="push"||op==="pop"){
+    if(a.t==="reg"&&a.size===8) throw op+" works with 16-bit registers (ax, not al)";
+    if(op==="pop"&&a.t==="imm") throw "Can't pop into a number";
+    ins.size=16; return;
+  }
+  if(op==="int"){ if(a.t!=="imm") throw "int needs a number, like int 0x10"; return; }
+  if(JCC[op]||op==="jmp"||op==="call"||op==="loop"){
+    if(a.t==="mem") throw "Jumping through memory isn't supported in Phase 1";
+    if(a.t==="reg"&&(op!=="jmp"&&op!=="call")) throw op+" needs a label";
+    return;
+  }
+}
+function rangeCheck(v,S){
+  if(S===8&&(v>255||v<-128)) throw "The value "+v+" doesn't fit in 8 bits (max 255)";
+  if(S===16&&(v>65535||v<-32768)) throw "The value "+v+" doesn't fit in 16 bits";
+}
+
+/* =====================  SCREEN  ===================== */
+const COLS=80, ROWS=25, CW=9, CH=16;
+class Screen{
+  constructor(cv){ this.cv=cv; this.ctx=cv.getContext("2d"); this.clear(); }
+  clear(){ this.buf=Array.from({length:ROWS},()=>Array(COLS).fill(" ")); this.row=0; this.col=0; this.sysRows=0; }
+  lf(){ this.row++; if(this.row>=ROWS){ this.buf.shift(); this.buf.push(Array(COLS).fill(" ")); this.row=ROWS-1; if(this.sysRows>0) this.sysRows--; } }
+  tty(c){
+    if(c===13) this.col=0;
+    else if(c===10) this.lf();
+    else if(c===8){ if(this.col>0) this.col--; }
+    else if(c===7){}
+    else { this.buf[this.row][this.col]=c===0?"\0":String.fromCharCode(c); this.col++; if(this.col>=COLS){ this.col=0; this.lf(); } }
+  }
+  sys(text){ for(const ch of text) this.tty(ch.charCodeAt(0)); this.tty(13); this.tty(10); this.sysRows=this.row; }
+  lines(from){ return this.buf.slice(from||0).map(r=>r.join("").replace(/\0/g," ").replace(/\s+$/,"")); }
+  draw(cursor){
+    const x=this.ctx, css=getComputedStyle(document.documentElement);
+    x.fillStyle=css.getPropertyValue("--crt-bg").trim()||"#0a0d0b"; x.fillRect(0,0,COLS*CW,ROWS*CH);
+    const fg=css.getPropertyValue("--crt-fg").trim()||"#ffb000", dim=css.getPropertyValue("--crt-dim").trim()||"#8c6200";
+    x.font=CH+"px VT323, monospace"; x.textBaseline="top";
+    for(let r=0;r<ROWS;r++){ x.fillStyle=r<this.sysRows?dim:fg;
+      for(let c=0;c<COLS;c++){ const ch=this.buf[r][c]; if(ch!==" "&&ch!=="\0") x.fillText(ch,c*CW,r*CH+1); } }
+    if(cursor){ x.fillStyle=fg; x.fillRect(this.col*CW,this.row*CH+CH-3,CW-1,2); }
+  }
+}
+
+/* =====================  CPU  ===================== */
+const hex=(v,w)=>(v>>>0).toString(16).toUpperCase().padStart(w||4,"0");
+class CPU{
+  constructor(prog,screen,keys){
+    this.p=prog; this.mem=prog.mem.slice(); this.scr=screen; this.keys=keys;
+    this.r={ax:0,bx:0,cx:0,dx:0x0080,si:0,di:0,sp:0x7000,bp:0};
+    this.seg={cs:0,ds:0,es:0,ss:0,fs:0,gs:0};
+    this.f={ZF:0,CF:0,SF:0}; this.ip=prog.start; this.state="ready"; this.steps=0; this.msg="";
+  }
+  ea(o){ return ((o.base?this.r[o.base]:0)+o.dval)&0xffff; }
+  get(o,S){
+    if(o.t==="reg"){ if(o.size===16) return this.r[o.name]; const [b,sh]=R8[o.name]; return (this.r[b]>>sh)&0xff; }
+    if(o.t==="seg") return this.seg[o.name];
+    if(o.t==="imm") return o.val&(S===8?0xff:0xffff);
+    const e=this.ea(o); return S===8?this.mem[e]:(this.mem[e]|(this.mem[(e+1)&0xffff]<<8));
+  }
+  set(o,v,S){
+    if(o.t==="reg"){ if(o.size===16){ this.r[o.name]=v&0xffff; return; } const [b,sh]=R8[o.name]; this.r[b]=((this.r[b]&~(0xff<<sh))|((v&0xff)<<sh))&0xffff; return; }
+    if(o.t==="seg"){ this.seg[o.name]=v&0xffff; return; }
+    const e=this.ea(o); this.mem[e]=v&0xff; if(S===16) this.mem[(e+1)&0xffff]=(v>>8)&0xff;
+  }
+  zs(v,S){ const M=S===8?0xff:0xffff; this.f.ZF=(v&M)===0?1:0; this.f.SF=(v>>(S-1))&1; }
+  push(v){ this.r.sp=(this.r.sp-2)&0xffff; this.mem[this.r.sp]=v&0xff; this.mem[(this.r.sp+1)&0xffff]=(v>>8)&0xff; }
+  pop(){ const v=this.mem[this.r.sp]|(this.mem[(this.r.sp+1)&0xffff]<<8); this.r.sp=(this.r.sp+2)&0xffff; return v; }
+  fault(m){ this.state="fault"; this.msg=m; }
+  target(a){ return a.t==="imm"?a.val&0xffff:this.get(a,16); }
+  step(){
+    const ins=this.p.code.get(this.ip);
+    if(!ins){
+      const inData = this.ip>=this.p.start && this.ip<this.p.end;
+      this.fault(inData ? "The CPU ran into your data at 0x"+hex(this.ip)+" and is trying to run text as code. Add jmp $ (or a jump) before your data."
+                        : "The CPU jumped to 0x"+hex(this.ip)+", where there is no code. Check your jumps and ret.");
+      return;
+    }
+    this.cur=ins; this.steps++;
+    let next=(ins.addr+ins.len)&0xffff; const [a,b]=ins.args, S=ins.size||16, M=S===8?0xff:0xffff;
+    switch(ins.op){
+      case "mov": this.set(a,this.get(b,S),S); break;
+      case "add": { const x=this.get(a,S),y=this.get(b,S),r=x+y; this.zs(r,S); this.f.CF=r>M?1:0; this.set(a,r,S); break; }
+      case "sub": case "cmp": { const x=this.get(a,S),y=this.get(b,S),r=(x-y)&M; this.zs(r,S); this.f.CF=x<y?1:0; if(ins.op==="sub") this.set(a,r,S); break; }
+      case "and": case "or": case "xor": { const x=this.get(a,S),y=this.get(b,S); const r=ins.op==="and"?x&y:ins.op==="or"?x|y:x^y; this.zs(r,S); this.f.CF=0; this.set(a,r,S); break; }
+      case "shl": case "shr": { const x=this.get(a,S),n=this.get(b,8)&31; const r=ins.op==="shl"?(x<<n):(x>>n); this.zs(r&M,S); this.set(a,r&M,S); break; }
+      case "inc": case "dec": { const r=(this.get(a,S)+(ins.op==="inc"?1:-1))&M; this.zs(r,S); this.set(a,r,S); break; }
+      case "push": this.push(this.get(a,16)); break;
+      case "pop": this.set(a,this.pop(),16); break;
+      case "jmp": next=this.target(a); if(next===ins.addr){ this.state="idle"; } break;
+      case "call": if(this.r.sp<0x0600){ this.fault("Stack overflow: too many calls without ret."); return; } this.push(next); next=this.target(a); break;
+      case "ret": next=this.pop(); break;
+      case "loop": this.r.cx=(this.r.cx-1)&0xffff; if(this.r.cx!==0) next=this.target(a); break;
+      case "lodsb": this.set({t:"reg",name:"al",size:8},this.mem[this.r.si],8); this.r.si=(this.r.si+1)&0xffff; break;
+      case "stosb": this.mem[this.r.di]=this.r.ax&0xff; this.r.di=(this.r.di+1)&0xffff; break;
+      case "cmpsb": { const x=this.mem[this.r.si],y=this.mem[this.r.di],r=(x-y)&0xff; this.zs(r,8); this.f.CF=x<y?1:0; this.r.si=(this.r.si+1)&0xffff; this.r.di=(this.r.di+1)&0xffff; break; }
+      case "int": if(!this.interrupt(a.val&0xff)) { this.steps--; return; } break;
+      case "hlt": this.state="halted"; break;
+      case "cli": case "sti": case "cld": case "std": case "nop": break;
+      default:
+        if(JCC[ins.op]){ if(JCC[ins.op](this.f)) next=this.target(a); }
+    }
+    this.ip=next;
+  }
+  interrupt(n){
+    const ah=(this.r.ax>>8)&0xff, al=this.r.ax&0xff;
+    if(n===0x10){
+      if(ah===0x0e){ this.scr.tty(al); return true; }
+      if(ah===0x00){ this.scr.clear(); return true; }
+      if(ah===0x02){ const dh=(this.r.dx>>8)&0xff, dl=this.r.dx&0xff; this.scr.row=Math.min(dh,ROWS-1); this.scr.col=Math.min(dl,COLS-1); return true; }
+      return true; // other video calls ignored
+    }
+    if(n===0x16){
+      if(ah===0x00||ah===0x10){
+        if(!this.keys.length){ this.state="waitkey"; return false; }
+        const k=this.keys.shift(); this.r.ax=((k.scan&0xff)<<8)|(k.code&0xff); return true;
+      }
+      if(ah===0x01||ah===0x11){
+        if(!this.keys.length){ this.f.ZF=1; } else { this.f.ZF=0; const k=this.keys[0]; this.r.ax=((k.scan&0xff)<<8)|(k.code&0xff); }
+        return true;
+      }
+      return true;
+    }
+    if(n===0x13){ this.fault("int 0x13 (disk) arrives in Phase 2. Run it in QEMU for now."); return false; }
+    this.fault("int 0x"+hex(n,2)+" isn't simulated here.");
+    return false;
+  }
+}
+
+/* =====================  LESSONS (Learn step)  ===================== */
+const escH=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const snip=s=>'<pre class="snip">'+escH(s)+'</pre>';
+const like=s=>'<div class="analogy"><b>Think of it like this</b><p>'+s+'</p></div>';
+const cells=(items,cap)=>'<div class="cellwrap"><div class="cells">'+items.map(it=>'<div class="cell'+(it[2]?' hl':'')+'"><b>'+it[0]+'</b><small>'+it[1]+'</small></div>').join('')+'</div>'+(cap?'<div class="cap">'+cap+'</div>':'')+'</div>';
+const table=(head,rows)=>'<div class="tblwrap"><table class="tbl"><thead><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+
+const LESSONS = [
+/* ---------- 1. Power On ---------- */
+[
+ {h:"What is a computer, really?", b:
+  "<p>A computer has two main parts you need to know today.</p>"+
+  "<p><b>The CPU</b> is the worker. It reads one instruction, does it, then reads the next one. It is very fast, but it never guesses. It does exactly what you write.</p>"+
+  "<p><b>Memory</b> is where things are kept. It is one very long row of boxes. Every box has a number, called its <b>address</b>.</p>"+
+  like("The CPU is a truck driver with a clipboard. Memory is a huge parking yard where every spot has a number painted on it. The driver goes spot to spot doing exactly what the clipboard says.")},
+ {h:"Bits and bytes", b:
+  "<p>Inside a computer everything is tiny switches. Each switch is <b>off (0)</b> or <b>on (1)</b>. One switch is called a <b>bit</b>.</p>"+
+  "<p>8 bits together make a <b>byte</b>. With 8 switches you can make 256 different patterns, so one byte holds a number from <b>0 to 255</b>.</p>"+
+  cells([["0","bit"],["1","bit"],["0","bit"],["0","bit"],["0","bit"],["0","bit"],["0","bit"],["1","bit"]],"8 bits = 1 byte. This pattern 01000001 is the number 65.")+
+  "<p>Each memory box holds exactly one byte. Letters, colors, music and programs are all just bytes.</p>",
+  quiz:{q:"How many different numbers can one byte hold?", o:["8","100","256","1000"], a:2, why:"8 switches give 256 patterns, so a byte holds 0 to 255."}},
+ {h:"Hex: the programmer's way to write numbers", b:
+  "<p>Normal numbers use 10 digits (0–9). Programmers often use <b>hex</b>, which has 16 digits: 0–9, then <b>A B C D E F</b> for 10 to 15.</p>"+
+  "<p>Why? Because one byte fits in exactly two hex digits, from <code>00</code> to <code>FF</code>. That makes memory easy to read.</p>"+
+  "<p>We put <code>0x</code> in front so everyone knows it's hex.</p>"+
+  table(["Normal","Hex"],[["9","0x09"],["10","0x0A"],["15","0x0F"],["16","0x10"],["255","0xFF"]]),
+  quiz:{q:"What is 0x0F as a normal number?", o:["0","15","16","100"], a:1, why:"F is the hex digit for 15, so 0x0F = 15."}},
+ {h:"What is assembly language?", b:
+  "<p>The CPU only understands bytes, like <code>EB FE</code>. That is very hard for people to read.</p>"+
+  "<p><b>Assembly</b> gives every CPU instruction a short name, like <code>mov</code> or <code>jmp</code>. A tool called an <b>assembler</b> (we use NASM) turns your words into bytes.</p>"+
+  "<p>One line of assembly = one instruction for the CPU. Anything after a <code>;</code> is a note for humans. The CPU never sees it.</p>"+
+  snip("jmp $        ; this part after ; is a comment")},
+ {h:"What is an operating system?", b:
+  "<p>An <b>operating system (OS)</b> is the first program that runs when the computer turns on. It controls the screen, keyboard, memory and disk, and it starts every other program. Linux and Windows are operating systems.</p>"+
+  "<p>In this course you will build a tiny one called <b>ForgeOS</b>. Every lesson adds one real piece. Today's piece is the very first one: something the computer agrees to start.</p>"},
+ {h:"What happens when you press the power button", b:
+  "<p>1. The CPU wakes up and runs the <b>BIOS</b>, a small program stored on the motherboard.</p>"+
+  "<p>2. The BIOS checks the hardware.</p>"+
+  "<p>3. The BIOS reads the <b>first 512 bytes</b> of the disk. This piece is called the <b>boot sector</b>.</p>"+
+  "<p>4. It copies those bytes into memory at address <code>0x7C00</code>, and tells the CPU: start working there.</p>"+
+  cells([["…",""],["your code","0x7C00",1],["…",""],["…",""],["55","0x7DFE",1],["AA","0x7DFF",1]],"Your 512 bytes sit in memory from 0x7C00 to 0x7DFF.")+
+  "<p>So your code is the first thing the CPU runs after the BIOS. That's where an OS begins.</p>",
+  quiz:{q:"How big is a boot sector?", o:["64 bytes","512 bytes","1 megabyte","Any size you want"], a:1, why:"The BIOS always loads exactly 512 bytes: the first sector of the disk."}},
+ {h:"The secret password: 55 AA", b:
+  "<p>The BIOS doesn't trust every disk. It checks the <b>last two bytes</b> of the boot sector (bytes number 510 and 511).</p>"+
+  "<p>If they are <code>0x55</code> and <code>0xAA</code>, it boots. If not, it shows <b>No bootable device</b> and gives up.</p>"+
+  like("A gate guard at the yard. No seal on the trailer, no entry. 55 AA is the seal.")},
+ {h:"Reading your first program, line by line", b:
+  snip("[bits 16]\n[org 0x7c00]\n\njmp $\n\ntimes 510-($-$$) db 0\ndw 0xaa55")+
+  "<p><code>[bits 16]</code> — the CPU starts in old 16-bit mode, so we write 16-bit code.</p>"+
+  "<p><code>[org 0x7c00]</code> — tells the assembler our code will live at address 0x7C00.</p>"+
+  "<p><code>jmp $</code> — <code>jmp</code> means jump. <code>$</code> means \"this line\". So it jumps to itself, forever. This parks the CPU so it doesn't wander off.</p>",
+  quiz:{q:"What does jmp $ do?", o:["Turns off the computer","Jumps to itself forever","Jumps to the start of the disk","Prints a dollar sign"], a:1, why:"$ is the address of this same line, so the CPU keeps jumping back to it. That's how we park it."}},
+ {h:"Filling up to 512 bytes", b:
+  "<p><code>db</code> means \"define byte\": put this byte right here in the file. <code>db 0</code> writes one zero.</p>"+
+  "<p><code>times 510-($-$$) db 0</code> repeats <code>db 0</code> many times:</p>"+
+  "<p><code>$</code> = where we are now. <code>$$</code> = where we started. So <code>$-$$</code> = bytes used so far. <code>510</code> minus that = zeros needed to reach byte 510.</p>"+
+  "<p><code>dw</code> means \"define word\" (a word is 2 bytes). <code>dw 0xaa55</code> writes the password. x86 stores the small end first, so it lands as <code>55 AA</code>. Exactly what the BIOS wants.</p>"+
+  cells([["EB FE","jmp $"],["00 00 00 …","zeros"],["55","byte 510",1],["AA","byte 511",1]],"The finished boot sector: 512 bytes.")},
+ {h:"Your mission", b:
+  "<p>The starter code is missing the last line, the password. First press <b>Boot</b> and see the BIOS refuse it. Then add the missing line and boot again.</p>"+
+  "<p>When the screen stays quiet with no error, the BIOS accepted your disk. That is ForgeOS, version 0.0.</p>"}
+],
+/* ---------- 2. First Words ---------- */
+[
+ {h:"Registers: the CPU's pockets", b:
+  "<p>Memory is big but far from the CPU. So the CPU also has a few tiny boxes built right inside it, called <b>registers</b>. They are super fast.</p>"+
+  "<p>Each one has a name. Today you need <code>AX</code>. Later: <code>BX CX DX</code> (helpers), <code>SI DI</code> (pointers), <code>SP</code> (stack), <code>IP</code> (which line the CPU is on).</p>"+
+  like("Registers are the cup holders and the dash tray in your cab. Only a few, but right at your hand. Memory is the trailer: lots of room, but you have to go get things.")},
+ {h:"AX has two halves: AH and AL", b:
+  "<p>AX holds 16 bits (2 bytes). You can use the whole thing, or each half by itself:</p>"+
+  cells([["0E","AH (high)",1],["41","AL (low)",1]],"AX = 0x0E41. AH is 0x0E, AL is 0x41.")+
+  "<p>Change AL and AH stays the same. Same for BX (BH, BL), CX (CH, CL) and DX (DH, DL).</p>",
+  quiz:{q:"If AX = 0x0E41, what is in AL?", o:["0x0E","0x41","0x0E41","0"], a:1, why:"AL is the low (right) half, so AL = 0x41."}},
+ {h:"mov: put a value into a box", b:
+  "<p><code>mov</code> copies a value into a place. Read it like this:</p>"+
+  snip("mov al, 5      ; AL gets 5\nmov ah, 0x0e   ; AH gets 0x0E\nmov bl, al     ; BL gets a copy of AL")+
+  "<p>The <b>destination comes first</b>, then a comma, then the value. Always right-to-left: the value on the right goes into the box on the left.</p>"+
+  like("\"Load trailer 5 with lumber.\" You say where first, then what goes in it."),
+  quiz:{q:"After mov al, 7 — what is in AL?", o:["0","7","al","Nothing changes"], a:1, why:"mov puts the right side into the left side. AL becomes 7."}},
+ {h:"Letters are just numbers", b:
+  "<p>The computer stores letters as numbers using a list called <b>ASCII</b>.</p>"+
+  table(["Character","Number","Hex"],[["'0'","48","0x30"],["'A'","65","0x41"],["'K'","75","0x4B"],["'O'","79","0x4F"],["space","32","0x20"]])+
+  "<p>In NASM you can write the letter in quotes, so <code>mov al, 'O'</code> is the same as <code>mov al, 79</code>.</p>",
+  quiz:{q:"'A' is 65. What number is 'B'?", o:["64","65","66","98"], a:2, why:"Letters are in order, so B = 66, C = 67, and so on."}},
+ {h:"int: calling the BIOS for help", b:
+  "<p>Drawing letters on the screen yourself is hard. Luckily the BIOS has built-in helpers. You ask for one with <code>int</code> (interrupt).</p>"+
+  "<p><code>int 0x10</code> is the <b>video helper</b>. It can do many jobs, so you say which job by putting a job number in <code>AH</code> first.</p>"+
+  "<p>Job <code>0x0E</code> = \"print the character in AL, then move the cursor right.\"</p>"+
+  like("Calling dispatch on the radio. int 0x10 is the channel. AH is the job number. AL is the load.")},
+ {h:"Putting it together", b:
+  snip("mov ah, 0x0e   ; job: print a character\nmov al, 'O'    ; the character\nint 0x10       ; call the video helper -> O appears")+
+  "<p>To print another letter, AH still holds <code>0x0E</code>, so you only change AL and call again.</p>",
+  quiz:{q:"You printed 'O'. To print 'K' next, which lines do you need?", o:["mov al, 'K' and int 0x10","Only int 0x10","Restart the whole program","mov ah, 'K'"], a:0, why:"AH still says 'print', so just put 'K' in AL and call int 0x10."}},
+ {h:"Your mission", b:"<p>Make the screen say <b>OK</b>. The code already prints the O. Add the K.</p><p>This is your OS's first sign of life.</p>"}
+],
+/* ---------- 3. Counting ---------- */
+[
+ {h:"inc and dec: plus one, minus one", b:
+  snip("mov al, 5\ninc al     ; AL is now 6\ndec al     ; AL is back to 5")+
+  "<p>Since digits are numbers in order ('0'=48, '1'=49, '2'=50 …), <code>inc al</code> on '0' gives '1'.</p>"},
+ {h:"Flags: the dashboard lights", b:
+  "<p>After math, the CPU turns small signal lights on or off. These are <b>flags</b>.</p>"+
+  "<p><b>ZF</b> (zero flag) lights up when the answer was zero.</p>"+
+  "<p><b>CF</b> (carry flag) lights up when the answer went below zero or got too big.</p>"+
+  like("The warning lights on your dash. You don't read the engine, you just look at which light is on.")+
+  "<p>You can see these lights next to the registers in the Build step.</p>"},
+ {h:"cmp: compare two things", b:
+  "<p><code>cmp al, 10</code> does <code>AL - 10</code>, throws the answer away, but keeps the lights.</p>"+
+  "<p>If AL is 10, then 10 - 10 = 0, so <b>ZF turns on</b>. That means \"equal\".</p>"+
+  "<p>If AL is something else, ZF is off. That means \"not equal\".</p>",
+  quiz:{q:"AL is 7. You run cmp al, 7. Is ZF on?", o:["Yes, they're equal so 7-7=0","No","ZF only works with AX","It depends on AH"], a:0, why:"cmp subtracts: 7 - 7 = 0, and zero turns ZF on."}},
+ {h:"Labels: names for places in your code", b:
+  "<p>A <b>label</b> is a name followed by a colon. It marks a spot in your program so you can jump to it.</p>"+
+  snip("count:          ; a label named 'count'\n    int 0x10")+
+  like("A named stop on your route. \"Go back to the Brampton yard\" is easier than an exact GPS number.")},
+ {h:"Jumps: changing which line runs next", b:
+  "<p>Normally the CPU goes line by line, top to bottom. A jump sends it somewhere else.</p>"+
+  table(["Instruction","Jumps when…"],[["<code>jmp count</code>","always"],["<code>je count</code>","equal (ZF on)"],["<code>jne count</code>","not equal (ZF off)"]])+
+  "<p><code>je</code> and <code>jne</code> look at the lights that <code>cmp</code> just set.</p>",
+  quiz:{q:"After cmp al, 3 with AL = 5, does jne count jump?", o:["Yes, 5 is not equal to 3","No","Only if AH is 3","jne never jumps"], a:0, why:"5 - 3 = 2, not zero, so ZF is off. jne jumps when ZF is off."}},
+ {h:"Building a loop", b:
+  snip("mov ah, 0x0e\nmov al, '0'\ncount:\n    int 0x10        ; print AL\n    inc al          ; next digit\n    cmp al, '9'+1   ; past 9 yet?\n    jne count       ; no -> go again\njmp $")+
+  "<p>Why <code>'9'+1</code>? After printing '9' we inc AL to the next character. When AL reaches '9'+1 we are done, so we stop jumping back.</p>"+
+  "<p>Tip: use the <b>Step</b> button to watch AL go up one at a time.</p>"},
+ {h:"Your mission", b:"<p>Print <b>0123456789</b> with a loop, not ten separate prints.</p>"}
+],
+/* ---------- 4. Strings in Memory ---------- */
+[
+ {h:"Your code lives in memory too", b:
+  "<p>When the BIOS loads your boot sector, every byte of it sits in memory, starting at 0x7C00. That includes the instructions <b>and</b> any text you add.</p>"+
+  "<p>So text is just bytes in a row, sitting in numbered boxes.</p>"},
+ {h:"db with text", b:
+  snip("msg: db 'Hi', 0")+
+  "<p>This puts three bytes in memory: the letter H, the letter i, and a 0.</p>"+
+  cells([["'H'","0x7C20",1],["'i'","0x7C21",1],["0","0x7C22",1]],"Example addresses. The 0 is the stop sign.")+
+  "<p>The <b>0 at the end</b> is how we know the text is finished. Without it, nobody knows where it stops.</p>"},
+ {h:"Labels on data, and SI", b:
+  "<p>The label <code>msg</code> means \"the address of the first byte\" (in the picture, 0x7C20).</p>"+
+  "<p><code>mov si, msg</code> puts that <b>address</b> into SI, not the letters. SI now points at the H.</p>"+
+  "<p><b>SI</b> means Source Index. It's a pointer register: it holds a spot number.</p>"+
+  like("SI is a note saying \"go to spot 20\". It's not the cargo itself."),
+  quiz:{q:"After mov si, msg, what is in SI?", o:["The letter H","The whole text","The address where the text starts","0"], a:2, why:"A label is an address. SI holds the spot number of the first byte."}},
+ {h:"lodsb: grab a byte and step forward", b:
+  "<p><code>lodsb</code> means LOaD String Byte. It does two things:</p>"+
+  "<p>1. Copies the byte at address SI into AL.<br>2. Adds 1 to SI, so it points at the next byte.</p>"+
+  cells([["'H'","SI first",1],["'i'","then here"],["0","then here"]],"Each lodsb moves SI one box to the right.")},
+ {h:"The printing loop", b:
+  snip("mov ah, 0x0e\nmov si, msg\nprint:\n    lodsb          ; AL = next letter\n    cmp al, 0      ; stop sign?\n    je done        ; yes -> finished\n    int 0x10       ; no -> print it\n    jmp print      ; and repeat\ndone:\n    jmp $")+
+  "<p>Read it out loud: grab a letter. Is it the stop sign? If yes, finish. If not, print it and go again.</p>",
+  quiz:{q:"What happens if you forget the cmp al, 0 / je done check?", o:["Nothing, it still stops","It prints the text and then keeps printing whatever bytes come next, forever","The BIOS fixes it","It prints nothing"], a:1, why:"The CPU never sees a reason to stop, so it keeps reading the boxes after your text."}},
+ {h:"Keep the CPU out of your data", b:
+  "<p>The CPU can't tell code from text. If it walks off the end of your code into the text, it tries to run letters as instructions and crashes.</p>"+
+  "<p>That's why <code>jmp $</code> (or another jump) always comes <b>before</b> the data. The simulator will warn you if this happens.</p>"},
+ {h:"Your mission", b:"<p>Finish the loop so it stops at the 0 and prints <b>ForgeOS booting...</b></p><p>Try booting once without the fix first, to see the runaway.</p>"}
+],
+/* ---------- 5. Functions ---------- */
+[
+ {h:"Why functions?", b:
+  "<p>You'll print text many times. Copying the same loop again and again is messy. A <b>function</b> is a piece of code with a name that you can run from anywhere and come back.</p>"+
+  like("A standard delivery route. Dispatch says \"run route 12, then come back here\". You don't rewrite the route every time.")},
+ {h:"The stack: a pile of plates", b:
+  "<p>The <b>stack</b> is an area of memory used like a pile of plates. You can only add to the top or take from the top.</p>"+
+  "<p><code>push ax</code> puts AX on top. <code>pop ax</code> takes the top one off into AX.</p>"+
+  cells([["…",""],["0x7C05","top (SP points here)",1],["0x1234","older"]],"The register SP always points at the top plate.")+
+  "<p>Last on, first off.</p>",
+  quiz:{q:"You push 1, then push 2. What does pop give you?", o:["1","2","Both","0"], a:1, why:"Last on, first off. 2 is on top."}},
+ {h:"call and ret", b:
+  "<p><code>call print_string</code> does two things: it pushes the address of the next line onto the stack (the way home), then jumps to <code>print_string</code>.</p>"+
+  "<p><code>ret</code> pops that address off the stack and jumps back to it.</p>"+
+  snip("    mov si, banner\n    call print_string   ; go do it…\n    mov si, status      ; …and come back here")},
+ {h:"Inputs to a function", b:
+  "<p>Functions get their inputs in registers. Our <code>print_string</code> expects SI to point at the text. That's written in its comment, like a label on a tool.</p>"+
+  snip("; print_string: prints the 0-terminated text at SI")+
+  "<p>So the rule is: set SI first, then call.</p>",
+  quiz:{q:"What does ret use to know where to go back to?", o:["The address that call pushed on the stack","AX","It always goes to 0x7C00","The label name"], a:0, why:"call saved the way home on the stack. ret takes it off and jumps there."}},
+ {h:"Local labels with a dot", b:
+  "<p>Inside a function you'll see <code>.loop</code> and <code>.done</code>. A label starting with a dot belongs to the label above it. That way two functions can both have a <code>.loop</code> without mixing up.</p>"},
+ {h:"New lines: 13 and 10", b:
+  "<p>To start a new line, print two special bytes:</p>"+
+  "<p><b>13</b> (carriage return): go back to the start of the line.<br><b>10</b> (line feed): go down one line.</p>"+
+  snip("banner: db 'ForgeOS v0.1', 13, 10, 0")+
+  "<p>These names come from old typewriters.</p>"},
+ {h:"Your mission", b:"<p>Print two lines, <b>ForgeOS v0.1</b> and <b>Kernel: ready</b>, by calling print_string twice.</p>"}
+],
+/* ---------- 6. Listen ---------- */
+[
+ {h:"An OS must listen", b:
+  "<p>So far ForgeOS only talks. Now it will listen to the keyboard. The BIOS has a keyboard helper too: <code>int 0x16</code>.</p>"},
+ {h:"Waiting for a key", b:
+  snip("mov ah, 0x00   ; job 0: wait for a key\nint 0x16       ; CPU waits here…")+
+  "<p>The CPU stops and waits until someone presses a key. Then:</p>"+
+  cells([["scan code","AH"],["character","AL",1]],"AL = the character typed. AH = which physical key it was.")},
+ {h:"Watch out: AH got changed", b:
+  "<p>The keyboard helper writes the key's scan code into AH. So AH no longer holds <code>0x0E</code>.</p>"+
+  "<p>Before you print, set AH back to <code>0x0E</code>.</p>"+
+  snip("mov ah, 0x00\nint 0x16       ; AL = key, AH = scan code\nmov ah, 0x0e   ; job: print again\nint 0x10       ; show the key"),
+  quiz:{q:"Why do we need mov ah, 0x0e after int 0x16?", o:["Because int 0x16 put the scan code in AH","Because AL is empty","To clear the screen","We don't need it"], a:0, why:"The keyboard helper overwrote AH. Without resetting it, int 0x10 would get the wrong job number."}},
+ {h:"The main loop", b:
+  "<p>Real operating systems run a loop that never ends: wait for something to happen, handle it, wait again. This is your first one.</p>"+
+  snip("main_loop:\n    ; wait for key\n    ; print it\n    jmp main_loop")},
+ {h:"How to type into the simulator", b:
+  "<p>After you press Boot, click on the black screen and type. On a phone, use the text box under the screen and the Enter and Backspace buttons.</p>"},
+ {h:"Your mission", b:"<p>Echo every key you type. Type at least 3 characters.</p>"}
+],
+/* ---------- 7. The Prompt ---------- */
+[
+ {h:"Special keys are numbers too", b:
+  table(["Key","AL value"],[["Enter","13"],["Backspace","8"],["a","97"]])+
+  "<p>So to know if Enter was pressed, compare AL with 13.</p>"},
+ {h:"Choosing a path", b:
+  snip("cmp al, 13\nje .enter        ; Enter? go there\ncmp al, 8\nje .backspace    ; Backspace? go there\n; otherwise: normal key, print it")+
+  like("A fork in the road. Check the sign, then take the right exit. If no sign matches, keep straight.")},
+ {h:"The Backspace trick", b:
+  "<p>Printing 8 only moves the cursor one spot left. It does <b>not</b> erase.</p>"+
+  "<p>To erase: print 8 (step back), print a space (cover the letter), print 8 again (step back so the next letter lands there).</p>",
+  quiz:{q:"To erase the last letter, what do you print?", o:["Just 8","8, then space, then 8","A space","13 and 10"], a:1, why:"Back, cover with a space, back again."}},
+ {h:"The prompt", b:
+  "<p>A prompt is the little sign that says \"type here\". Ours is <code>&gt; </code>.</p>"+
+  "<p>When Enter is pressed: print a new line (13, 10), then print the prompt again.</p>"},
+ {h:"Your mission", b:"<p>Make Enter print a new line with a fresh <b>&gt;</b> prompt, and make Backspace erase. Boot it, type a word, press Enter.</p>"}
+],
+/* ---------- 8. Your First Shell ---------- */
+[
+ {h:"What is a shell?", b:
+  "<p>A <b>shell</b> reads a command you type, figures out what it means, and does it. The Linux terminal is a shell. You're building ForgeOS's shell now.</p>"+
+  "<p>To do that, ForgeOS must <b>remember</b> what you typed, not just print it.</p>"},
+ {h:"A buffer: reserved empty boxes", b:
+  snip("buffer: times 32 db 0")+
+  "<p>This reserves 32 empty bytes. Each key you type gets saved into the next empty one.</p>"+
+  cells([["'h'","buffer+0",1],["'e'","+1",1],["'l'","+2",1],["'p'","+3",1],["0","+4"],["0","…"]],"After typing help.")},
+ {h:"DI and stosb", b:
+  "<p><b>DI</b> (Destination Index) is the partner of SI. It points to where things should be <b>written</b>.</p>"+
+  "<p><code>stosb</code> = STOre String Byte. It's the opposite of lodsb:</p>"+
+  "<p>1. Copies AL into the box at address DI.<br>2. Adds 1 to DI.</p>",
+  quiz:{q:"What does stosb do?", o:["Reads a byte into AL","Writes AL into memory at DI, then DI goes up by 1","Prints AL","Stops the CPU"], a:1, why:"lodsb reads from SI. stosb writes to DI."}},
+ {h:"Square brackets: the box vs. what's in it", b:
+  "<p>This one is very important.</p>"+
+  "<p><code>si</code> = the address (the spot number).<br><code>[si]</code> = the byte <b>stored at</b> that address (what's parked there).</p>"+
+  snip("mov al, [si]   ; AL = the byte at address SI")+
+  like("\"Spot 20\" versus \"the trailer parked in spot 20\". Brackets mean go look inside."),
+  quiz:{q:"SI = 0x7C20 and the byte at 0x7C20 is 'H'. What does mov al, [si] put in AL?", o:["0x7C20","'H'","0","SI"], a:1, why:"Brackets mean: go to that address and take what's inside. That's 'H'."}},
+ {h:"byte: saying the size", b:
+  "<p>When there's no register to show the size, you have to say it:</p>"+
+  snip("cmp byte [buffer], 0   ; is the first typed byte 0 (empty line)?")+
+  "<p><code>byte</code> = 1 byte. <code>word</code> = 2 bytes.</p>"},
+ {h:"Comparing two words", b:
+  "<p>Two strings are equal when every byte matches, all the way to the 0 at the end.</p>"+
+  table(["Step","[si]","[di]","Result"],[["1","h","h","same, keep going"],["2","e","e","same, keep going"],["3","l","l","same, keep going"],["4","p","p","same, keep going"],["5","0","0","both ended: EQUAL"]])+
+  "<p>If any pair is different, stop right away: NOT equal.</p>"},
+ {h:"Answering with a flag", b:
+  "<p>str_equal returns its answer in the ZF light. The last <code>cmp</code> it runs leaves ZF on for equal and off for different. Then <code>ret</code> goes back, and the caller uses <code>je</code>.</p>"+
+  snip("call str_equal\nje do_help        ; ZF on = they matched")+
+  "<p>ret doesn't touch the flags, so the answer survives the trip home.</p>"},
+ {h:"Your mission", b:"<p>Write the body of str_equal so commands work. Then boot, type <b>help</b> and Enter, then type <b>ls</b> and Enter.</p><p>When you see the command list and then \"Unknown command\", Phase 1 is done.</p>"}
+]
+];
+
+/* =====================  APP  ===================== */
+const $=id=>document.getElementById(id);
+const store={ get(k,d){ try{ const v=localStorage.getItem("osforge:"+k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
+              set(k,v){ try{ localStorage.setItem("osforge:"+k,JSON.stringify(v)); }catch(e){} } };
+let cur=Math.min(store.get("cur",0),M.length-1);
+let done=new Set(store.get("done",[]));
+const codeEl=$("code"), gutter=$("gutter"), consoleEl=$("console"), canvas=$("screen");
+const screen=new Screen(canvas);
+let cpu=null, prog=null, keys=[], autoRun=false, raf=0, dirty=true, typedCount=0, wonThisRun=false, booted=false, solArmed=false;
+
+function log(text,cls,line){
+  const d=document.createElement("div"); d.className=cls||"info";
+  if(line){ const b=document.createElement("button"); b.type="button"; b.textContent="Line "+line+":"; b.addEventListener("click",()=>gotoLine(line)); d.appendChild(b); d.appendChild(document.createTextNode(" "+text)); }
+  else d.textContent=text;
+  consoleEl.appendChild(d); consoleEl.scrollTop=consoleEl.scrollHeight;
+}
+function clearLog(){ consoleEl.textContent=""; }
+function gotoLine(n){
+  const ls=codeEl.value.split("\n"); let pos=0; for(let i=0;i<n-1&&i<ls.length;i++) pos+=ls[i].length+1;
+  codeEl.focus(); codeEl.setSelectionRange(pos,pos+(ls[n-1]||"").length);
+  codeEl.scrollTop=Math.max(0,(n-4)*20);
+}
+function renderGutter(){
+  const n=codeEl.value.split("\n").length; let s=""; for(let i=1;i<=n;i++) s+=i+"\n"; gutter.textContent=s; gutter.scrollTop=codeEl.scrollTop;
+}
+
+function renderNav(){
+  const nav=$("nav"); nav.textContent="";
+  const lab=document.createElement("div"); lab.className="phase-label"; lab.textContent="Phase 1 · Boot sector"; nav.appendChild(lab);
+  M.forEach((m,i)=>{
+    const b=document.createElement("button"); b.type="button"; b.className="mbtn"+(done.has(i)?" done":"");
+    if(i===cur) b.setAttribute("aria-current","true");
+    b.innerHTML='<span class="n">'+String(i+1).padStart(2,"0")+'</span><span></span><span class="dot"></span>';
+    b.children[1].textContent=m.title;
+    b.addEventListener("click",()=>openMission(i));
+    nav.appendChild(b);
+  });
+  const lab2=document.createElement("div"); lab2.className="phase-label"; lab2.textContent="Phases 2–5 · next"; nav.appendChild(lab2);
+  const ll=document.createElement("div"); ll.className="locked-list";
+  ROADMAP.slice(1).forEach(p=>{ const s=document.createElement("span"); s.textContent=p.name; ll.appendChild(s); });
+  nav.appendChild(ll);
+  $("progText").textContent=done.size+" / "+M.length+" missions";
+  $("progBar").style.width=(done.size/M.length*100)+"%";
+}
+function renderRoad(){
+  const box=$("phases"); box.textContent=""; let n=1;
+  ROADMAP.forEach((p,pi)=>{
+    const d=document.createElement("div"); d.className="ph "+(p.live?"live":"later");
+    const h=document.createElement("h4"); h.textContent="Phase "+(pi+1)+" · "+p.name; const sm=document.createElement("small"); sm.textContent=p.sub; h.appendChild(sm); d.appendChild(h);
+    const ol=document.createElement("ol");
+    p.items.forEach(t=>{ const li=document.createElement("li"); const s=document.createElement("span"); s.textContent=String(n++).padStart(2,"0"); li.appendChild(s); li.appendChild(document.createTextNode(t+(p.live&&done.has(n-2)?"  ✓":""))); ol.appendChild(li); });
+    d.appendChild(ol); box.appendChild(d);
+  });
+}
+function openMission(i){
+  stopRun(); cur=i; store.set("cur",i);
+  const m=M[i];
+  $("eyebrow").textContent="Mission "+(i+1)+" of "+M.length+" · Phase 1 · Boot sector";
+  $("mTitle").textContent=m.title; $("mStory").textContent=m.story; $("mTask").textContent=m.task;
+  const L=$("mLearn"); L.textContent="";
+  m.learn.forEach(([k,v])=>{ const d=document.createElement("div"); const b=document.createElement("b"); b.textContent=k; const p=document.createElement("p"); p.innerHTML=v; d.appendChild(b); d.appendChild(p); L.appendChild(d); });
+  $("hintBox").hidden=true; $("hintBox").innerHTML=m.hint; $("hintBtn").textContent="Hint";
+  solArmed=false; $("solBtn").textContent="Load solution";
+  codeEl.value=store.get("code"+i,m.starter); renderGutter(); codeEl.scrollTop=0;
+  $("win").hidden=true;
+  cpu=null; dirty=true; screen.clear(); screen.draw(false); clearLog();
+  log("Press Boot to power on the PC with your code as its disk.");
+  setLed("off"); renderRegs(); renderNav(); renderRoad();
+  lessonIdx=0; renderLesson(); showView(learned.has(i)?"build":"learn");
+}
+
+function boot(){
+  stopRun(); clearLog(); toldKeys=false; keys=[]; typedCount=0; wonThisRun=false; booted=false;
+  prog=assemble(codeEl.value);
+  if(prog.errors.length){
+    prog.errors.slice(0,8).forEach(e=>log(e.msg,"err",e.line));
+    if(prog.errors.length>8) log("…and "+(prog.errors.length-8)+" more","err");
+    cpu=null; setLed("err","ASSEMBLY ERROR"); screen.clear(); screen.draw(false); renderRegs(); return false;
+  }
+  log("Assembled "+prog.count+" instructions into a "+(prog.end-prog.start)+"-byte disk image.","info");
+  screen.clear(); screen.sys("Booting from Hard Disk...");
+  cpu=new CPU(prog,screen,keys); dirty=false;
+  const sig0=cpu.mem[(prog.start+510)&0xffff], sig1=cpu.mem[(prog.start+511)&0xffff];
+  if(prog.end-prog.start<512 || sig0!==0x55 || sig1!==0xAA){
+    screen.sys("Boot failed: not a bootable disk"); screen.sys("No bootable device.");
+    cpu.state="nobootable";
+    log("The BIOS found no 55 AA signature at bytes 510-511"+(prog.end-prog.start<512?" (your image is only "+(prog.end-prog.start)+" bytes)":"")+".","err");
+    screen.draw(false); setLed("err","NO BOOT DEVICE"); renderRegs(); return false;
+  }
+  booted=true;
+  return true;
+}
+function setLed(kind,text){
+  const l=$("led"); l.className="led"+(kind==="on"?" on":kind==="wait"?" wait":kind==="err"?" err":"");
+  $("ledText").textContent=text||(kind==="off"?"POWER OFF":"");
+}
+function runLoop(){
+  raf=0; if(!cpu) return;
+  let n=0; while(cpu.state==="run" && n<4000){ cpu.step(); n++; }
+  afterExec();
+  if(cpu.state==="run") raf=requestAnimationFrame(runLoop);
+}
+function stopRun(){ autoRun=false; if(raf){ cancelAnimationFrame(raf); raf=0; } if(cpu&&(cpu.state==="run")) { cpu.state="ready"; afterExec(); log("Paused. Press Step to go one instruction at a time, or Boot to restart.","info"); } }
+let lastState="", toldKeys=false;
+function afterExec(){
+  if(!cpu) return;
+  const st=cpu.state;
+  screen.draw(blinkOn && (st==="run"||st==="waitkey"||st==="idle"||st==="ready"));
+  renderRegs();
+  if(st!==lastState){
+    lastState=st;
+    if(st==="run") setLed("on","RUNNING");
+    if(st==="ready") setLed("wait","PAUSED");
+    if(st==="waitkey") { setLed("wait","WAITING FOR A KEY"); if(!toldKeys){ toldKeys=true; log("Waiting for a key. Click the screen and type, or use the box below it.","info"); } }
+    if(st==="idle") { setLed("on","IDLE (jmp $)"); log("CPU parked in jmp $. Your code finished.","ok"); }
+    if(st==="halted") { setLed("on","HALTED"); log("CPU halted (hlt).","ok"); }
+    if(st==="fault") { setLed("err","CRASHED"); log(cpu.msg,"err",cpu.cur?cpu.cur.line+1:null); }
+  }
+  checkMission();
+}
+function checkMission(){
+  if(!cpu||wonThisRun) return;
+  const lines=screen.lines(screen.sysRows);
+  const c={booted, state:cpu.state, lines, prog:lines.join("\n"), typedCount};
+  let ok=false; try{ ok=!!M[cur].check(c); }catch(e){ ok=false; }
+  if(ok){
+    wonThisRun=true; done.add(cur); store.set("done",[...done]);
+    $("winText").textContent=M[cur].win;
+    $("nextBtn").hidden = cur>=M.length-1;
+    $("win").hidden=false; renderNav(); renderRoad();
+    log("Mission complete.","ok");
+  }
+}
+function renderRegs(){
+  const R=$("regs"); R.textContent="";
+  const r=cpu?cpu.r:{ax:0,bx:0,cx:0,dx:0,si:0,di:0,sp:0,bp:0};
+  const items=[["AX",r.ax,true],["BX",r.bx,true],["CX",r.cx,true],["DX",r.dx,true],["SI",r.si],["DI",r.di],["SP",r.sp],["IP",cpu?cpu.ip:0]];
+  for(const [k,v,split] of items){
+    const d=document.createElement("div"); d.className="reg";
+    const s=document.createElement("span"); s.textContent=split?k+" ("+k[0]+"H "+k[0]+"L)":k;
+    const b=document.createElement("b");
+    if(split){ b.innerHTML=hex(v>>8,2)+" <em>"+hex(v&0xff,2)+"</em>"; const al=v&0xff; if(al>=32&&al<127){ b.title="Low byte as character: '"+String.fromCharCode(al)+"'"; b.innerHTML+=' <span style="display:inline;font-size:12px;letter-spacing:0">\''+escapeHtml(String.fromCharCode(al))+'\'</span>'; } }
+    else b.textContent=hex(v);
+    d.appendChild(s); d.appendChild(b); R.appendChild(d);
+  }
+  const F=$("flags"); F.textContent="Flags";
+  for(const k of ["ZF","CF","SF"]){ const e=document.createElement("span"); e.className="flag"+(cpu&&cpu.f[k]?" on":""); e.textContent=k+"="+(cpu?cpu.f[k]:0); F.appendChild(e); }
+  const steps=document.createElement("span"); steps.textContent=cpu?" · "+cpu.steps.toLocaleString()+" instructions run":""; F.appendChild(steps);
+  const nx=$("nextins");
+  if(cpu&&(cpu.state==="ready"||cpu.state==="waitkey")){ const ins=cpu.p.code.get(cpu.ip); nx.textContent=ins?"Next → line "+(ins.line+1)+":  "+ins.src:""; }
+  else nx.textContent="";
+}
+function escapeHtml(s){ return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* keyboard into the simulated PC */
+const SCAN={13:0x1C,8:0x0E,32:0x39};
+function sendKey(code){
+  if(!cpu||["fault","nobootable","idle","halted"].includes(cpu.state)) return;
+  keys.push({code,scan:SCAN[code]||0x1E}); if(code>=32) typedCount++;
+  if(cpu.state==="waitkey"){ cpu.state=autoRun?"run":"ready"; if(autoRun) { afterExec(); if(!raf) raf=requestAnimationFrame(runLoop); } else afterExec(); }
+}
+canvas.addEventListener("click",()=>canvas.focus());
+canvas.addEventListener("keydown",e=>{
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
+  if(e.key==="Enter"){ sendKey(13); e.preventDefault(); }
+  else if(e.key==="Backspace"){ sendKey(8); e.preventDefault(); }
+  else if(e.key.length===1){ const c=e.key.charCodeAt(0); if(c<128){ sendKey(c); e.preventDefault(); } }
+});
+const kbd=$("kbd");
+kbd.addEventListener("input",()=>{ const v=kbd.value; kbd.value=""; for(const ch of v){ const c=ch.charCodeAt(0); if(c<128) sendKey(c); } });
+kbd.addEventListener("keydown",e=>{ if(e.key==="Enter"){ sendKey(13); e.preventDefault(); } else if(e.key==="Backspace"&&kbd.value===""){ sendKey(8); e.preventDefault(); } });
+$("enterKey").addEventListener("click",()=>sendKey(13));
+$("bsKey").addEventListener("click",()=>sendKey(8));
+
+/* toolbar */
+$("runBtn").addEventListener("click",()=>{
+  if(cpu&&cpu.state==="ready"&&!dirty&&cpu.steps>0){ autoRun=true; cpu.state="run"; afterExec(); raf=requestAnimationFrame(runLoop); return; }
+  if(!boot()) return; autoRun=true; cpu.state="run"; lastState=""; afterExec(); raf=requestAnimationFrame(runLoop);
+});
+$("stepBtn").addEventListener("click",()=>{
+  if(!cpu||dirty||["fault","nobootable","idle","halted"].includes(cpu.state)){
+    if(!boot()) return; cpu.state="ready"; lastState=""; log("Step mode. Each press runs one instruction. Watch the registers.","info"); afterExec(); return;
+  }
+  if(cpu.state==="run") stopRun();
+  if(cpu.state==="ready"){ cpu.step(); afterExec(); }
+});
+$("stopBtn").addEventListener("click",()=>{ if(cpu&&cpu.state==="waitkey"){ autoRun=false; } stopRun(); });
+$("resetBtn").addEventListener("click",()=>{ codeEl.value=M[cur].starter; store.set("code"+cur,codeEl.value); renderGutter(); dirty=true; log("Code reset to the mission starter.","info"); });
+$("hintBtn").addEventListener("click",()=>{ const h=$("hintBox"); h.hidden=!h.hidden; $("hintBtn").textContent=h.hidden?"Hint":"Hide hint"; });
+$("solBtn").addEventListener("click",()=>{
+  if(!solArmed){ solArmed=true; $("solBtn").textContent="Click again to replace your code"; return; }
+  solArmed=false; $("solBtn").textContent="Load solution";
+  codeEl.value=M[cur].solution; store.set("code"+cur,codeEl.value); renderGutter(); dirty=true; log("Solution loaded. Read it line by line, then press Boot.","info");
+});
+$("nextBtn").addEventListener("click",()=>{ if(cur<M.length-1){ openMission(cur+1); window.scrollTo({top:0,behavior:"smooth"}); } });
+
+/* editor behaviour */
+let saveT=0;
+codeEl.addEventListener("input",()=>{ dirty=true; renderGutter(); clearTimeout(saveT); saveT=setTimeout(()=>store.set("code"+cur,codeEl.value),400); });
+codeEl.addEventListener("scroll",()=>{ gutter.scrollTop=codeEl.scrollTop; });
+codeEl.addEventListener("keydown",e=>{
+  if(e.key==="Tab"&&!e.shiftKey){ e.preventDefault(); const s=codeEl.selectionStart, en=codeEl.selectionEnd; codeEl.setRangeText("    ",s,en,"end"); codeEl.dispatchEvent(new Event("input")); }
+  if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){ e.preventDefault(); $("runBtn").click(); }
+});
+
+/* cursor blink */
+let blinkOn=true;
+setInterval(()=>{ blinkOn=!blinkOn; if(cpu&&["run","waitkey","idle","ready"].includes(cpu.state)) screen.draw(blinkOn); },480);
+
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>screen.draw(false));
+
+/* =====================  LEARN VIEW  ===================== */
+let lessonIdx=0;
+const learned=new Set(store.get("learned",[]));
+const quizDone=new Set(store.get("quiz",[]));
+function showView(v){
+  const learn=v==="learn";
+  $("learnView").hidden=!learn; $("buildView").hidden=learn;
+  $("tabLearn").setAttribute("aria-selected",String(learn)); $("tabBuild").setAttribute("aria-selected",String(!learn));
+  if(!learn){ screen.draw(false); renderGutter(); }
+}
+function renderLesson(){
+  const L=LESSONS[cur], c=L[lessonIdx], key=cur+"-"+lessonIdx;
+  $("lEyebrow").textContent="Mission "+(cur+1)+" · "+M[cur].title+" · card "+(lessonIdx+1)+" of "+L.length;
+  const D=$("lDots"); D.textContent=""; L.forEach((_,i)=>{ const d=document.createElement("i"); if(i<=lessonIdx) d.className="on"; D.appendChild(d); });
+  $("lTitle").textContent=c.h; $("lBody").innerHTML=c.b;
+  const Q=$("lQuiz"); Q.textContent="";
+  let locked=false;
+  if(c.quiz){
+    Q.hidden=false; const answered=quizDone.has(key); locked=!answered;
+    const h=document.createElement("div"); h.className="qh"; h.textContent="Quick check"; Q.appendChild(h);
+    const q=document.createElement("div"); q.className="q"; q.textContent=c.quiz.q; Q.appendChild(q);
+    const os=document.createElement("div"); os.className="opts"; Q.appendChild(os);
+    const fb=document.createElement("p"); fb.className="fb"; Q.appendChild(fb);
+    c.quiz.o.forEach((t,i)=>{
+      const b=document.createElement("button"); b.type="button"; b.className="opt"; b.textContent=t;
+      if(answered&&i===c.quiz.a) b.classList.add("right");
+      b.addEventListener("click",()=>{
+        if(i===c.quiz.a){ b.classList.add("right"); fb.className="fb right"; fb.textContent="Right! "+c.quiz.why; quizDone.add(key); store.set("quiz",[...quizDone]); $("lNext").disabled=false; }
+        else { b.classList.add("wrong"); fb.className="fb wrong"; fb.textContent="Not quite. Read the card again and try another answer."; }
+      });
+      os.appendChild(b);
+    });
+    if(answered){ fb.className="fb right"; fb.textContent="Right! "+c.quiz.why; }
+  } else Q.hidden=true;
+  $("lPrev").disabled=lessonIdx===0;
+  const last=lessonIdx===L.length-1;
+  $("lNext").textContent=last?"Start building →":"Next →";
+  $("lNext").disabled=locked;
+}
+function lessonGo(d){
+  const L=LESSONS[cur];
+  if(d>0&&lessonIdx===L.length-1){ learned.add(cur); store.set("learned",[...learned]); showView("build"); window.scrollTo({top:0}); return; }
+  lessonIdx=Math.max(0,Math.min(L.length-1,lessonIdx+d)); renderLesson();
+  const t=$("learnView").getBoundingClientRect().top; if(t<0) window.scrollTo({top:window.scrollY+t-10});
+}
+$("lNext").addEventListener("click",()=>lessonGo(1));
+$("lPrev").addEventListener("click",()=>lessonGo(-1));
+$("tabLearn").addEventListener("click",()=>{ stopRun(); showView("learn"); });
+$("tabBuild").addEventListener("click",()=>showView("build"));
+document.addEventListener("keydown",e=>{
+  if($("learnView").hidden) return;
+  const tg=e.target.tagName; if(tg==="TEXTAREA"||tg==="INPUT"||e.target===canvas) return;
+  if(e.key==="ArrowRight"&&!$("lNext").disabled&&lessonIdx<LESSONS[cur].length-1) lessonGo(1);
+  if(e.key==="ArrowLeft"&&lessonIdx>0) lessonGo(-1);
+});
+openMission(cur);
+})();
+</script>
+
+</body>
+</html>
