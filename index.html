@@ -1,11 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>[hidden]{display:none!important} img{max-width:100%}</style>
-</head>
-<body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>OS Forge</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,6 +44,23 @@ button:focus-visible,textarea:focus-visible,canvas:focus-visible,input:focus-vis
 .prog{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
 .bar{width:160px;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.notice{margin:0;background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-size:14px}
+.progpanel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.pp-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pp-head h3{margin:0;font-family:var(--f-display);font-size:18px}
+.pp-note{margin:0;color:var(--muted);font-size:14px;max-width:70ch}
+.pp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.pp-box{display:flex;flex-direction:column;gap:6px;min-width:0}
+.pp-box label{font-size:13px;color:var(--muted)} .pp-box label b{color:var(--ink)}
+.pp-box textarea{width:100%;font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);border-radius:8px;background:var(--code-bg);color:var(--ink);padding:8px;resize:vertical}
+.pp-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pp-reset{border-top:1px dashed var(--line);padding-top:12px}
+.pp-reset #resetConfirm{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:14px}
+.pp-reset #resetConfirm[hidden]{display:none}
+.danger{color:var(--bad);border-color:var(--bad)}
+.pp-msg{margin:0;font-size:14px;min-height:1.2em}
+.filebtn{display:inline-flex;align-items:center}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:20px;align-items:start}
 nav.missions{display:flex;flex-direction:column;gap:4px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
 .phase-label{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:6px 0 4px}
@@ -77,6 +87,16 @@ main{display:flex;flex-direction:column;gap:18px;min-width:0}
 .ghost{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:5px 12px;border-radius:7px;font-size:13px}
 .ghost:hover{border-color:var(--accent)}
 .hintbox{font-size:14px;border-left:3px solid var(--accent);padding:4px 12px}
+.checks{border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.checks-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.checks-head b{font-family:var(--f-display);text-transform:uppercase;font-size:13px;letter-spacing:.1em}
+.checks-head span{color:var(--muted);font-size:13px;flex:1}
+.checklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.checklist li{display:grid;grid-template-columns:22px 1fr;gap:6px;align-items:start}
+.checklist li i{font-style:normal;font-weight:700;text-align:center;border-radius:50%;width:20px;height:20px;line-height:20px;font-size:12px;background:var(--line);color:var(--muted)}
+.checklist li.pass i{background:var(--good);color:var(--panel)}
+.checklist li.fail i{background:var(--bad);color:var(--panel)}
+.checklist li small{display:block;color:var(--bad);font-size:13px;margin-top:2px}
 .win{background:var(--good-soft);border:1px solid var(--good);border-radius:12px;padding:14px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .win b{font-family:var(--f-display);font-size:18px;color:var(--good)}
 .win p{margin:0;flex:1 1 280px}
@@ -91,8 +111,8 @@ main{display:flex;flex-direction:column;gap:18px;min-width:0}
 .gutter{font-family:var(--f-mono);font-size:13px;line-height:20px;color:var(--gutter);text-align:right;padding:10px 8px 10px 10px;margin:0;user-select:none;overflow:hidden;white-space:pre;min-width:42px;border-right:1px solid var(--line)}
 textarea#code{flex:1;min-width:0;border:0;resize:none;background:transparent;color:var(--code-ink);font-family:var(--f-mono);font-size:13px;line-height:20px;padding:10px 12px;white-space:pre;overflow:auto;tab-size:4}
 textarea#code:focus{outline:none}
-.console{font-family:var(--f-mono);font-size:12.5px;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:8px 12px;min-height:64px;max-height:150px;overflow:auto;display:flex;flex-direction:column;gap:2px}
-.console .err{color:var(--bad)} .console .ok{color:var(--good)} .console .info{color:var(--muted)}
+.console{font-family:var(--f-mono);font-size:13.5px;line-height:1.5;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:8px 12px;min-height:64px;max-height:150px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.console .err{color:var(--bad)} .console .warn{color:var(--accent)} .console .ok{color:var(--good)} .console .info{color:var(--muted)}
 .console button{background:none;border:0;color:inherit;text-decoration:underline;padding:0;font:inherit;text-align:left}
 .monitor{background:var(--bezel);border-radius:14px;padding:14px 14px 10px}
 canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-width:100%;background:var(--crt-bg);border-radius:6px;image-rendering:pixelated}
@@ -114,6 +134,35 @@ canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-widt
 .flags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}
 .flag{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--muted)}
 .flag.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.debug{border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.debug>summary{cursor:pointer;padding:10px 14px;font-family:var(--f-display);font-weight:700;letter-spacing:.04em;list-style-position:inside;min-height:44px;display:flex;align-items:center;gap:8px}
+.debug>summary span{font-family:var(--f-body);font-weight:400;font-size:13px;color:var(--muted)}
+.debug-body{display:flex;flex-direction:column;gap:10px;padding:0 12px 12px}
+.reg b del{text-decoration:none;color:var(--muted);font-size:12px}
+.flag.chg{outline:2px solid var(--accent);outline-offset:1px}
+.reg.chg{border-color:var(--accent);background:var(--accent-soft)}
+.sregs{grid-column:1/-1;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.stepinfo{border-left:3px solid var(--accent);padding:4px 0 4px 12px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.stepinfo:empty{display:none}
+.stepinfo .what{font-family:var(--f-mono);font-size:13px;overflow-x:auto;white-space:pre}
+.stepinfo .why{margin:0;font-size:15px}
+.stepinfo ul{margin:0;padding-left:18px;font-size:13.5px}
+.stepinfo .lbl{font-family:var(--f-display);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.meminsp{display:flex;flex-direction:column;gap:6px}
+.memhead{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-family:var(--f-mono);font-size:13px}
+.memhead input{width:7ch;border:1px solid var(--line);background:var(--code-bg);color:var(--ink);border-radius:6px;padding:6px;font-family:var(--f-mono);font-size:13px;text-transform:uppercase}
+.memjump{display:flex;gap:4px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--code-bg);color:var(--ink);border-radius:999px;padding:5px 10px;font-size:12px;min-height:32px}
+.chip:hover{border-color:var(--accent)}
+.memwrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--code-bg)}
+#memDump{margin:0;padding:8px 10px;font-family:var(--f-mono);font-size:12.5px;line-height:1.6;white-space:pre;color:var(--code-ink)}
+#memDump .a{color:var(--gutter)}
+#memDump .w,.mk.w{background:var(--accent);color:var(--accent-ink);border-radius:2px}
+#memDump .si,.mk.si{box-shadow:inset 0 -2px 0 #2f9e6b}
+#memDump .di,.mk.di{box-shadow:inset 0 -2px 0 #3d7be0}
+#memDump .sp,.mk.sp{box-shadow:inset 0 -2px 0 #c2410c}
+.memlegend{margin:0;font-size:12px;color:var(--muted)}
+.mk{font-family:var(--f-mono);padding:0 3px}
 .nextins{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);overflow-x:auto;white-space:pre}
 .road{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
 .road h3{font-family:var(--f-display);margin:0 0 4px;font-size:20px}
@@ -165,6 +214,21 @@ canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-widt
 .lnav{display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:6px}
 .run:disabled,.tool:disabled{opacity:.45;cursor:not-allowed}
 #buildView{display:flex;flex-direction:column;gap:18px}
+button,.chip,.tool,.ghost,.run,.mbtn,.opt,.filebtn{min-height:40px}
+.keys input,.memhead input{min-height:40px}
+.crtwrap{overflow-x:auto;border-radius:6px}
+.crthint{display:none;margin:6px 0 0;font-size:12px;color:#9aa39a}
+.screentext>summary,.debug>summary{min-height:44px}
+.screentext{border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.screentext>summary{cursor:pointer;padding:10px 14px;font-family:var(--f-display);font-weight:700;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.screentext>summary span{font-family:var(--f-body);font-weight:400;font-size:13px;color:var(--muted)}
+#screenText{margin:0;padding:0 14px 12px;font-family:var(--f-mono);font-size:13px;white-space:pre;overflow-x:auto;color:var(--code-ink)}
+@media (max-width:700px){
+  canvas#screen{width:620px;max-width:none}
+  .crthint{display:block}
+  .mon-foot{font-size:10px}
+}
+@media (pointer:coarse){ button,.chip,.tool,.ghost,.run,.mbtn,.opt,.filebtn,.keys input,.memhead input{min-height:44px} }
 @media (max-width:1100px){ .bench{grid-template-columns:minmax(0,1fr)} .editor{height:380px} }
 @media (max-width:860px){
   .layout{grid-template-columns:minmax(0,1fr)}
@@ -181,19 +245,45 @@ canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-widt
 <div class="app">
   <header class="top">
     <div class="brand"><h1>OS Forge</h1><span class="addr">BUILDING FORGEOS FROM 0x7C00 UP</span></div>
-    <div class="prog"><span id="progText">0 / 8 missions</span><div class="bar"><i id="progBar"></i></div></div>
+    <div class="prog"><span id="progText">0 / 8 missions</span><div class="bar"><i id="progBar"></i></div>
+      <button class="ghost" id="progBtn" type="button" aria-expanded="false" aria-controls="progPanel">Progress</button></div>
   </header>
+  <p class="notice" id="notice" role="status" hidden></p>
+  <section class="progpanel" id="progPanel" hidden aria-label="Save, move or reset your progress">
+    <div class="pp-head"><h3>Your progress</h3><button class="ghost" id="progClose" type="button">Close</button></div>
+    <p class="pp-note">Progress is saved automatically in this browser only. To move it to another device or keep a backup, export it and import it there.</p>
+    <div class="pp-grid">
+      <div class="pp-box">
+        <label for="exportText"><b>Export</b> (completed missions, lesson positions, your code)</label>
+        <textarea id="exportText" readonly rows="6" spellcheck="false"></textarea>
+        <button class="tool" id="copyExport" type="button">Copy export text</button>
+      </div>
+      <div class="pp-box">
+        <label for="importText"><b>Import</b> (paste exported text, or choose a .json file)</label>
+        <textarea id="importText" rows="6" spellcheck="false" placeholder='{"app": "os-forge", ...}'></textarea>
+        <div class="pp-row"><button class="tool" id="importBtn" type="button">Import pasted text</button>
+        <label class="filebtn tool" for="importFile">Choose file…</label><input id="importFile" type="file" accept=".json,application/json,text/plain" class="sr-only"></div>
+      </div>
+    </div>
+    <div class="pp-row pp-reset">
+      <button class="tool danger" id="resetAll" type="button">Reset all progress…</button>
+      <span id="resetConfirm" hidden><span>This deletes completed missions, lesson positions and all your code. </span>
+        <button class="tool danger" id="resetYes" type="button">Yes, delete everything</button>
+        <button class="tool" id="resetNo" type="button">Cancel</button></span>
+    </div>
+    <p class="pp-msg" id="progMsg" role="status" aria-live="polite"></p>
+  </section>
 
   <div class="layout">
     <nav class="missions" id="nav" aria-label="Missions"></nav>
 
     <main>
       <div class="tabs" role="tablist" aria-label="Mission steps">
-        <button class="tab" role="tab" id="tabLearn" type="button" aria-selected="true">1 · Learn</button>
-        <button class="tab" role="tab" id="tabBuild" type="button" aria-selected="false">2 · Build</button>
+        <button class="tab" role="tab" id="tabLearn" type="button" aria-selected="true" aria-controls="learnView">1 · Learn</button>
+        <button class="tab" role="tab" id="tabBuild" type="button" aria-selected="false" aria-controls="buildView" tabindex="-1">2 · Build</button>
       </div>
 
-      <section class="lesson" id="learnView" aria-live="polite">
+      <section class="lesson" id="learnView" role="tabpanel" aria-labelledby="tabLearn" aria-live="polite">
         <div class="lhead"><span class="eyebrow" id="lEyebrow"></span><div class="dots" id="lDots"></div></div>
         <h2 id="lTitle"></h2>
         <div class="lbody" id="lBody"></div>
@@ -201,7 +291,7 @@ canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-widt
         <div class="lnav"><button class="tool" id="lPrev" type="button">← Back</button><button class="run" id="lNext" type="button">Next →</button></div>
       </section>
 
-      <div id="buildView" hidden>
+      <div id="buildView" role="tabpanel" aria-labelledby="tabBuild" hidden>
       <section class="brief" aria-live="polite">
         <div class="eyebrow" id="eyebrow"></div>
         <h2 id="mTitle"></h2>
@@ -216,6 +306,10 @@ canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-widt
           </div>
         </div>
         <div class="hintbox" id="hintBox" hidden></div>
+        <div class="checks" id="checks">
+          <div class="checks-head"><b>Mission checks</b><span id="checkSummary">Not checked yet</span><button class="ghost" id="checkBtn" type="button">Check my code</button></div>
+          <ul class="checklist" id="checkList"></ul>
+        </div>
       </section>
 
       <div class="win" id="win" hidden>
@@ -230,8 +324,9 @@ canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-widt
             <button class="run" id="runBtn" type="button">Boot ▸</button>
             <button class="tool" id="stepBtn" type="button" title="Run one instruction">Step</button>
             <button class="tool" id="stopBtn" type="button">Stop</button>
+            <button class="tool" id="powerBtn" type="button" title="Turn the simulated PC off. Your code stays.">Power off</button>
             <span class="sp"></span>
-            <button class="tool" id="resetBtn" type="button">Reset code</button>
+            <button class="tool" id="resetBtn" type="button" title="Replace your code with this mission's starter code">Restore starter</button>
           </div>
           <div class="editor">
             <pre class="gutter" id="gutter" aria-hidden="true">1</pre>
@@ -242,7 +337,8 @@ canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-widt
 
         <div class="pane">
           <div class="monitor">
-            <canvas id="screen" width="720" height="400" tabindex="0" aria-label="Simulated PC screen. Click it, then type to send keys."></canvas>
+            <div class="crtwrap" id="crtwrap"><canvas id="screen" width="720" height="400" tabindex="0" role="img" aria-label="Simulated PC screen. Focus it and type to send keys; the text is also listed under Screen text."></canvas></div>
+            <p class="crthint">Swipe sideways to see all 80 columns.</p>
             <div class="mon-foot">
               <span class="led" id="led"><i></i><span id="ledText">POWER OFF</span></span>
               <span>VGA TEXT 80×25 · REAL MODE</span>
@@ -253,9 +349,34 @@ canvas#screen{display:block;width:100%;height:auto;aspect-ratio:720/400;max-widt
             <button class="tool" id="enterKey" type="button">Enter</button>
             <button class="tool" id="bsKey" type="button">Backspace</button>
           </div>
-          <div class="regs" id="regs"></div>
-          <div class="flags" id="flags"></div>
-          <div class="nextins" id="nextins"></div>
+          <details class="screentext">
+            <summary>Screen text <span>for screen readers and copying</span></summary>
+            <pre id="screenText" aria-live="off"></pre>
+          </details>
+          <details class="debug" id="debugPanel" open>
+            <summary>Debugger <span>registers, last step, memory</span></summary>
+            <div class="debug-body">
+              <div class="regs" id="regs" aria-label="CPU registers"></div>
+              <div class="flags" id="flags" aria-label="CPU flags"></div>
+              <section class="stepinfo" id="stepInfo" aria-live="polite" aria-label="What the last instruction did"></section>
+              <div class="nextins" id="nextins"></div>
+              <section class="meminsp" aria-label="Memory inspector">
+                <div class="memhead">
+                  <label for="memAddr">Memory at 0x</label>
+                  <input id="memAddr" type="text" inputmode="text" value="07C00" maxlength="5" spellcheck="false" autocomplete="off">
+                  <span class="memjump" role="group" aria-label="Jump to">
+                    <button class="chip" type="button" data-mem="code">Code</button>
+                    <button class="chip" type="button" data-mem="si">DS:SI</button>
+                    <button class="chip" type="button" data-mem="di">ES:DI</button>
+                    <button class="chip" type="button" data-mem="sp">Stack</button>
+                    <button class="chip" type="button" data-mem="vga">Screen</button>
+                  </span>
+                </div>
+                <div class="memwrap"><pre id="memDump" tabindex="0" aria-label="Hex dump"></pre></div>
+                <p class="memlegend"><span class="mk si">SI</span> <span class="mk di">DI</span> <span class="mk sp">SP</span> <span class="mk w">changed by last step</span> · Addresses are physical (segment × 16 + offset).</p>
+              </section>
+            </div>
+          </details>
         </div>
       </section>
       </div>
@@ -314,7 +435,6 @@ const M = [
 "; TODO: write the 2-byte boot signature on the next line\n",
   solution:
 "; ForgeOS - boot sector\n" + HDR + "jmp $              ; hang here forever\n" + FOOT,
-  check:c=>c.booted && (c.state==="idle"||c.state==="halted"),
   win:"The BIOS accepted your disk. ForgeOS now exists: 512 bytes that boot."
 },
 {
@@ -340,7 +460,6 @@ const M = [
 "mov al, 'K'\n" +
 "int 0x10\n\n" +
 "jmp $\n" + FOOT,
-  check:c=>c.prog.includes("OK"),
   win:"Your OS can talk. Every kernel's first job is showing that it's alive."
 },
 {
@@ -371,7 +490,6 @@ const M = [
 "    cmp al, '9'+1\n" +
 "    jne count\n\n" +
 "jmp $\n" + FOOT,
-  check:c=>c.prog.includes("0123456789"),
   win:"Loops work. Your CPU now makes decisions on its own."
 },
 {
@@ -407,7 +525,6 @@ const M = [
 "done:\n" +
 "    jmp $\n\n" +
 "msg: db 'ForgeOS booting...', 0\n" + FOOT,
-  check:c=>c.state==="idle" && c.prog.includes("ForgeOS booting..."),
   win:"That's how every OS prints: walk through bytes until the 0. C strings work exactly this way."
 },
 {
@@ -435,7 +552,6 @@ const M = [
 "jmp $\n\n" + PRINT_STRING + "\n" +
 "banner: db 'ForgeOS v0.1', 13, 10, 0\n" +
 "status: db 'Kernel: ready', 13, 10, 0\n" + FOOT,
-  check:c=>{ if(c.state!=="idle") return false; const a=c.lines.findIndex(l=>l.includes("ForgeOS v0.1")); const b=c.lines.findIndex(l=>l.includes("Kernel: ready")); return a>=0 && b>a; },
   win:"You wrote and called your first kernel function. The stack just did its first real job."
 },
 {
@@ -467,7 +583,6 @@ const M = [
 "    int 0x10\n" +
 "    jmp main_loop\n\n" + PRINT_STRING + "\n" +
 "banner: db 'ForgeOS v0.1 - type something:', 13, 10, 0\n" + FOOT,
-  check:c=>{ const i=c.prog.indexOf("type something:"); if(i<0) return false; const rest=c.prog.slice(i+15).replace(/[\s\0]/g,""); return c.typedCount>=3 && rest.length>=3; },
   win:"Input and output both work. Your OS is now interactive."
 },
 {
@@ -539,7 +654,6 @@ const M = [
 "banner:     db 'ForgeOS v0.1', 13, 10, 0\n" +
 "prompt_str: db '> ', 0\n" +
 "newline:    db 13, 10, 0\n" + FOOT,
-  check:c=>c.lines.filter(l=>l.startsWith(">")).length>=2,
   win:"You have a real prompt. It looks like a terminal because it now works like one."
 },
 {
@@ -631,7 +745,6 @@ const M = [
 "cmd_clear:  db 'clear', 0\n" +
 "buffer:     times 32 db 0\n" + FOOT,
   solution:null, // filled below
-  check:c=>c.prog.includes("Commands: help clear") && c.prog.includes("Unknown command"),
   win:"Phase 1 complete. You wrote a boot-sector shell that reads, stores and runs commands. Real operating systems started exactly like this."
 }
 ];
@@ -649,6 +762,118 @@ M[7].solution = M[7].starter.replace(
 "    inc di\n" +
 "    jmp .loop\n");
 
+/* =====================  MISSION TESTS  ===================== */
+/*
+  Behavioral tests shared by the app ("Check my code") and test/missions.test.mjs.
+  Each test boots the learner's code on a fresh simulated PC, optionally types keys,
+  and inspects the screen, registers, memory and execution counts. Every run has an
+  instruction limit, so endless loops end as a failed test instead of a frozen page.
+*/
+const MissionTests = (function(){
+  const LIMIT = 300000;
+  class Fail extends Error {}
+  const fail = m => { throw new Fail(m); };
+  const show = lines => lines.length ? lines.map(l => '"' + l + '"').join(", ") : "(nothing)";
+  function pc(code){
+    const prog = ForgeCore.assemble(code);
+    if (!prog.ok) fail("Your code doesn't assemble. Line " + prog.errors[0].line + ": " + prog.errors[0].msg);
+    const m = new ForgeCore.Machine(prog);
+    if (!m.boot()) fail(m.msg);
+    const api = {
+      m, prog,
+      run(){                                 // run until the program waits, parks, halts or crashes
+        if (m.state === "ready") m.state = "run";
+        m.run(LIMIT);
+        if (m.state === "run") fail("Your code was still running after " + LIMIT.toLocaleString() + " instructions. Is there an endless loop that isn't jmp $?");
+        if (m.state === "fault") fail("The simulated PC crashed: " + m.msg);
+        return api;
+      },
+      type(keys){
+        for (const k of keys) {
+          if (m.state !== "waitkey") fail("Your code stopped listening to the keyboard before all the test keys were typed (it is " + describe(m.state) + ").");
+          m.pressKey(typeof k === "number" ? k : k.charCodeAt(0));
+          api.run();
+        }
+        return api;
+      },
+      out(){ return m.outputLines(); },
+      count(op){ let n = 0; for (const ins of prog.instrs) if (ins.op === op) n += m.execCount.get(ins.addr) || 0; return n; },
+      maxCount(pred){ let n = 0; for (const ins of prog.instrs) if (pred(ins)) n = Math.max(n, m.execCount.get(ins.addr) || 0); return n; },
+      sym(name){ if (!prog.symbols.has(name)) fail("I can't find the label '" + name + "'. Keep the label names from the starter code."); return prog.symbols.get(name); }
+    };
+    return api;
+  }
+  function describe(st){ return {idle:"parked in jmp $",halted:"halted",ready:"paused",fault:"crashed",waitkey:"waiting for a key"}[st] || st; }
+  const expectLines = (got, want, what) => { if (JSON.stringify(got) !== JSON.stringify(want)) fail((what || "The screen") + " should show " + show(want) + " but shows " + show(got) + "."); };
+  const parked = p => { if (p.m.state !== "idle" && p.m.state !== "halted") fail("The CPU should end parked in jmp $, but it is " + describe(p.m.state) + "."); };
+  const letters = (n, rnd) => Array.from({length:n}, () => "abcdefghjkmnpqrstuvwxyz"[Math.floor(rnd() * 23)]).join("");
+  const BS = 8, ENTER = 13;
+  const boots = {name:"The BIOS accepts your disk (512 bytes ending in 55 AA)", run:c => { pc(c); }};
+
+  const SPECS = [
+    /* 1 Power On */ [
+      boots,
+      {name:"The CPU parks safely instead of running into data", run:c => parked(pc(c).run())}
+    ],
+    /* 2 First Words */ [
+      boots,
+      {name:"The screen shows exactly OK", run:c => expectLines(pc(c).run().out(), ["OK"])},
+      {name:"Each letter goes through the BIOS print service (int 0x10, AH=0x0E)", run:c => { const p = pc(c).run(); const sent = p.m.intCalls.filter(i => i.n === 0x10 && i.ah === 0x0E).map(i => String.fromCharCode(i.al)).join(""); if (sent !== "OK") fail("The print service should receive O then K. It received " + (sent ? JSON.stringify(sent) : "nothing") + "."); }},
+      {name:"The CPU ends parked in jmp $", run:c => parked(pc(c).run())}
+    ],
+    /* 3 Counting */ [
+      boots,
+      {name:"The screen shows exactly 0123456789", run:c => expectLines(pc(c).run().out(), ["0123456789"])},
+      {name:"A loop does the printing (one int 0x10 runs 10 times)", run:c => { const p = pc(c).run(); const n = p.maxCount(i => i.op === "int"); if (n < 10) fail("Your busiest int 0x10 line ran " + n + " time(s). Use one int 0x10 inside a loop that runs 10 times."); }},
+      {name:"The loop stops after 9 and the CPU parks", run:c => parked(pc(c).run())}
+    ],
+    /* 4 Strings in Memory */ [
+      boots,
+      {name:"The loop stops at the 0 byte and the CPU parks", run:c => { let p; try { p = pc(c).run(); } catch (e) { if (/still running|crashed/.test(e.message)) fail("The printing never stopped. Add the check for the 0 byte after lodsb. (" + e.message + ")"); throw e; } parked(p); }},
+      {name:"The screen shows exactly ForgeOS booting...", run:c => expectLines(pc(c).run().out(), ["ForgeOS booting..."])},
+      {name:"The text is read from memory with lodsb", run:c => { const n = pc(c).run().count("lodsb"); if (n < 18) fail("lodsb ran " + n + " times. It should read all 18 characters plus the 0."); }}
+    ],
+    /* 5 Functions */ [
+      boots,
+      {name:"The screen shows the two lines", run:c => expectLines(pc(c).run().out(), ["ForgeOS v0.1", "Kernel: ready"])},
+      {name:"print_string is called twice", run:c => { const p = pc(c).run(); const at = p.sym("print_string") - p.prog.org + 0x7C00; const n = p.m.calls.filter(t => t === at).length; if (n < 2) fail("print_string was called " + n + " time(s). Call it once for each line."); }},
+      {name:"Every call returns, and the stack ends balanced", run:c => { const p = pc(c).run(); if (p.m.r.sp !== ForgeCore.INITIAL_SP) fail("SP ended at 0x" + ForgeCore.hex(p.m.r.sp) + " instead of 0x" + ForgeCore.hex(ForgeCore.INITIAL_SP) + ". Something was pushed and never popped."); parked(p); }}
+    ],
+    /* 6 Listen */ [
+      boots,
+      {name:"The banner appears and the PC waits for a key", run:c => { const p = pc(c).run(); expectLines(p.out(), ["ForgeOS v0.1 - type something:"]); if (p.m.state !== "waitkey") fail("After the banner the PC should wait for a key, but it is " + describe(p.m.state) + "."); }},
+      {name:"Every key you type is echoed (random test keys)", run:(c, rnd) => { const k = letters(4, rnd); const p = pc(c).run(); for (let i = 1; i <= k.length; i++) { p.type(k[i - 1]); expectLines(p.out(), ["ForgeOS v0.1 - type something:", k.slice(0, i)], "After typing " + k.slice(0, i) + ", the screen"); } }},
+      {name:"It keeps listening after each key", run:(c, rnd) => { const p = pc(c).run().type(letters(3, rnd)); if (p.m.state !== "waitkey") fail("After 3 keys the PC should still wait for more, but it is " + describe(p.m.state) + "."); }}
+    ],
+    /* 7 The Prompt */ [
+      boots,
+      {name:"The banner and a > prompt appear", run:c => { const p = pc(c).run(); expectLines(p.out(), ["ForgeOS v0.1", ">"]); }},
+      {name:"Typed keys appear after the prompt", run:(c, rnd) => { const k = letters(3, rnd); const p = pc(c).run().type(k); expectLines(p.out(), ["ForgeOS v0.1", "> " + k]); }},
+      {name:"Backspace really erases the last letter", run:(c, rnd) => { const k = letters(3, rnd); const p = pc(c).run().type(k + "\b\b"); expectLines(p.out(), ["ForgeOS v0.1", "> " + k[0]], "After typing " + k + " and pressing Backspace twice, the screen"); }},
+      {name:"Enter starts a new line with a fresh prompt", run:(c, rnd) => { const k = letters(2, rnd), k2 = letters(2, rnd); const p = pc(c).run().type(k + "\r" + k2 + "\r"); expectLines(p.out(), ["ForgeOS v0.1", "> " + k, "> " + k2, ">"]); }}
+    ],
+    /* 8 Your First Shell */ [
+      boots,
+      {name:"help prints the command list", run:c => { const p = pc(c).run().type("help\r"); expectLines(p.out(), ["ForgeOS v0.1 - type help", "> help", "Commands: help clear", ">"]); }},
+      {name:"Unknown words print Unknown command", run:(c, rnd) => { const w = letters(3, rnd); const p = pc(c).run().type(w + "\r"); expectLines(p.out(), ["ForgeOS v0.1 - type help", "> " + w, "Unknown command", ">"]); }},
+      {name:"Only the exact word matches (hel and helpme are unknown)", run:c => { const o = pc(c).run().type("hel\rhelpme\r").out(); expectLines(o, ["ForgeOS v0.1 - type help", "> hel", "Unknown command", "> helpme", "Unknown command", ">"]); }},
+      {name:"An empty line just shows a new prompt", run:c => expectLines(pc(c).run().type("\r\r").out(), ["ForgeOS v0.1 - type help", ">", ">", ">"])},
+      {name:"Backspace edits the saved command too", run:c => { const p = pc(c).run().type("hx\belp\r"); expectLines(p.out(), ["ForgeOS v0.1 - type help", "> help", "Commands: help clear", ">"]); }},
+      {name:"clear wipes the screen", run:c => expectLines(pc(c).run().type("help\rclear\r").out(), [">"])},
+      {name:"Long input can't overflow the buffer", run:c => { const p = pc(c).run(); const buf = p.sym("buffer") - p.prog.org + 0x7C00; p.type("a".repeat(45) + "\r"); const o = p.out(); if (!o.includes("Unknown command")) fail("After 45 letters and Enter the shell should say Unknown command."); for (let i = 0; i < 512; i++) { const a = 0x7C00 + i; if (a >= buf && a < buf + 32) continue; if (p.m.mem[a] !== p.prog.image[i]) fail("Typing 45 letters changed memory at 0x" + ForgeCore.hex(a) + ", outside the 32-byte buffer."); } }}
+    ]
+  ];
+  function seeded(seed){ let x = seed >>> 0 || 1; return () => { x ^= x << 13; x >>>= 0; x ^= x >> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; }; }
+  function run(index, code, seed){
+    const rnd = seeded(seed === undefined ? (Date.now() & 0xffffffff) : seed);
+    return SPECS[index].map(t => {
+      try { t.run(code, rnd); return {name:t.name, pass:true}; }
+      catch (e) { if (e instanceof Fail) return {name:t.name, pass:false, msg:e.message}; return {name:t.name, pass:false, msg:"Test error: " + e.message}; }
+    });
+  }
+  return {run, SPECS, LIMIT};
+})();
+
 const ROADMAP = [
   {name:"Boot sector", sub:"Real mode · runs here", live:true, items:M.map(m=>m.title)},
   {name:"Beyond 512 bytes", sub:"Real mode · QEMU", items:["Read sectors with int 0x13","Segments and the memory map","A second-stage loader"]},
@@ -657,333 +882,928 @@ const ROADMAP = [
   {name:"Becoming an OS", sub:"32-bit · QEMU", items:["Multitasking","System calls and user mode","A filesystem","Load and run programs (ELF)","Userspace shell: ForgeOS 1.0"]}
 ];
 
-/* =====================  ASSEMBLER  ===================== */
-const R16 = ["ax","bx","cx","dx","si","di","sp","bp"];
-const R8 = {al:["ax",0],ah:["ax",8],bl:["bx",0],bh:["bx",8],cl:["cx",0],ch:["cx",8],dl:["dx",0],dh:["dx",8]};
-const SEG = ["cs","ds","es","ss","fs","gs"];
-const JCC = {je:f=>f.ZF,jz:f=>f.ZF,jne:f=>!f.ZF,jnz:f=>!f.ZF,jb:f=>f.CF,jc:f=>f.CF,jnae:f=>f.CF,jae:f=>!f.CF,jnb:f=>!f.CF,jnc:f=>!f.CF,
-  ja:f=>!f.CF&&!f.ZF,jnbe:f=>!f.CF&&!f.ZF,jbe:f=>f.CF||f.ZF,jna:f=>f.CF||f.ZF,js:f=>f.SF,jns:f=>!f.SF};
-const ARGC = {mov:2,add:2,sub:2,cmp:2,and:2,or:2,xor:2,shl:2,shr:2,inc:1,dec:1,push:1,pop:1,jmp:1,call:1,loop:1,int:1,
-  ret:0,hlt:0,cli:0,sti:0,cld:0,std:0,nop:0,lodsb:0,stosb:0,cmpsb:0};
-for(const k in JCC) ARGC[k]=1;
-const SUPPORTED = "mov add sub cmp and or xor shl shr inc dec push pop jmp je jne jz jnz jb jae ja jbe call ret loop int lodsb stosb cmpsb hlt cli sti nop";
+/* =====================  CORE: assembler + 8086-subset machine  ===================== */
+/*
+  ForgeCore is the part of OS Forge that must be correct. It has no DOM code.
+  - assemble(src): NASM-syntax subset -> real x86 machine code (byte-exact with NASM 2.16
+    for every supported form; checked by test/encoder.test.mjs).
+  - Machine(prog): runs the assembled boot sector on a simulated real-mode PC with a
+    small BIOS. Executes the assembled instruction list (not a byte decoder), so it
+    diagnoses self-modifying code and jumps into the middle of instructions instead of
+    guessing. See AUDIT.md for what is simulated versus accurate.
+*/
+const ForgeCore = (function(){
+"use strict";
+
+const R8  = {al:0,cl:1,dl:2,bl:3,ah:4,ch:5,dh:6,bh:7};
+const R16 = {ax:0,cx:1,dx:2,bx:3,sp:4,bp:5,si:6,di:7};
+const SREG = {es:0,cs:1,ss:2,ds:3,fs:4,gs:5};
+const R8_PARENT = {al:["ax",0],cl:["cx",0],dl:["dx",0],bl:["bx",0],ah:["ax",8],ch:["cx",8],dh:["dx",8],bh:["bx",8]};
+const ALU = {add:0,or:1,and:4,sub:5,xor:6,cmp:7};
+const CC = {jo:0,jno:1,jb:2,jc:2,jnae:2,jae:3,jnb:3,jnc:3,je:4,jz:4,jne:5,jnz:5,jbe:6,jna:6,ja:7,jnbe:7,
+            js:8,jns:9,jp:10,jpe:10,jnp:11,jpo:11,jl:12,jnge:12,jge:13,jnl:13,jle:14,jng:14,jg:15,jnle:15};
+const SIMPLE = {ret:[0xC3],hlt:[0xF4],cli:[0xFA],sti:[0xFB],cld:[0xFC],std:[0xFD],nop:[0x90],
+                lodsb:[0xAC],stosb:[0xAA],cmpsb:[0xA6]};
+const ARGC = {mov:2,add:2,sub:2,cmp:2,and:2,or:2,xor:2,test:2,shl:2,shr:2,sal:2,inc:1,dec:1,push:1,pop:1,
+              jmp:1,call:1,loop:1,int:1};
+for (const k in SIMPLE) ARGC[k] = 0;
+for (const k in CC) ARGC[k] = 1;
+const SUPPORTED = "mov add sub cmp and or xor test shl shr inc dec push pop jmp call ret loop int " +
+  "je jne jz jnz jb jae ja jbe jl jge jle jg jc jnc js jns jo jno jp jnp lodsb stosb cmpsb hlt cli sti cld std nop";
+const KNOWN_UNSUPPORTED = /^(adc|sbb|mul|imul|div|idiv|neg|not|lea|xchg|movsb|movsw|lodsw|stosw|cmpsw|scasb|scasw|rep|repe|repne|repz|repnz|rol|ror|rcl|rcr|sar|iret|retf|int3|into|in|out|les|lds|cbw|cwd|pusha|popa|pushf|popf|lahf|sahf|xlat|enter|leave|bt|bts|btr|movzx|movsx|daa|das|aaa|aas|aam|aad|jcxz|loope|loopne|loopz|loopnz|clc|stc|cmc)$/;
+
+/* ---------- small helpers ---------- */
+const hex = (v, w) => (v >>> 0).toString(16).toUpperCase().padStart(w || 4, "0");
+const s8  = v => { v &= 0xff; return v & 0x80 ? v - 0x100 : v; };
+const s16 = v => { v &= 0xffff; return v & 0x8000 ? v - 0x10000 : v; };
+const fitsS8 = v => { const s = s16(v); return s >= -128 && s <= 127; };
+const parity = v => { v &= 0xff; v ^= v >> 4; v ^= v >> 2; v ^= v >> 1; return (v & 1) ? 0 : 1; };
+const chr = v => (v >= 32 && v < 127) ? "'" + String.fromCharCode(v) + "'" : null;
+class AsmError extends Error {}
+const fail = m => { throw new AsmError(m); };
 
 function stripComment(line){
-  let q=null;
-  for(let i=0;i<line.length;i++){ const c=line[i];
-    if(q){ if(c===q) q=null; } else if(c==="'"||c==='"') q=c; else if(c===";") return line.slice(0,i); }
+  let q = null;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (q) { if (c === q) q = null; }
+    else if (c === "'" || c === '"' || c === "`") q = c;
+    else if (c === ";") return line.slice(0, i);
+  }
   return line;
 }
 function splitArgs(s){
-  const out=[]; let cur="", q=null, depth=0;
-  for(const c of s){
-    if(q){ cur+=c; if(c===q) q=null; continue; }
-    if(c==="'"||c==='"'){ q=c; cur+=c; continue; }
-    if(c==="[") depth++; if(c==="]") depth--;
-    if(c===","&&depth===0){ out.push(cur.trim()); cur=""; continue; }
-    cur+=c;
+  const out = []; let cur = "", q = null, depth = 0;
+  for (const c of s) {
+    if (q) { cur += c; if (c === q) q = null; continue; }
+    if (c === "'" || c === '"') { q = c; cur += c; continue; }
+    if (c === "[") depth++;
+    if (c === "]") depth--;
+    if (c === "," && depth === 0) { out.push(cur.trim()); cur = ""; continue; }
+    cur += c;
   }
-  if(cur.trim()!=="") out.push(cur.trim());
-  if(q) throw "A quote is missing its closing partner";
+  if (q) fail("A quote is missing its closing partner");
+  if (depth !== 0) fail("Unbalanced [ ] brackets");
+  if (cur.trim() !== "" || out.length) out.push(cur.trim());
+  if (out.some(a => a === "")) fail("Empty operand (check your commas)");
   return out;
 }
+
+/* ---------- expressions (NASM-style precedence) ---------- */
 function tokenize(s){
-  const toks=[]; let i=0;
-  while(i<s.length){ const c=s[i];
-    if(/\s/.test(c)){ i++; continue; }
-    if(c==="'"||c==='"'){ const j=s.indexOf(c,i+1); if(j<0) throw "A quote is missing its closing partner"; toks.push({t:"str",v:s.slice(i+1,j)}); i=j+1; continue; }
-    if("+-*()".includes(c)){ toks.push({t:c}); i++; continue; }
-    if(c==="$"){ if(s[i+1]==="$"){ toks.push({t:"$$"}); i+=2; } else { toks.push({t:"$"}); i++; } continue; }
-    const m=/^[A-Za-z0-9_.]+/.exec(s.slice(i));
-    if(m){ toks.push({t:"id",v:m[0]}); i+=m[0].length; continue; }
-    throw "I can't read '"+c+"' here";
+  const toks = []; let i = 0;
+  while (i < s.length) {
+    const c = s[i];
+    if (/\s/.test(c)) { i++; continue; }
+    if (c === "'" || c === '"') {
+      const j = s.indexOf(c, i + 1);
+      if (j < 0) fail("A quote is missing its closing partner");
+      toks.push({t:"str", v:s.slice(i + 1, j)}); i = j + 1; continue;
+    }
+    if (c === "`") fail("Backquote strings aren't supported. Use 'single' or \"double\" quotes.");
+    if (s.startsWith("<<", i) || s.startsWith(">>", i)) { toks.push({t:s.slice(i, i + 2)}); i += 2; continue; }
+    if ("+-*/%()&|^~".includes(c)) { toks.push({t:c}); i++; continue; }
+    if (c === "$") {
+      if (s[i + 1] === "$") { toks.push({t:"$$"}); i += 2; continue; }
+      const m = /^\$[0-9a-fA-F]+/.exec(s.slice(i));
+      if (m && /^\$[0-9]/.test(m[0])) { toks.push({t:"id", v:"0x" + m[0].slice(1)}); i += m[0].length; continue; }
+      toks.push({t:"$"}); i++; continue;
+    }
+    const m = /^[A-Za-z0-9_.?@]+/.exec(s.slice(i));
+    if (m) { toks.push({t:"id", v:m[0]}); i += m[0].length; continue; }
+    fail("I can't read '" + c + "' here");
   }
   return toks;
 }
-function idValue(s,ctx){
-  if(/^0x[0-9a-f]+$/i.test(s)) return parseInt(s.slice(2),16);
-  if(/^0b[01]+$/i.test(s)) return parseInt(s.slice(2),2);
-  if(/^[0-9][0-9a-f]*h$/i.test(s)) return parseInt(s.slice(0,-1),16);
-  if(/^[0-9]+$/.test(s)) return parseInt(s,10);
-  if(/^[0-9]/.test(s)) throw "'"+s+"' is not a valid number";
-  const low=s.toLowerCase();
-  if(R16.includes(low)||R8[low]) throw "Register "+low+" can't be used inside a number here";
-  const name=s.startsWith(".")? ctx.scope+s : s;
-  if(ctx.labels[name]!==undefined) return ctx.labels[name];
-  if(ctx.pass1) throw "Label '"+s+"' has to be defined above this line";
-  throw "Unknown label '"+s+"'. Check the spelling (labels are case-sensitive).";
+function numberValue(s){
+  let m;
+  if ((m = /^0[xh]([0-9a-f_]+)$/i.exec(s))) return parseInt(m[1].replace(/_/g, ""), 16);
+  if ((m = /^([0-9][0-9a-f_]*)h$/i.exec(s))) return parseInt(m[1].replace(/_/g, ""), 16);
+  if ((m = /^0[by]([01_]+)$/i.exec(s))) return parseInt(m[1].replace(/_/g, ""), 2);
+  if ((m = /^([01_]+)[by]$/i.exec(s))) return parseInt(m[1].replace(/_/g, ""), 2);
+  if ((m = /^0[qo]([0-7_]+)$/i.exec(s))) return parseInt(m[1].replace(/_/g, ""), 8);
+  if ((m = /^([0-7_]+)[qo]$/i.exec(s))) return parseInt(m[1].replace(/_/g, ""), 8);
+  if ((m = /^0d([0-9_]+)$/i.exec(s))) return parseInt(m[1].replace(/_/g, ""), 10);
+  if (/^[0-9][0-9_]*d?$/i.test(s)) return parseInt(s.replace(/[_d]/gi, ""), 10);
+  return null;
 }
-function evalExpr(src,ctx){
-  const toks=tokenize(src); let p=0;
-  const peek=()=>toks[p], next=()=>toks[p++];
-  function factor(){ const t=next(); if(!t) throw "A value is missing";
-    if(t.t==="-") return -factor(); if(t.t==="+") return factor();
-    if(t.t==="("){ const v=expr(); const c=next(); if(!c||c.t!==")") throw "Missing )"; return v; }
-    if(t.t==="$") return ctx.here; if(t.t==="$$") return ctx.start;
-    if(t.t==="str"){ if(!t.v.length) throw "Empty character ''"; let v=0; for(let i=Math.min(t.v.length,2)-1;i>=0;i--) v=(v<<8)|(t.v.charCodeAt(i)&0xff); return v; }
-    if(t.t==="id") return idValue(t.v,ctx);
-    throw "Unexpected '"+t.t+"'"; }
-  function term(){ let v=factor(); while(peek()&&peek().t==="*"){ next(); v*=factor(); } return v; }
-  function expr(){ let v=term(); while(peek()&&(peek().t==="+"||peek().t==="-")){ const o=next().t, w=term(); v=o==="+"?v+w:v-w; } return v; }
-  const v=expr(); if(p<toks.length) throw "I couldn't understand '"+src+"'"; return v;
-}
-function parseOperand(raw){
-  let s=raw.trim(), size=null;
-  const sm=/^(byte|word)\s+(.*)$/i.exec(s);
-  if(sm){ size=sm[1].toLowerCase()==="byte"?8:16; s=sm[2].trim(); }
-  const low=s.toLowerCase();
-  if(R16.includes(low)) return {t:"reg",name:low,size:16};
-  if(R8[low]) return {t:"reg",name:low,size:8};
-  if(SEG.includes(low)) return {t:"seg",name:low,size:16};
-  if(s.startsWith("[")){
-    if(!s.endsWith("]")) throw "Missing ] in "+s;
-    let inner=s.slice(1,-1).trim(), base=null;
-    if(/^[a-z]s\s*:/i.test(inner)) inner=inner.replace(/^[a-z]s\s*:/i,"");
-    const rm=inner.match(/\b(ax|bx|cx|dx|si|di|sp|bp|al|ah|bl|bh|cl|ch|dl|dh)\b/gi);
-    if(rm){
-      if(rm.length>1) throw "This simulator allows one register inside [ ]";
-      const r=rm[0].toLowerCase();
-      if(!["bx","si","di","bp"].includes(r)) throw "Only bx, si, di or bp can point into memory, not "+r;
-      base=r; inner=inner.replace(new RegExp("\\b"+r+"\\b","i"),"0");
+function evalExpr(src, ctx){
+  const toks = tokenize(src); let p = 0;
+  const peek = () => toks[p], next = () => toks[p++];
+  const unknown = { v: false };
+  function atom(){
+    const t = next();
+    if (!t) fail("A value is missing in '" + src + "'");
+    if (t.t === "-") return -atom();
+    if (t.t === "+") return atom();
+    if (t.t === "~") return ~atom();
+    if (t.t === "(") { const v = expr(0); const c = next(); if (!c || c.t !== ")") fail("Missing )"); return v; }
+    if (t.t === "$") return ctx.here;
+    if (t.t === "$$") return ctx.start;
+    if (t.t === "str") {
+      if (!t.v.length) fail("Empty character ''");
+      if (t.v.length > 2) fail("'" + t.v + "' is too long for a number (max 2 characters). Use db for text.");
+      let v = 0; for (let i = t.v.length - 1; i >= 0; i--) v = (v << 8) | (t.v.charCodeAt(i) & 0xff);
+      return v;
     }
-    return {t:"mem",size,base,disp:inner||"0"};
+    if (t.t === "id") {
+      const n = numberValue(t.v);
+      if (n !== null) { if (Number.isNaN(n)) fail("'" + t.v + "' is not a valid number"); return n; }
+      if (/^[0-9]/.test(t.v)) fail("'" + t.v + "' is not a valid number");
+      const low = t.v.toLowerCase();
+      if (low in R8 || low in R16 || low in SREG) fail("Register " + low + " can't be used inside a number here");
+      const name = t.v.startsWith(".") ? ctx.scope + t.v : t.v;
+      if (ctx.symbols.has(name)) return ctx.symbols.get(name);
+      if (ctx.final) fail("Unknown label '" + t.v + "'. Check the spelling (labels are case-sensitive).");
+      unknown.v = true; return 0;
+    }
+    fail("Unexpected '" + t.t + "'");
   }
-  return {t:"imm",expr:s,size};
-}
-function dataBytes(kind,argstr,ctx){
-  const out=[];
-  for(const a of splitArgs(argstr)){
-    if(kind==="db" && (a[0]==="'"||a[0]==='"') && a.endsWith(a[0]) && a.length>=2){
-      for(const ch of a.slice(1,-1)) out.push(ch.charCodeAt(0)&0xff);
-    } else {
-      const v=evalExpr(a,ctx);
-      if(kind==="db") out.push(v&0xff); else out.push(v&0xff,(v>>8)&0xff);
+  const BIN = { "|":1, "^":2, "&":3, "<<":4, ">>":4, "+":5, "-":5, "*":6, "/":6, "%":6 };
+  function expr(minP){
+    let v = atom();
+    for (;;) {
+      const t = peek(); if (!t || !(t.t in BIN) || BIN[t.t] < minP) return v;
+      next(); const w = expr(BIN[t.t] + 1);
+      switch (t.t) {
+        case "|": v = v | w; break; case "^": v = v ^ w; break; case "&": v = v & w; break;
+        case "<<": v = v << w; break; case ">>": v = v >>> w; break;
+        case "+": v = v + w; break; case "-": v = v - w; break; case "*": v = v * w; break;
+        case "/": if (w === 0) fail("Division by zero"); v = Math.floor(v / w); break;
+        case "%": if (w === 0) fail("Division by zero"); v = v % w; break;
+      }
     }
+  }
+  const v = expr(0);
+  if (p < toks.length) fail("I couldn't understand '" + src + "'");
+  return { v, unknown: unknown.v };
+}
+
+/* ---------- operands ---------- */
+function parseOperand(raw){
+  let s = raw.trim(), size = null, dist = null;
+  let m = /^(byte|word|dword)\s+(.*)$/i.exec(s);
+  if (m) {
+    if (m[1].toLowerCase() === "dword") fail("dword (32-bit) operands arrive in Phase 3. Use byte or word.");
+    size = m[1].toLowerCase() === "byte" ? 8 : 16; s = m[2].trim();
+  }
+  m = /^(short|near|far)\s+(.*)$/i.exec(s);
+  if (m) { dist = m[1].toLowerCase(); if (dist === "far") fail("Far jumps and calls aren't supported in Phase 1"); s = m[2].trim(); }
+  const low = s.toLowerCase();
+  if (low in R16) return {t:"reg", name:low, size:16, code:R16[low]};
+  if (low in R8) return {t:"reg", name:low, size:8, code:R8[low]};
+  if (low in SREG) return {t:"sreg", name:low, size:16, code:SREG[low]};
+  if (/^(e[abcd]x|e[sd]i|e[sb]p)$/.test(low)) fail(low + " is a 32-bit register. Phase 1 runs in 16-bit mode: use " + low.slice(1) + ".");
+  if (s.startsWith("[")) {
+    if (!s.endsWith("]")) fail("Missing ] in " + s);
+    let inner = s.slice(1, -1).trim(), seg = null;
+    const sm = /^([a-z]s)\s*:\s*(.*)$/i.exec(inner);
+    if (sm) { const sl = sm[1].toLowerCase(); if (!(sl in SREG)) fail("Unknown segment register " + sm[1]); seg = sl; inner = sm[2]; }
+    const regs = [];
+    inner = inner.replace(/\b(e?[a-d]x|e?[sd]i|e?[sb]p|[a-d][hl]|[c-gs]s)\b/gi, (r) => { regs.push(r.toLowerCase()); return "0"; });
+    if (regs.some(r => r.length === 3)) fail("32-bit registers can't be used in Phase 1 addresses");
+    if (regs.some(r => r in R8)) fail("8-bit registers like " + regs.find(r => r in R8) + " can't point into memory. Use bx, si, di or bp.");
+    const base = regs.filter(r => r === "bx" || r === "bp"), index = regs.filter(r => r === "si" || r === "di");
+    const bad = regs.filter(r => !["bx","bp","si","di"].includes(r));
+    if (bad.length) fail(bad[0] + " can't point into memory in 16-bit mode. Only bx, bp, si and di can.");
+    if (base.length > 1 || index.length > 1) fail("16-bit addresses allow at most one of bx/bp plus one of si/di, like [bx+si]");
+    if (/(^|[^+])\s*-\s*0\s*$/.test(inner) && regs.length) {/* [x - reg] would be invalid; caught below */}
+    return {t:"mem", size, seg, base: base[0] || null, index: index[0] || null, disp: inner.trim() || "0"};
+  }
+  if (/^[a-z]s\s*:/i.test(s)) fail("Segment overrides go inside the brackets, like [es:di]");
+  if (/^\S+\s*:\s*\S+$/.test(s) && !/['"]/.test(s)) fail("Far (segment:offset) addresses aren't supported in Phase 1");
+  return {t:"imm", expr:s, size, dist};
+}
+
+/* ModR/M encoding for 16-bit memory operands */
+function memModrm(m, regField){
+  const d = m.dval & 0xffff, ds = s16(d);
+  const key = (m.base || "") + "+" + (m.index || "");
+  const RM = {"bx+si":0,"bx+di":1,"bp+si":2,"bp+di":3,"+si":4,"+di":5,"bp+":6,"bx+":7};
+  if (!m.base && !m.index) return [0x06 | (regField << 3), d & 0xff, d >> 8];
+  const rm = RM[key];
+  if (d === 0 && rm !== 6) return [(regField << 3) | rm];
+  if (ds >= -128 && ds <= 127) return [0x40 | (regField << 3) | rm, d & 0xff];
+  return [0x80 | (regField << 3) | rm, d & 0xff, d >> 8];
+}
+function segPrefix(m){
+  if (!m || m.t !== "mem" || !m.seg) return [];
+  return [{es:0x26,cs:0x2E,ss:0x36,ds:0x3E,fs:0x64,gs:0x65}[m.seg]];
+}
+const modrmReg = (reg, rmCode) => 0xC0 | (reg << 3) | rmCode;
+const imm8 = v => [v & 0xff];
+const imm16 = v => [v & 0xff, (v >> 8) & 0xff];
+
+function checkImm(v, S){
+  if (S === 8 && (v > 255 || v < -128)) fail("The value " + v + " doesn't fit in 8 bits (range -128 to 255)");
+  if (S === 16 && (v > 65535 || v < -32768)) fail("The value " + v + " doesn't fit in 16 bits (range -32768 to 65535)");
+}
+
+/* Encode one instruction. a/b are resolved operands. Returns {bytes, size, info} */
+function encode(ins, final){
+  const {op, args} = ins; const [a, b] = args; let bytes = [];
+  const pre = segPrefix(a).concat(segPrefix(b));
+  const isMem = o => o && o.t === "mem", isReg = o => o && o.t === "reg", isImm = o => o && o.t === "imm";
+  const opSize = () => {
+    if (isReg(a) && isReg(b) && a.size !== b.size) fail("Size mismatch: " + a.name + " is " + a.size + "-bit but " + b.name + " is " + b.size + "-bit");
+    if (isMem(a) && a.size && isReg(b) && a.size !== b.size) fail("Size mismatch: memory is marked " + (a.size === 8 ? "byte" : "word") + " but " + b.name + " is " + b.size + "-bit");
+    if (isMem(b) && b.size && isReg(a) && a.size !== b.size) fail("Size mismatch: memory is marked " + (b.size === 8 ? "byte" : "word") + " but " + a.name + " is " + a.size + "-bit");
+    const S = isReg(a) ? a.size : isReg(b) ? b.size : (a && a.size) || (b && b.size);
+    if (!S) fail("Size not specified. Add byte or word, for example: cmp byte [si], 0");
+    return S;
+  };
+  if (op in SIMPLE) return SIMPLE[op].slice();
+  if (op in ALU || op === "test") {
+    if (isImm(a)) fail("The first operand of " + op + " can't be a number. It's where the result goes.");
+    if (isMem(a) && isMem(b)) fail("x86 can't use two memory operands at once. Load one into a register first.");
+    if (a.t === "sreg" || b.t === "sreg") fail("Segment registers only work with mov, push and pop");
+    const S = opSize(), w = S === 16 ? 1 : 0;
+    if (op === "test") {
+      if (isImm(b)) {
+        checkImm(b.val, S);
+        if (isReg(a) && a.code === 0) return pre.concat([0xA8 | w], S === 8 ? imm8(b.val) : imm16(b.val));
+        const mr = isReg(a) ? [modrmReg(0, a.code)] : memModrm(a, 0);
+        return pre.concat([0xF6 | w], mr, S === 8 ? imm8(b.val) : imm16(b.val));
+      }
+      const r = isReg(b) ? b : a, o = isReg(b) ? a : b;
+      const mr = isReg(o) ? [modrmReg(r.code, o.code)] : memModrm(o, r.code);
+      return pre.concat([0x84 | w], mr);
+    }
+    const n = ALU[op];
+    if (isImm(b)) {
+      checkImm(b.val, S);
+      if (S === 16 && fitsS8(b.val) && !b.unknownSticky) {
+        const mr = isReg(a) ? [modrmReg(n, a.code)] : memModrm(a, n);
+        return pre.concat([0x83], mr, imm8(b.val));
+      }
+      if (isReg(a) && a.code === 0) return pre.concat([n * 8 + 4 + w], S === 8 ? imm8(b.val) : imm16(b.val));
+      const mr = isReg(a) ? [modrmReg(n, a.code)] : memModrm(a, n);
+      return pre.concat([0x80 | w], mr, S === 8 ? imm8(b.val) : imm16(b.val));
+    }
+    if (isReg(b)) {
+      const mr = isReg(a) ? [modrmReg(b.code, a.code)] : memModrm(a, b.code);
+      return pre.concat([n * 8 + w], mr);
+    }
+    return pre.concat([n * 8 + 2 + w], memModrm(b, a.code));
+  }
+  if (op === "mov") {
+    if (isImm(a)) fail("The first operand of mov can't be a number. It's where the value goes.");
+    if (isMem(a) && isMem(b)) fail("x86 can't move memory to memory directly. Load it into a register first.");
+    if (a.t === "sreg" || b.t === "sreg") {
+      if (a.t === "sreg" && b.t === "sreg") fail("Can't mov between two segment registers. Go through ax.");
+      if (a.t === "sreg" && isImm(b)) fail("You can't mov a number straight into " + a.name + ". Use mov ax, value then mov " + a.name + ", ax");
+      if (a.t === "sreg" && a.name === "cs") fail("mov cs, ... isn't allowed. CS only changes through far jumps.");
+      const s = a.t === "sreg" ? a : b, o = a.t === "sreg" ? b : a;
+      if (isReg(o) && o.size !== 16) fail("Segment registers are 16-bit. Use a 16-bit register like ax.");
+      if (isMem(o) && o.size === 8) fail("Segment registers are 16-bit, not byte");
+      const mr = isReg(o) ? [modrmReg(s.code, o.code)] : memModrm(o, s.code);
+      return pre.concat([a.t === "sreg" ? 0x8E : 0x8C], mr);
+    }
+    const S = opSize(), w = S === 16 ? 1 : 0;
+    if (isImm(b)) {
+      checkImm(b.val, S);
+      if (isReg(a)) return [(S === 8 ? 0xB0 : 0xB8) + a.code].concat(S === 8 ? imm8(b.val) : imm16(b.val));
+      return pre.concat([0xC6 | w], memModrm(a, 0), S === 8 ? imm8(b.val) : imm16(b.val));
+    }
+    if (isReg(a) && isReg(b)) return [0x88 | w, modrmReg(b.code, a.code)];
+    if (isReg(a) && a.code === 0 && isMem(b) && !b.base && !b.index) return pre.concat([0xA0 | w], imm16(b.dval));
+    if (isReg(b) && b.code === 0 && isMem(a) && !a.base && !a.index) return pre.concat([0xA2 | w], imm16(a.dval));
+    if (isReg(b)) return pre.concat([0x88 | w], memModrm(a, b.code));
+    return pre.concat([0x8A | w], memModrm(b, a.code));
+  }
+  if (op === "inc" || op === "dec") {
+    if (isImm(a)) fail("Can't " + op + " a number");
+    if (a.t === "sreg") fail("Can't " + op + " a segment register");
+    const n = op === "inc" ? 0 : 1;
+    if (isReg(a) && a.size === 16) return [(op === "inc" ? 0x40 : 0x48) + a.code];
+    if (isReg(a)) return [0xFE, modrmReg(n, a.code)];
+    if (!a.size) fail("Size not specified. Add byte or word, for example: " + op + " byte [count]");
+    return pre.concat([a.size === 8 ? 0xFE : 0xFF], memModrm(a, n));
+  }
+  if (op === "shl" || op === "sal" || op === "shr") {
+    if (isImm(a)) fail("Can't shift a number");
+    if (a.t === "sreg") fail("Can't shift a segment register");
+    const S = isReg(a) ? a.size : a.size; if (!S) fail("Size not specified. Add byte or word");
+    const w = S === 16 ? 1 : 0, n = op === "shr" ? 5 : 4;
+    const mr = isReg(a) ? [modrmReg(n, a.code)] : memModrm(a, n);
+    if (isReg(b) && b.name === "cl") return pre.concat([0xD2 | w], mr);
+    if (!isImm(b)) fail(op + " count must be a number or cl");
+    if (b.val < 0 || b.val > 255) fail("Shift count must be 0 to 255");
+    if (b.val === 1) return pre.concat([0xD0 | w], mr);
+    return pre.concat([0xC0 | w], mr, imm8(b.val));
+  }
+  if (op === "push" || op === "pop") {
+    if (a.t === "sreg") {
+      const P = {push:{es:[0x06],cs:[0x0E],ss:[0x16],ds:[0x1E],fs:[0x0F,0xA0],gs:[0x0F,0xA8]},
+                 pop:{es:[0x07],ss:[0x17],ds:[0x1F],fs:[0x0F,0xA1],gs:[0x0F,0xA9]}}[op][a.name];
+      if (!P) fail("pop cs isn't a valid instruction");
+      return P.slice();
+    }
+    if (isReg(a)) { if (a.size === 8) fail(op + " works with 16-bit registers (ax, not al)"); return [(op === "push" ? 0x50 : 0x58) + a.code]; }
+    if (isImm(a)) {
+      if (op === "pop") fail("Can't pop into a number");
+      checkImm(a.val, 16);
+      return fitsS8(a.val) && !a.unknownSticky ? [0x6A].concat(imm8(a.val)) : [0x68].concat(imm16(a.val));
+    }
+    if (a.size === 8) fail(op + " works with words, not bytes");
+    return op === "push" ? pre.concat([0xFF], memModrm(a, 6)) : pre.concat([0x8F], memModrm(a, 0));
+  }
+  if (op === "int") {
+    if (!isImm(a)) fail("int needs a number, like int 0x10");
+    if (a.val < 0 || a.val > 255) fail("Interrupt numbers go from 0 to 255");
+    return [0xCD, a.val & 0xff];
+  }
+  if (op === "jmp" || op === "call" || op === "loop" || op in CC) {
+    if (isMem(a)) fail("Jumping through a memory pointer isn't supported in Phase 1");
+    if (a.t === "sreg") fail("Can't jump to a segment register");
+    if (isReg(a)) {
+      if (op !== "jmp" && op !== "call") fail(op + " needs a label");
+      if (a.size !== 16) fail(op + " to a register needs a 16-bit register");
+      return [0xFF, modrmReg(op === "jmp" ? 4 : 2, a.code)];
+    }
+    const tgt = a.val & 0xffff;
+    if (op === "call") { if (a.dist === "short") fail("There is no short call"); return [0xE8].concat(imm16(tgt - (ins.addr + 3))); }
+    const rel8 = tgt - (ins.addr + 2), fits = (a.unknown && !final) || (rel8 >= -128 && rel8 <= 127);
+    if (op === "loop") {
+      if (!fits && final) fail("loop can only jump 127 bytes back or forward. This target is " + rel8 + " bytes away.");
+      return [0xE2, rel8 & 0xff];
+    }
+    const wantShort = a.dist === "short" || (a.dist !== "near" && (ins.short !== false) && fits);
+    if (a.dist === "short" && !fits && final) fail("Short jump target is " + rel8 + " bytes away (max 127)");
+    if (wantShort) return op === "jmp" ? [0xEB, rel8 & 0xff] : [0x70 + CC[op], rel8 & 0xff];
+    ins.short = false;
+    if (op === "jmp") return [0xE9].concat(imm16(tgt - (ins.addr + 3)));
+    return [0x0F, 0x80 + CC[op]].concat(imm16(tgt - (ins.addr + 4)));
+  }
+  fail("Can't encode " + op);
+}
+
+/* ---------- the assembler ---------- */
+function assemble(source){
+  const lines = source.replace(/\r\n?/g, "\n").split("\n");
+  const errors = [], warnings = [];
+  const err = (n, m) => errors.push({line:n + 1, msg:String(m && m.message || m)});
+  // Parse once into statements
+  const stmts = []; let scope = "";
+  let org = null, sawCode = false;
+  for (let n = 0; n < lines.length; n++) {
+    let line = stripComment(lines[n]).trim();
+    if (!line) continue;
+    try {
+      let m;
+      if ((m = /^\[?\s*bits\s+(\w+)\s*\]?$/i.exec(line))) {
+        if (m[1] !== "16") fail("Phase 1 runs in 16-bit real mode. Use [bits 16].");
+        continue;
+      }
+      if ((m = /^\[?\s*org\s+([^\]]+?)\s*\]?$/i.exec(line))) {
+        if (sawCode) fail("Put [org ...] at the top, before any code or data");
+        if (org !== null) fail("org can only appear once");
+        org = evalExpr(m[1], {symbols:new Map(), here:0, start:0, scope:"", final:true}).v & 0xffff;
+        continue;
+      }
+      if (/^\[?\s*(section|segment|global|extern|cpu|default|absolute)\b/i.test(line)) fail("'" + line.split(/\s/)[0].replace("[", "") + "' isn't used in Phase 1 boot sectors");
+      let label = null;
+      if ((m = /^([A-Za-z_.?][\w.?@]*)\s*:\s*(.*)$/.exec(line))) { label = m[1]; line = m[2].trim(); }
+      else if ((m = /^([A-Za-z_.?][\w.?@]*)\s+(db|dw|times|equ)\b\s*(.*)$/i.exec(line)) && !(m[1].toLowerCase() in ARGC) && !/^(db|dw|times|equ)$/i.test(m[1])) { label = m[1]; line = (m[2] + " " + m[3]).trim(); }
+      let full = null;
+      if (label) {
+        const low = label.toLowerCase();
+        if (low in ARGC || low in R8 || low in R16 || low in SREG || /^(db|dw|times|equ|byte|word|short|near)$/.test(low)) fail("'" + label + "' is a reserved word. Pick another label name.");
+        full = label.startsWith(".") ? scope + label : label;
+        if (!label.startsWith(".") && !/^\s*equ\b/i.test(line)) scope = label;
+      }
+      if ((m = /^equ\s+(.+)$/i.exec(line))) {
+        if (!label) fail("equ needs a name, like: SCREEN_W equ 80");
+        stmts.push({kind:"equ", name:full, expr:m[1], line:n, scope}); continue;
+      }
+      if (label) stmts.push({kind:"label", name:full, line:n});
+      if (!line) continue;
+      sawCode = true;
+      stmts.push(parseStatement(line, n, scope));
+    } catch (e) { if (e instanceof AsmError) err(n, e); else throw e; }
+  }
+  if (org === null) { org = 0; warnings.push({line:1, msg:"No [org 0x7c00] line. Labels will have the wrong addresses because the BIOS loads you at 0x7C00."}); }
+  else if (org !== 0x7C00) warnings.push({line:1, msg:"org is 0x" + hex(org) + ". The BIOS loads boot sectors at 0x7C00."});
+
+  let symbols = new Map(), image = null, instrs = [];
+  // Label definitions must be unique
+  const seen = new Map();
+  for (const st of stmts) if (st.kind === "label" || st.kind === "equ") {
+    if (seen.has(st.name)) err(st.line, "Label '" + st.name + "' is defined twice (first on line " + (seen.get(st.name) + 1) + ")");
+    else seen.set(st.name, st.line);
+  }
+  if (errors.length) return finish(null);
+
+  // Multi-pass layout: sizes can only grow (jumps short -> near, imm8 -> imm16), so this terminates.
+  for (let pass = 0; pass < 12; pass++) {
+    const res = layout(stmts, org, symbols, false);
+    const changed = res.changed || !sameMap(symbols, res.symbols);
+    symbols = res.symbols;
+    if (!changed && pass > 0) break;
+  }
+  const res = layout(stmts, org, symbols, true);
+  if (res.errors.length) { res.errors.forEach(e => err(e.line, e.msg)); return finish(null); }
+  image = Uint8Array.from(res.bytes); instrs = res.instrs;
+  if (image.length > 512) {
+    const codeAfter = instrs.find(i => i.addr - org >= 512);
+    warnings.push({line:(codeAfter ? codeAfter.line : lines.length - 1) + 1, msg:"The image is " + image.length + " bytes. The BIOS only loads the first 512, so everything after byte 512 is not in memory." + (codeAfter ? " Code at line " + (codeAfter.line + 1) + " will never run unless you load it from disk (Phase 2)." : "")});
+  }
+  return finish(image);
+
+  function finish(img){
+    const byAddr = new Map(); for (const i of instrs) byAddr.set(i.addr, i);
+    return { ok: !errors.length, errors, warnings, image: img, org, symbols, instrs, byAddr,
+             count: instrs.length, size: img ? img.length : 0,
+             codeBytes: instrs.reduce((s, i) => s + i.len, 0) };
+  }
+}
+function sameMap(a, b){ if (a.size !== b.size) return false; for (const [k, v] of a) if (b.get(k) !== v) return false; return true; }
+
+function parseStatement(line, n, scope){
+  let m;
+  if ((m = /^times\s+(.+)$/i.exec(line))) {
+    // split "count stmt": find the first top-level db/dw/instruction keyword after the count
+    const rest = m[1];
+    const km = /^(.*?)\s+((?:db|dw|[a-z]+)\b.*)$/i.exec(rest);
+    let split = null;
+    // try every split point; choose the first whose right side parses as a statement and left as an expression
+    const words = rest.split(/(\s+)/);
+    for (let i = 2; i < words.length; i += 2) {
+      const left = words.slice(0, i - 1).join(""), right = words.slice(i).join("");
+      const kw = right.split(/\s/)[0].toLowerCase();
+      if (kw === "db" || kw === "dw" || kw in ARGC) { split = [left, right]; break; }
+    }
+    if (!split) fail("times needs a count and something to repeat, like: times 510-($-$$) db 0");
+    const inner = parseStatement(split[1], n, scope);
+    return {kind:"times", count:split[0], inner, line:n, scope};
+  }
+  if ((m = /^(db|dw)\s+(.*)$/i.exec(line))) {
+    const items = splitArgs(m[2]);
+    if (!items.length) fail(m[1] + " needs at least one value");
+    return {kind:"data", unit:m[1].toLowerCase() === "db" ? 1 : 2, items, line:n, scope};
+  }
+  if (/^(db|dw)$/i.test(line)) fail(line + " needs at least one value");
+  if ((m = /^(resb|resw|dd|dq|incbin|%\w+)\b/i.exec(line))) fail("'" + m[1] + "' isn't supported in Phase 1");
+  const sp = line.search(/\s/);
+  const op = (sp < 0 ? line : line.slice(0, sp)).toLowerCase();
+  const rest = sp < 0 ? "" : line.slice(sp + 1).trim();
+  if (!(op in ARGC)) {
+    if (KNOWN_UNSUPPORTED.test(op)) fail("'" + op + "' is a real x86 instruction, but this simulator doesn't support it yet. Supported: " + SUPPORTED);
+    fail("I don't know the instruction '" + op + "'. Supported: " + SUPPORTED);
+  }
+  const args = rest ? splitArgs(rest).map(parseOperand) : [];
+  if (args.length !== ARGC[op]) fail(op + " needs " + ARGC[op] + " operand" + (ARGC[op] === 1 ? "" : "s") + ", you gave " + args.length);
+  return {kind:"ins", op, args, line:n, scope, src:line, sticky:{}};
+}
+
+function layout(stmts, org, symIn, final){
+  const symbols = new Map(), errors = [], bytes = [], instrs = [];
+  let addr = org, changed = false;
+  const ctxFor = (st, here) => ({symbols: final ? symIn : merged, here, start:org, scope:st.scope || "", final});
+  // during non-final passes, use previous pass values for forward refs and current values for backward refs
+  const merged = new Map(symIn);
+  const put = (st, bs, extra) => { for (const b of bs) bytes.push(b & 0xff); addr += bs.length; };
+  function emit(st){
+    if (st.kind === "label") { symbols.set(st.name, addr); merged.set(st.name, addr); return; }
+    if (st.kind === "equ") { const r = evalExpr(st.expr, ctxFor(st, addr)); symbols.set(st.name, r.v); merged.set(st.name, r.v); return; }
+    if (st.kind === "data") {
+      for (const it of st.items) {
+        if ((it[0] === "'" || it[0] === '"') && it.length >= 2 && it.endsWith(it[0]) && st.unit === 1) {
+          for (const ch of it.slice(1, -1)) { const c = ch.charCodeAt(0); if (c > 255) fail("Character '" + ch + "' isn't in the PC's character set"); put(st, [c]); }
+        } else if ((it[0] === "'" || it[0] === '"') && st.unit === 2 && it.length > 4) {
+          const s = it.slice(1, -1); for (let i = 0; i < s.length; i += 2) put(st, [s.charCodeAt(i), i + 1 < s.length ? s.charCodeAt(i + 1) : 0]);
+        } else {
+          const v = evalExpr(it, ctxFor(st, addr)).v;
+          if (final) checkImm(v, st.unit === 1 ? 8 : 16);
+          put(st, st.unit === 1 ? [v] : [v & 0xff, (v >> 8) & 0xff]);
+        }
+      }
+      return;
+    }
+    if (st.kind === "times") {
+      const c = evalExpr(st.count, ctxFor(st, addr));
+      if (c.unknown && final) fail("times count must use labels defined above it");
+      if (c.v < 0) {
+        if (final) fail("Your boot sector is bigger than 512 bytes (times count is " + c.v + "). The BIOS only loads 512 bytes, so shrink the code or text.");
+        return;
+      }
+      if (c.v > 65536) fail("times count " + c.v + " is too large");
+      for (let i = 0; i < c.v; i++) emit(st.inner);
+      return;
+    }
+    // instruction
+    const ins = {op:st.op, line:st.line, src:st.src, scope:st.scope, addr, stmt:st};
+    ins.args = st.args.map(o => {
+      const r = Object.assign({}, o);
+      if (o.t === "imm") { const e = evalExpr(o.expr, ctxFor(st, addr)); r.val = e.v; r.unknown = e.unknown; }
+      if (o.t === "mem") { const e = evalExpr(o.disp, ctxFor(st, addr)); r.dval = e.v & 0xffff; r.unknown = e.unknown; if (final && (e.v > 0xffff || e.v < -0x8000)) fail("Address " + e.v + " doesn't fit in 16 bits"); }
+      return r;
+    });
+    // sticky growth so the layout converges: once an item needed a long form, keep it
+    const stk = st.sticky || (st.sticky = {});
+    if (stk.longJump) ins.short = false;
+    ins.args.forEach((r, i) => { if (stk["imm" + i]) r.unknownSticky = true; });
+    let bs = encode(ins, final);
+    if (ins.short === false && !stk.longJump) { stk.longJump = true; changed = true; }
+    ins.args.forEach((r, i) => { if (r.t === "imm" && !fitsS8(r.val) && (st.op in ALU || st.op === "push") && !stk["imm" + i]) { stk["imm" + i] = true; changed = true; bs = encode(ins, final); } });
+    ins.bytes = bs; ins.len = bs.length;
+    if (st.prevLen !== undefined && st.prevLen !== bs.length) changed = true;
+    st.prevLen = bs.length;
+    instrs.push(ins); put(st, bs);
+  }
+  for (const st of stmts) {
+    try { emit(st); }
+    catch (e) { if (e instanceof AsmError) { errors.push({line:st.line + 1, msg:e.message}); if (st.kind === "times") {} } else throw e; }
+  }
+  return {symbols, errors, bytes, instrs, changed};
+}
+
+/* =====================  MACHINE  ===================== */
+const MEM_SIZE = 0x100000;              // 1 MB real-mode address space (A20 off: wraps)
+const VGA = 0xB8000, COLS = 80, ROWS = 25;
+const BDA_CURSOR = 0x450;               // BIOS data area: cursor column, row for page 0
+const INITIAL_SP = 0x7000;              // simulator choice; real BIOSes vary (see AUDIT.md)
+const SCAN = {13:0x1C, 8:0x0E, 32:0x39, 27:0x01, 9:0x0F};
+(function(){ const rows = ["1234567890-=","qwertyuiop[]","asdfghjkl;'`","zxcvbnm,./"], starts = [0x02,0x10,0x1E,0x2C];
+  rows.forEach((r, i) => [...r].forEach((ch, j) => { SCAN[ch.charCodeAt(0)] = starts[i] + j; SCAN[ch.toUpperCase().charCodeAt(0)] = starts[i] + j; })); })();
+const FLAG_NAMES = ["CF","PF","AF","ZF","SF","OF","DF","IF"];
+const FLAG_INFO = {CF:"carry",PF:"parity",AF:"aux carry",ZF:"zero",SF:"sign",OF:"overflow",DF:"direction",IF:"interrupts"};
+
+class Machine {
+  constructor(prog, opts){
+    opts = opts || {};
+    this.prog = prog;
+    this.mem = new Uint8Array(MEM_SIZE);
+    this.r = {ax:0, cx:0, dx:0x0080, bx:0, sp:INITIAL_SP, bp:0, si:0, di:0};
+    this.sr = {es:0, cs:0, ss:0, ds:0, fs:0, gs:0};
+    this.f = {CF:0,PF:0,AF:0,ZF:0,SF:0,OF:0,DF:0,IF:1};
+    this.ip = 0x7C00;
+    this.state = "off"; this.msg = ""; this.steps = 0;
+    this.keys = []; this.typed = [];
+    this.execCount = new Map(); this.calls = []; this.intCalls = [];
+    this.codeOwner = new Map();          // physical byte -> instruction (for diagnostics)
+    this.writes = null; this.notes = null;
+    this.initialSP = INITIAL_SP;
+    for (let i = 0; i < COLS * ROWS; i++) { this.mem[VGA + 2 * i] = 0x20; this.mem[VGA + 2 * i + 1] = 0x07; }
+    this.sysRows = 0;
+  }
+  /* --- BIOS POST and boot --- */
+  boot(){
+    this.biosPrint("Booting from Hard Disk...\r\n");
+    const p = this.prog;
+    if (!p || !p.ok) { this.state = "fault"; this.msg = "The code didn't assemble."; return false; }
+    const img = p.image;
+    if (img.length < 512) return this.noBoot("the disk image is only " + img.length + " bytes; a boot sector is 512 bytes (the times line pads it)");
+    if (img[510] !== 0x55 || img[511] !== 0xAA) return this.noBoot("bytes 510-511 are " + hex(img[510], 2) + " " + hex(img[511], 2) + ", not the 55 AA boot signature");
+    // The BIOS loads exactly one sector to 0000:7C00.
+    for (let i = 0; i < 512; i++) this.mem[0x7C00 + i] = img[i];
+    for (const ins of p.instrs) {
+      const phys = ins.addr - p.org + 0x7C00;
+      if (ins.addr - p.org >= 512) continue;
+      for (let k = 0; k < ins.len; k++) this.codeOwner.set(phys + k, ins);
+    }
+    this.byPhys = new Map(); for (const ins of p.instrs) if (ins.addr - p.org < 512) this.byPhys.set(ins.addr - p.org + 0x7C00, ins);
+    this.sysRows = this.cursor().row;
+    this.ip = 0x7C00; this.state = "ready";
+    return true;
+  }
+  noBoot(why){
+    this.biosPrint("Boot failed: not a bootable disk\r\n\r\nNo bootable device.\r\n");
+    this.sysRows = this.cursor().row + 1;
+    this.state = "nobootable"; this.msg = "The BIOS refused the disk: " + why + "."; return false;
+  }
+  biosPrint(s){ for (const c of s) this.tty(c.charCodeAt(0)); }
+  /* --- memory --- */
+  phys(seg, off){ return ((this.sr[seg] << 4) + (off & 0xffff)) & 0xFFFFF; }
+  rd8(p){ return this.mem[p & 0xFFFFF]; }
+  rd16(p){ return this.mem[p & 0xFFFFF] | (this.mem[(p + 1) & 0xFFFFF] << 8); }
+  wr8(p, v){
+    p &= 0xFFFFF; v &= 0xff;
+    if (p >= 0xC0000) { (this.notes || []).push("Write to 0x" + hex(p, 5) + " ignored: that's BIOS ROM."); return; }
+    if (this.codeOwner.has(p)) {
+      const ins = this.codeOwner.get(p);
+      this.fault("Your program wrote over its own code at 0x" + hex(p, 5) + " (the instruction on line " + (ins.line + 1) + "). Real CPUs allow this, but this simulator runs your assembled instructions and can't follow code that changes itself. Keep data in separate labels.", "smc");
+      return;
+    }
+    if (this.writes) this.writes.push([p, this.mem[p], v]);
+    this.mem[p] = v;
+  }
+  wr16(p, v){ this.wr8(p, v); this.wr8(p + 1, v >> 8); }
+  /* --- registers --- */
+  get8(name){ const [r, sh] = R8_PARENT[name]; return (this.r[r] >> sh) & 0xff; }
+  set8(name, v){ const [r, sh] = R8_PARENT[name]; this.r[r] = ((this.r[r] & ~(0xff << sh)) | ((v & 0xff) << sh)) & 0xffff; }
+  ea(o){
+    let off = (o.base ? this.r[o.base] : 0) + (o.index ? this.r[o.index] : 0) + o.dval;
+    const seg = o.seg || (o.base === "bp" ? "ss" : "ds");
+    return {seg, off: off & 0xffff, phys: this.phys(seg, off)};
+  }
+  get(o, S){
+    if (o.t === "reg") return o.size === 16 ? this.r[o.name] : this.get8(o.name);
+    if (o.t === "sreg") return this.sr[o.name];
+    if (o.t === "imm") return o.val & (S === 8 ? 0xff : 0xffff);
+    const e = this.ea(o); return S === 8 ? this.rd8(e.phys) : this.rd16(e.phys);
+  }
+  set(o, v, S){
+    if (o.t === "reg") { if (o.size === 16) this.r[o.name] = v & 0xffff; else this.set8(o.name, v); return; }
+    if (o.t === "sreg") { this.sr[o.name] = v & 0xffff; return; }
+    const e = this.ea(o); if (S === 8) this.wr8(e.phys, v); else this.wr16(e.phys, v);
+  }
+  push(v){
+    const nsp = (this.r.sp - 2) & 0xffff, p = this.phys("ss", nsp);
+    if (p < 0x500) { this.fault("Stack overflow: SP reached 0x" + hex(nsp) + ", inside the BIOS data area (0x0000-0x04FF). A real PC would silently corrupt the interrupt table here; the simulator stops. Check for calls without ret or a missing pop.", "stack"); return; }
+    this.r.sp = nsp; this.wr16(p, v);
+  }
+  pop(){ const v = this.rd16(this.phys("ss", this.r.sp)); this.r.sp = (this.r.sp + 2) & 0xffff; return v; }
+  fault(m, kind){ if (this.state === "fault") return; this.state = "fault"; this.msg = m; this.faultKind = kind || "fault"; }
+  /* --- flags --- */
+  szp(res, S){ const M = S === 8 ? 0xff : 0xffff; res &= M; this.f.ZF = res === 0 ? 1 : 0; this.f.SF = (res >> (S - 1)) & 1; this.f.PF = parity(res); }
+  addFlags(a, b, S, keepCF){ const M = S === 8 ? 0xff : 0xffff, sign = 1 << (S - 1), r = a + b;
+    if (!keepCF) this.f.CF = r > M ? 1 : 0;
+    this.f.OF = ((a ^ r) & (b ^ r) & sign) ? 1 : 0; this.f.AF = ((a ^ b ^ r) & 0x10) ? 1 : 0; this.szp(r, S); return r & M; }
+  subFlags(a, b, S, keepCF){ const M = S === 8 ? 0xff : 0xffff, sign = 1 << (S - 1), r = (a - b) & M;
+    if (!keepCF) this.f.CF = a < b ? 1 : 0;
+    this.f.OF = ((a ^ b) & (a ^ r) & sign) ? 1 : 0; this.f.AF = ((a ^ b ^ r) & 0x10) ? 1 : 0; this.szp(r, S); return r; }
+  logicFlags(r, S){ this.f.CF = 0; this.f.OF = 0; this.f.AF = 0; this.szp(r, S); return r; }
+  /* --- run --- */
+  insAt(p){ return this.byPhys ? this.byPhys.get(p) : undefined; }
+  nextIns(){ return this.insAt(this.phys("cs", this.ip)); }
+  step(){
+    if (!["ready","run"].includes(this.state)) return null;
+    const p = this.phys("cs", this.ip), ins = this.insAt(p);
+    if (!ins) {
+      const owner = this.codeOwner.get(p);
+      if (owner) this.fault("The CPU jumped into the middle of the instruction on line " + (owner.line + 1) + " (address 0x" + hex(p, 5) + "). That would run garbage bytes. Check your jump targets.", "badjump");
+      else if (p >= 0x7C00 && p < 0x7E00) this.fault("The CPU ran into your data at 0x" + hex(p, 5) + " and would try to run it as code. Put jmp $ (or a jump) before your data.", "data");
+      else if (this.prog.size > 512 && p >= 0x7E00 && p < 0x7C00 + this.prog.size) this.fault("The CPU jumped to 0x" + hex(p, 5) + ", past the 512 bytes the BIOS loaded. That part of your file isn't in memory (Phase 2 teaches loading it).", "notloaded");
+      else this.fault("The CPU jumped to 0x" + hex(p, 5) + ", where there is no code. Check your jumps and ret (is the stack balanced?).", "nocode");
+      return null;
+    }
+    const before = this.snapshot();
+    this.writes = []; this.notes = []; this.jump = null; this.cur = ins;
+    const next = this.exec(ins);
+    if (this.state === "fault") { this.writes = null; return {ins, before, after:this.snapshot(), fault:this.msg}; }
+    if (next !== null) { this.ip = next & 0xffff; this.steps++; this.execCount.set(ins.addr, (this.execCount.get(ins.addr) || 0) + 1); }
+    const t = {ins, before, after:this.snapshot(), writes:this.writes, notes:this.notes, jump:this.jump, waited: next === null};
+    this.writes = null;
+    return t;
+  }
+  run(limit){
+    let n = 0;
+    if (this.state === "ready") this.state = "run";
+    while (this.state === "run" && n < limit) { this.step(); n++; }
+    return n;
+  }
+  snapshot(){ return {r:Object.assign({}, this.r), sr:Object.assign({}, this.sr), f:Object.assign({}, this.f), ip:this.ip}; }
+  exec(ins){
+    const [a, b] = ins.args, op = ins.op;
+    let next = (this.ip + ins.len) & 0xffff;
+    const S = (a && a.t === "reg") ? a.size : (b && b.t === "reg") ? b.size : (a && a.size) || (b && b.size) || 16;
+    const target = o => o.t === "imm" ? o.val & 0xffff : this.get(o, 16);
+    const strStep = () => this.f.DF ? -1 : 1;
+    switch (op) {
+      case "mov": this.set(a, this.get(b, S), S); break;
+      case "add": this.set(a, this.addFlags(this.get(a, S), this.get(b, S), S), S); break;
+      case "sub": this.set(a, this.subFlags(this.get(a, S), this.get(b, S), S), S); break;
+      case "cmp": this.subFlags(this.get(a, S), this.get(b, S), S); break;
+      case "and": this.set(a, this.logicFlags(this.get(a, S) & this.get(b, S), S), S); break;
+      case "or":  this.set(a, this.logicFlags(this.get(a, S) | this.get(b, S), S), S); break;
+      case "xor": this.set(a, this.logicFlags(this.get(a, S) ^ this.get(b, S), S), S); break;
+      case "test": this.logicFlags(this.get(a, S) & this.get(b, S), S); break;
+      case "inc": this.set(a, this.addFlags(this.get(a, S), 1, S, true), S); break;
+      case "dec": this.set(a, this.subFlags(this.get(a, S), 1, S, true), S); break;
+      case "shl": case "sal": case "shr": {
+        const x = this.get(a, S), c = this.get(b, 8) & 31, M = S === 8 ? 0xff : 0xffff;
+        if (c === 0) break;                                   // count 0: no flags change
+        let r;
+        if (op === "shr") { r = x >>> c; this.f.CF = c <= S ? (x >>> (c - 1)) & 1 : 0; if (c === 1) this.f.OF = (x >> (S - 1)) & 1; }
+        else { r = (x << c) & M; this.f.CF = c <= S ? (x >>> (S - c)) & 1 : 0; if (c === 1) this.f.OF = ((r >> (S - 1)) & 1) ^ this.f.CF; }
+        this.szp(r, S); this.set(a, r, S); break;
+      }
+      case "push": this.push(this.get(a, 16)); break;
+      case "pop": { const v = this.pop(); if (a.t === "sreg" && a.name === "ss") this.notes.push("Loading SS blocks interrupts for one instruction so you can set SP next."); this.set(a, v, 16); break; }
+      case "jmp": {
+        const t = target(a);
+        this.jump = {taken:true, to:t, why:"jmp always jumps"};
+        if (t === this.ip) { this.state = "idle"; this.jump.why = "jmp $ jumps to itself: the CPU is parked"; }
+        next = t; break;
+      }
+      case "call": this.push(next); this.calls.push(target(a)); next = target(a); this.jump = {taken:true, to:next, why:"call pushes the return address and jumps"}; break;
+      case "ret": next = this.pop(); this.jump = {taken:true, to:next, why:"ret pops the return address"}; break;
+      case "loop": { this.r.cx = (this.r.cx - 1) & 0xffff; const tk = this.r.cx !== 0; this.jump = {taken:tk, to:target(a), why: tk ? "CX is now " + this.r.cx + " (not zero), so loop jumps back" : "CX reached 0, so loop falls through"}; if (tk) next = target(a); break; }
+      case "lodsb": { const s = this.phys("ds", this.r.si); this.set8("al", this.rd8(s)); this.r.si = (this.r.si + strStep()) & 0xffff; break; }
+      case "stosb": { const d = this.phys("es", this.r.di); this.wr8(d, this.get8("al")); this.r.di = (this.r.di + strStep()) & 0xffff; break; }
+      case "cmpsb": { const x = this.rd8(this.phys("ds", this.r.si)), y = this.rd8(this.phys("es", this.r.di)); this.subFlags(x, y, 8); this.r.si = (this.r.si + strStep()) & 0xffff; this.r.di = (this.r.di + strStep()) & 0xffff; break; }
+      case "int": { const ok = this.interrupt(a.val & 0xff); if (ok === "wait") return null; break; }
+      case "hlt":
+        if (!this.f.IF) { this.state = "halted"; this.notes.push("Interrupts are off (cli), so nothing can wake the CPU. It stays halted."); }
+        else this.notes.push("hlt sleeps until the next interrupt. The timer fires about 18 times a second, so the CPU wakes up and continues with the next instruction. Use cli before hlt, or jmp $, to stop for good.");
+        break;
+      case "cli": this.f.IF = 0; break;
+      case "sti": this.f.IF = 1; break;
+      case "cld": this.f.DF = 0; break;
+      case "std": this.f.DF = 1; break;
+      case "nop": break;
+      default:
+        if (op in CC) {
+          const tk = this.cond(op);
+          this.jump = {taken:tk, to:target(a), why:this.condWhy(op, tk)};
+          if (tk) next = target(a);
+        } else this.fault("Instruction " + op + " isn't implemented in the simulator.", "unsupported");
+    }
+    return next;
+  }
+  cond(op){
+    const f = this.f;
+    switch (CC[op]) {
+      case 0: return !!f.OF; case 1: return !f.OF; case 2: return !!f.CF; case 3: return !f.CF;
+      case 4: return !!f.ZF; case 5: return !f.ZF; case 6: return !!(f.CF || f.ZF); case 7: return !f.CF && !f.ZF;
+      case 8: return !!f.SF; case 9: return !f.SF; case 10: return !!f.PF; case 11: return !f.PF;
+      case 12: return f.SF !== f.OF; case 13: return f.SF === f.OF; case 14: return !!f.ZF || f.SF !== f.OF; case 15: return !f.ZF && f.SF === f.OF;
+    }
+  }
+  condWhy(op, tk){
+    const f = this.f, J = tk ? "jumps" : "does not jump";
+    const D = {
+      0:"OF=" + f.OF, 1:"OF=" + f.OF, 2:"CF=" + f.CF, 3:"CF=" + f.CF, 4:"ZF=" + f.ZF, 5:"ZF=" + f.ZF,
+      6:"CF=" + f.CF + ", ZF=" + f.ZF, 7:"CF=" + f.CF + ", ZF=" + f.ZF, 8:"SF=" + f.SF, 9:"SF=" + f.SF,
+      10:"PF=" + f.PF, 11:"PF=" + f.PF, 12:"SF=" + f.SF + ", OF=" + f.OF, 13:"SF=" + f.SF + ", OF=" + f.OF,
+      14:"ZF=" + f.ZF + ", SF=" + f.SF + ", OF=" + f.OF, 15:"ZF=" + f.ZF + ", SF=" + f.SF + ", OF=" + f.OF };
+    const RULE = {0:"when OF=1",1:"when OF=0",2:"when CF=1 (below, unsigned)",3:"when CF=0 (above or equal, unsigned)",
+      4:"when ZF=1 (equal)",5:"when ZF=0 (not equal)",6:"when CF=1 or ZF=1",7:"when CF=0 and ZF=0",8:"when SF=1",9:"when SF=0",
+      10:"when PF=1",11:"when PF=0",12:"when SF≠OF (less, signed)",13:"when SF=OF",14:"when ZF=1 or SF≠OF",15:"when ZF=0 and SF=OF"};
+    return op + " jumps " + RULE[CC[op]] + ". Now " + D[CC[op]] + ", so it " + J + ".";
+  }
+  /* --- BIOS --- */
+  cursor(){ return {col:this.mem[BDA_CURSOR], row:this.mem[BDA_CURSOR + 1]}; }
+  setCursor(row, col){ this.mem[BDA_CURSOR] = col; this.mem[BDA_CURSOR + 1] = row; }
+  putChar(row, col, c){ const o = VGA + 2 * (row * COLS + col); this.mem[o] = c; this.mem[o + 1] = 0x07; }
+  scroll(){
+    this.mem.copyWithin(VGA, VGA + 2 * COLS, VGA + 2 * COLS * ROWS);
+    for (let c = 0; c < COLS; c++) this.putChar(ROWS - 1, c, 0x20);
+    if (this.sysRows > 0) this.sysRows--;
+  }
+  tty(c){
+    let {row, col} = this.cursor();
+    if (c === 13) col = 0;
+    else if (c === 10) { row++; }
+    else if (c === 8) { if (col > 0) col--; }
+    else if (c === 7) { if (this.notes) this.notes.push("Character 7 is the bell: a real PC beeps."); }
+    else { this.putChar(row, col, c); col++; if (col >= COLS) { col = 0; row++; } }
+    if (row >= ROWS) { this.scroll(); row = ROWS - 1; }
+    this.setCursor(row, col);
+  }
+  interrupt(n){
+    const ah = this.r.ax >> 8, al = this.r.ax & 0xff;
+    this.intCalls.push({n, ah, al, addr:this.cur && this.cur.addr});
+    const unsupported = (svc) => { this.fault("int 0x" + hex(n, 2) + " with AH=0x" + hex(ah, 2) + " (" + svc + ") isn't simulated. Phase 1 supports int 0x10 AH=0x00/0x01/0x02/0x03/0x0E/0x0F and int 0x16 AH=0x00/0x01/0x02/0x10/0x11.", "bios"); return "fault"; };
+    if (n === 0x10) {
+      switch (ah) {
+        case 0x0E: this.tty(al); return "ok";
+        case 0x00:
+          if ((al & 0x7f) !== 0x03 && (al & 0x7f) !== 0x02) { this.fault("int 0x10 AH=0x00 mode 0x" + hex(al, 2) + " is a graphics or other video mode. Only text mode 0x03 (80x25) is simulated.", "bios"); return "fault"; }
+          if (!(al & 0x80)) for (let i = 0; i < COLS * ROWS; i++) this.putChar(Math.floor(i / COLS), i % COLS, 0x20);
+          this.setCursor(0, 0); this.sysRows = 0; return "ok";
+        case 0x01: this.notes.push("Cursor shape set (not drawn differently in the simulator)."); return "ok";
+        case 0x02: {
+          const dh = this.r.dx >> 8, dl = this.r.dx & 0xff;
+          if (dh >= ROWS || dl >= COLS) { this.fault("int 0x10 AH=0x02: row " + dh + ", column " + dl + " is off the 80x25 screen.", "bios"); return "fault"; }
+          this.setCursor(dh, dl); return "ok";
+        }
+        case 0x03: { const c = this.cursor(); this.r.dx = (c.row << 8) | c.col; this.r.cx = 0x0607; return "ok"; }
+        case 0x0F: this.r.ax = (COLS << 8) | 0x03; this.r.bx &= 0x00ff; return "ok";
+        default: return unsupported({0x09:"write character and attribute",0x0A:"write character",0x06:"scroll up",0x07:"scroll down",0x13:"write string",0x0C:"put pixel"}[ah] || "video service");
+      }
+    }
+    if (n === 0x16) {
+      switch (ah) {
+        case 0x00: case 0x10:
+          if (!this.keys.length) { this.state = "waitkey"; return "wait"; }
+          { const k = this.keys.shift(); this.r.ax = ((k.scan & 0xff) << 8) | (k.code & 0xff); this.typed.push(k.code); }
+          if (this.state === "waitkey") this.state = "ready";
+          return "ok";
+        case 0x01: case 0x11:
+          if (!this.keys.length) this.f.ZF = 1;
+          else { this.f.ZF = 0; const k = this.keys[0]; this.r.ax = ((k.scan & 0xff) << 8) | (k.code & 0xff); }
+          return "ok";
+        case 0x02: this.set8("al", 0); return "ok";
+        default: return unsupported("keyboard service");
+      }
+    }
+    if (n === 0x12) { this.r.ax = 639; return "ok"; }
+    if (n === 0x13) { this.fault("int 0x13 (disk) arrives in Phase 2. In Phase 1, everything must fit in the boot sector.", "bios"); return "fault"; }
+    if (n === 0x19) { this.fault("int 0x19 (reboot through the BIOS) isn't simulated. Press Boot to restart.", "bios"); return "fault"; }
+    if (n === 0x1A) { this.fault("int 0x1A (clock) isn't simulated yet.", "bios"); return "fault"; }
+    this.fault("int 0x" + hex(n, 2) + " isn't simulated. Phase 1 supports int 0x10 (video), int 0x16 (keyboard) and int 0x12 (memory size).", "bios");
+    return "fault";
+  }
+  pressKey(code){
+    this.keys.push({code, scan: SCAN[code] || 0});
+    if (this.state === "waitkey") this.state = "ready";
+  }
+  /* --- screen view --- */
+  screenLines(fromRow){
+    const out = [];
+    for (let r = fromRow || 0; r < ROWS; r++) {
+      let s = ""; for (let c = 0; c < COLS; c++) { const ch = this.mem[VGA + 2 * (r * COLS + c)]; s += (ch >= 32 && ch < 127) ? String.fromCharCode(ch) : (ch === 0 ? " " : "·"); }
+      out.push(s.replace(/\s+$/, ""));
+    }
+    return out;
+  }
+  /* program output = lines after the BIOS banner, with trailing empty lines removed */
+  outputLines(){
+    const l = this.screenLines(this.sysRows);
+    while (l.length && l[l.length - 1] === "") l.pop();
+    return l;
+  }
+}
+
+/* plain-English explanation of one step */
+function explain(t, m){
+  if (!t || !t.ins) return "";
+  const {ins, before, after} = t, op = ins.op, [a, b] = ins.args;
+  const nm = o => o.t === "reg" || o.t === "sreg" ? o.name.toUpperCase() : o.t === "imm" ? o.expr : "memory " + memText(o);
+  const val = (v, S) => "0x" + hex(v, S === 8 ? 2 : 4) + (S === 8 && chr(v) ? " " + chr(v) : "");
+  const S = (a && a.t === "reg") ? a.size : (b && b.t === "reg") ? b.size : (a && a.size) || (b && b.size) || 16;
+  const readB = o => o.t === "reg" ? (o.size === 16 ? before.r[o.name] : (before.r[R8_PARENT[o.name][0]] >> R8_PARENT[o.name][1]) & 0xff) : o.t === "imm" ? o.val & (S === 8 ? 0xff : 0xffff) : o.t === "sreg" ? before.sr[o.name] : null;
+  const readA = o => o.t === "reg" ? (o.size === 16 ? after.r[o.name] : (after.r[R8_PARENT[o.name][0]] >> R8_PARENT[o.name][1]) & 0xff) : o.t === "sreg" ? after.sr[o.name] : null;
+  const memText = o => "[" + [o.seg ? o.seg + ":" : "", o.base || "", o.base && o.index ? "+" : "", o.index || "", (o.base || o.index) && o.dval ? "+" : "", (o.base || o.index) && !o.dval ? "" : "0x" + hex(o.dval)].join("") + "]";
+  const res = () => a.t === "mem" ? (t.writes && t.writes.length ? (S === 8 ? t.writes[0][2] : t.writes[0][2] | ((t.writes[1] || [0,0,0])[2] << 8)) : null) : readA(a);
+  switch (op) {
+    case "mov": return "Copied " + (b.t === "mem" ? "the " + (S === 8 ? "byte" : "word") + " at " + memText(b) + " (" + val(res(), S) + ")" : val(readB(b), S)) + " into " + nm(a) + ".";
+    case "add": case "sub": case "and": case "or": case "xor": {
+      const sym = {add:"+",sub:"−",and:"AND",or:"OR",xor:"XOR"}[op];
+      if (op === "xor" && a.t === "reg" && b.t === "reg" && a.name === b.name) return "XOR of a register with itself is always 0, so " + nm(a) + " is now 0. This is the usual way to clear a register.";
+      return nm(a) + " = " + (readB(a) !== null ? val(readB(a), S) : nm(a)) + " " + sym + " " + (readB(b) !== null ? val(readB(b), S) : nm(b)) + " = " + (res() !== null ? val(res(), S) : "?") + ".";
+    }
+    case "cmp": { const x = readB(a), y = readB(b); return "Compared " + nm(a) + (x !== null ? " (" + val(x, S) + ")" : "") + " with " + (y !== null ? val(y, S) : nm(b)) + " by subtracting. The answer is thrown away; only the flags change" + (after.f.ZF ? ": they were equal, so ZF=1." : ": they were different, so ZF=0."); }
+    case "test": return "ANDed " + nm(a) + " with " + nm(b) + " without saving the result, just to set flags" + (after.f.ZF ? ": the result was 0, so ZF=1." : ": the result was not 0, so ZF=0.");
+    case "inc": return nm(a) + " went up by 1" + (res() !== null ? " to " + val(res(), S) : "") + ". (inc never changes CF.)";
+    case "dec": return nm(a) + " went down by 1" + (res() !== null ? " to " + val(res(), S) : "") + ". (dec never changes CF.)";
+    case "shl": case "sal": return "Shifted " + nm(a) + " left by " + (b.t === "imm" ? b.val : "CL") + " bit(s); each shift left doubles it" + (res() !== null ? ". Now " + val(res(), S) : "") + ". The last bit pushed out went into CF.";
+    case "shr": return "Shifted " + nm(a) + " right by " + (b.t === "imm" ? b.val : "CL") + " bit(s); each shift right halves it" + (res() !== null ? ". Now " + val(res(), S) : "") + ". The last bit pushed out went into CF.";
+    case "push": return "Pushed " + val(t.writes && t.writes.length ? t.writes[0][2] | (t.writes[1][2] << 8) : 0, 16) + " onto the stack. SP went from 0x" + hex(before.r.sp) + " to 0x" + hex(after.r.sp) + ".";
+    case "pop": return "Popped the top of the stack into " + nm(a) + " (" + val(readA(a), 16) + "). SP went from 0x" + hex(before.r.sp) + " to 0x" + hex(after.r.sp) + ".";
+    case "jmp": return t.jump && t.jump.why.startsWith("jmp $") ? "jmp $ jumps to itself forever. The CPU is parked: your program is done." : "Jumped to 0x" + hex(t.jump.to) + labelFor(m, t.jump.to) + ".";
+    case "call": return "Pushed the return address 0x" + hex((before.ip + ins.len) & 0xffff) + " onto the stack (SP 0x" + hex(before.r.sp) + " → 0x" + hex(after.r.sp) + ") and jumped to " + (b ? "" : "0x" + hex(t.jump.to)) + labelFor(m, t.jump.to) + ".";
+    case "ret": return "Popped the return address 0x" + hex(t.jump.to) + " off the stack (SP 0x" + hex(before.r.sp) + " → 0x" + hex(after.r.sp) + ") and went back to the caller.";
+    case "loop": return "CX went down by 1 to " + after.r.cx + ". " + t.jump.why + ".";
+    case "lodsb": return "Loaded the byte at DS:SI (0x" + hex(before.r.si) + ") into AL: " + val(after.r.ax & 0xff, 8) + ". SI moved " + (before.f.DF ? "back" : "forward") + " to 0x" + hex(after.r.si) + ".";
+    case "stosb": return "Stored AL (" + val(before.r.ax & 0xff, 8) + ") at ES:DI (0x" + hex(before.r.di) + "). DI moved " + (before.f.DF ? "back" : "forward") + " to 0x" + hex(after.r.di) + ".";
+    case "cmpsb": return "Compared the byte at DS:SI with the byte at ES:DI by subtracting. SI and DI both moved " + (before.f.DF ? "back" : "forward") + "." + (after.f.ZF ? " They were equal (ZF=1)." : " They were different (ZF=0).");
+    case "int": {
+      const ah = before.r.ax >> 8, al = before.r.ax & 0xff;
+      if (a.val === 0x10 && ah === 0x0E) return "Called the BIOS video service, job 0x0E: print AL. " + (al === 13 ? "13 is carriage return: the cursor went to the start of the line." : al === 10 ? "10 is line feed: the cursor went down one line." : al === 8 ? "8 is backspace: the cursor moved one spot left (nothing was erased)." : "It printed " + (chr(al) || "character 0x" + hex(al, 2)) + " and moved the cursor right.");
+      if (a.val === 0x10 && ah === 0x00) return "Called the BIOS video service, job 0x00: set video mode " + hex(al, 2) + ". That clears the screen and puts the cursor at the top left.";
+      if (a.val === 0x10 && ah === 0x02) return "Moved the cursor to row " + (before.r.dx >> 8) + ", column " + (before.r.dx & 0xff) + ".";
+      if (a.val === 0x16 && (ah === 0 || ah === 0x10)) return t.waited ? "Asked the BIOS for a key. No key is waiting, so the CPU waits here until you type." : "The BIOS returned the key you typed: AL = " + val(after.r.ax & 0xff, 8) + ", AH = scan code 0x" + hex(after.r.ax >> 8, 2) + ".";
+      if (a.val === 0x16 && (ah === 1 || ah === 0x11)) return after.f.ZF ? "Checked for a key without waiting: none ready, so ZF=1." : "Checked for a key without waiting: one is ready (AL = " + val(after.r.ax & 0xff, 8) + "), so ZF=0.";
+      return "Called BIOS interrupt 0x" + hex(a.val, 2) + ".";
+    }
+    case "hlt": return after.f.IF ? "hlt: the CPU sleeps until the next interrupt (the timer), then carries on with the next instruction." : "hlt with interrupts off: the CPU stops for good.";
+    case "cli": return "Interrupts are now off (IF=0). Hardware like the timer and keyboard can't interrupt the CPU.";
+    case "sti": return "Interrupts are now on (IF=1).";
+    case "cld": return "Direction flag cleared (DF=0): string instructions like lodsb now move forward.";
+    case "std": return "Direction flag set (DF=1): string instructions like lodsb now move backward.";
+    case "nop": return "No operation: does nothing for one instruction.";
+    default: if (op in CC) return t.jump.why + (t.jump.taken ? " Next stop: 0x" + hex(t.jump.to) + labelFor(m, t.jump.to) + "." : " Next: the line below.");
+  }
+  return "";
+}
+function labelFor(m, addr){
+  if (!m || !m.prog) return "";
+  const virt = addr - 0x7C00 + m.prog.org;
+  for (const [k, v] of m.prog.symbols) if (v === virt && !k.includes(".")) return " (" + k + ")";
+  for (const [k, v] of m.prog.symbols) if (v === virt) return " (" + k + ")";
+  return "";
+}
+/* why each changed flag changed */
+function flagReasons(t){
+  if (!t || !t.ins) return [];
+  const out = [], op = t.ins.op;
+  for (const k of FLAG_NAMES) {
+    const x = t.before.f[k], y = t.after.f[k];
+    if (x === y) continue;
+    let why = "";
+    switch (k) {
+      case "ZF": why = y ? "the result was zero" : "the result was not zero"; break;
+      case "SF": why = y ? "the top bit of the result is 1 (negative if you read it as signed)" : "the top bit of the result is 0"; break;
+      case "CF": why = op === "add" ? (y ? "the unsigned result was too big and carried out" : "the unsigned result fit") :
+                       (op === "sub" || op === "cmp" || op === "cmpsb") ? (y ? "the first value was smaller, so the subtraction borrowed" : "no borrow was needed") :
+                       (op === "shl" || op === "sal" || op === "shr") ? "it holds the last bit shifted out" :
+                       (op in ALU || op === "test") ? "logic instructions always clear CF" : "changed by " + op; break;
+      case "OF": why = (op === "and" || op === "or" || op === "xor" || op === "test") ? "logic instructions always clear OF" : y ? "signed overflow: the result's sign is wrong for signed numbers" : "no signed overflow"; break;
+      case "PF": why = y ? "the low byte of the result has an even number of 1 bits" : "the low byte of the result has an odd number of 1 bits"; break;
+      case "AF": why = y ? "there was a carry or borrow out of bit 3" : "no carry or borrow out of bit 3"; break;
+      case "DF": why = y ? "std sets it" : "cld clears it"; break;
+      case "IF": why = y ? "sti turns interrupts on" : "cli turns interrupts off"; break;
+    }
+    out.push({flag:k, from:x, to:y, why, name:FLAG_INFO[k]});
   }
   return out;
 }
-function insLen(op,args){
-  if(!args.length) return 1;
-  if(op==="int"||JCC[op]||op==="jmp"||op==="loop") return 2;
-  if(op==="call") return 3;
-  if(args.length===1) return args[0].t==="mem"?4:(args[0].t==="imm"?3:1);
-  if(args.some(a=>a.t==="mem")) return 4;
-  if(args[1].t==="imm") return args[0].size===8?2:3;
-  return 2;
-}
 
-function assemble(src){
-  const lines=src.split("\n"), labels={}, errors=[], code=new Map(), mem=new Uint8Array(65536), instrs=[];
-  let start=0x7C00, addr=start, scope="", sawContent=false;
-  const err=(n,m)=>errors.push({line:n+1,msg:String(m)});
-  for(let n=0;n<lines.length;n++){
-    let line=stripComment(lines[n]).trim(); if(!line) continue;
-    try{
-      let m;
-      if((m=/^\[?\s*bits\s+(\w+)\s*\]?$/i.exec(line))){ if(m[1]!=="16") throw "Phase 1 runs in 16-bit real mode. Use [bits 16]."; continue; }
-      if((m=/^\[?\s*org\s+([^\]]+?)\s*\]?$/i.exec(line))){ if(sawContent) throw "Put [org ...] at the top, before any code"; start=addr=evalExpr(m[1],{labels,here:addr,start,scope,pass1:true}); continue; }
-      let colon=true;
-      if((m=/^([A-Za-z_.][\w.]*)\s*:\s*(.*)$/.exec(line)) || ((colon=false), (m=/^([A-Za-z_][\w.]*)\s+((?:db|dw|times)\s.*)$/i.exec(line)))){
-        let name=m[1];
-        if(!colon && (ARGC[name.toLowerCase()]!==undefined || /^(db|dw|times)$/i.test(name))) { /* not a label */ }
-        else {
-          if(name.startsWith(".")) name=scope+name; else scope=name;
-          if(labels[name]!==undefined) throw "Label '"+m[1]+"' is defined twice";
-          if(ARGC[name.toLowerCase()]!==undefined || R16.includes(name.toLowerCase()) || R8[name.toLowerCase()]) throw "'"+m[1]+"' is a reserved word, pick another label name";
-          labels[name]=addr; line=m[2].trim(); if(!line) continue;
-        }
-      }
-      sawContent=true;
-      const ctx={labels,here:addr,start,scope,pass1:true};
-      if((m=/^times\s+(.+?)\s+(db|dw)\s+(.*)$/i.exec(line))){
-        const cnt=evalExpr(m[1],ctx);
-        if(cnt<0) throw "Your boot sector is bigger than 512 bytes. The BIOS only loads 512, so shrink the code or text.";
-        const unit=dataBytes(m[2].toLowerCase(),m[3],ctx);
-        for(let i=0;i<cnt;i++) for(const b of unit) mem[(addr++)&0xffff]=b;
-        continue;
-      }
-      if((m=/^(db|dw)\s+(.*)$/i.exec(line))){
-        for(const b of dataBytes(m[1].toLowerCase(),m[2],ctx)) mem[(addr++)&0xffff]=b;
-        continue;
-      }
-      const sp=line.search(/\s/);
-      const op=(sp<0?line:line.slice(0,sp)).toLowerCase();
-      const rest=sp<0?"":line.slice(sp+1).trim();
-      if(ARGC[op]===undefined){
-        if(/^(org|bits|section|global|extern|equ)$/.test(op)) throw "'"+op+"' isn't needed in Phase 1";
-        throw "I don't know the instruction '"+op+"' yet. Phase 1 supports: "+SUPPORTED;
-      }
-      const args=rest?splitArgs(rest).map(parseOperand):[];
-      if(args.length!==ARGC[op]) throw op+" needs "+ARGC[op]+" operand"+(ARGC[op]===1?"":"s")+", you gave "+args.length;
-      const ins={op,args,line:n,addr,scope,src:line};
-      ins.len=insLen(op,args);
-      code.set(addr,ins); instrs.push(ins); addr+=ins.len;
-    }catch(e){ err(n,e); }
-  }
-  // pass 2: resolve values and check operand rules
-  for(const ins of instrs){
-    try{
-      const ctx={labels,here:ins.addr,start,scope:ins.scope};
-      for(const a of ins.args){
-        if(a.t==="imm") a.val=evalExpr(a.expr,ctx);
-        if(a.t==="mem") a.dval=evalExpr(a.disp,ctx)&0xffff;
-      }
-      validate(ins);
-    }catch(e){ err(ins.line,e); }
-  }
-  const end=addr;
-  if(!errors.length && end-start>512) errors.push({line:lines.length,msg:"Image is "+(end-start)+" bytes. A boot sector must be exactly 512."});
-  return {mem,code,labels,start,end,errors,count:instrs.length};
-}
-function validate(ins){
-  const {op,args}=ins; const [a,b]=args;
-  const two=["mov","add","sub","cmp","and","or","xor"];
-  if(two.includes(op)){
-    if(a.t==="imm") throw "The first operand of "+op+" can't be a number. It's where the result goes.";
-    if(a.t==="mem"&&b.t==="mem") throw "x86 can't use two memory operands at once. Load one into a register first.";
-    if((a.t==="seg"||b.t==="seg")&&op!=="mov") throw "Segment registers only work with mov";
-    if(a.t==="seg"&&b.t==="imm") throw "You can't mov a number straight into "+a.name+". Use mov ax, value then mov "+a.name+", ax";
-    if(a.t==="reg"&&b.t==="reg"&&a.size!==b.size) throw "Size mismatch: "+a.name+" is "+a.size+"-bit but "+b.name+" is "+b.size+"-bit";
-    let S=(a.t==="reg"||a.t==="seg")?a.size:(b.t==="reg"||b.t==="seg")?b.size:(a.size||b.size);
-    if(a.t==="mem"&&a.size&&b.t==="reg"&&a.size!==b.size) throw "Size mismatch between "+a.size+"-bit memory and "+b.name;
-    if(!S) throw "Size not specified. Add byte or word, for example: cmp byte [si], 0";
-    if(b.t==="imm") rangeCheck(b.val,S);
-    ins.size=S; return;
-  }
-  if(op==="shl"||op==="shr"){
-    if(a.t==="imm") throw "Can't shift a number";
-    if(!(b.t==="imm"||(b.t==="reg"&&b.name==="cl"))) throw op+" count must be a number or cl";
-    ins.size=a.size; if(!ins.size) throw "Size not specified. Add byte or word"; return;
-  }
-  if(op==="inc"||op==="dec"){ if(a.t==="imm") throw "Can't "+op+" a number"; ins.size=a.size; if(!ins.size) throw "Size not specified. Add byte or word, for example: inc byte [count]"; return; }
-  if(op==="push"||op==="pop"){
-    if(a.t==="reg"&&a.size===8) throw op+" works with 16-bit registers (ax, not al)";
-    if(op==="pop"&&a.t==="imm") throw "Can't pop into a number";
-    ins.size=16; return;
-  }
-  if(op==="int"){ if(a.t!=="imm") throw "int needs a number, like int 0x10"; return; }
-  if(JCC[op]||op==="jmp"||op==="call"||op==="loop"){
-    if(a.t==="mem") throw "Jumping through memory isn't supported in Phase 1";
-    if(a.t==="reg"&&(op!=="jmp"&&op!=="call")) throw op+" needs a label";
-    return;
-  }
-}
-function rangeCheck(v,S){
-  if(S===8&&(v>255||v<-128)) throw "The value "+v+" doesn't fit in 8 bits (max 255)";
-  if(S===16&&(v>65535||v<-32768)) throw "The value "+v+" doesn't fit in 16 bits";
-}
-
-/* =====================  SCREEN  ===================== */
-const COLS=80, ROWS=25, CW=9, CH=16;
-class Screen{
-  constructor(cv){ this.cv=cv; this.ctx=cv.getContext("2d"); this.clear(); }
-  clear(){ this.buf=Array.from({length:ROWS},()=>Array(COLS).fill(" ")); this.row=0; this.col=0; this.sysRows=0; }
-  lf(){ this.row++; if(this.row>=ROWS){ this.buf.shift(); this.buf.push(Array(COLS).fill(" ")); this.row=ROWS-1; if(this.sysRows>0) this.sysRows--; } }
-  tty(c){
-    if(c===13) this.col=0;
-    else if(c===10) this.lf();
-    else if(c===8){ if(this.col>0) this.col--; }
-    else if(c===7){}
-    else { this.buf[this.row][this.col]=c===0?"\0":String.fromCharCode(c); this.col++; if(this.col>=COLS){ this.col=0; this.lf(); } }
-  }
-  sys(text){ for(const ch of text) this.tty(ch.charCodeAt(0)); this.tty(13); this.tty(10); this.sysRows=this.row; }
-  lines(from){ return this.buf.slice(from||0).map(r=>r.join("").replace(/\0/g," ").replace(/\s+$/,"")); }
-  draw(cursor){
-    const x=this.ctx, css=getComputedStyle(document.documentElement);
-    x.fillStyle=css.getPropertyValue("--crt-bg").trim()||"#0a0d0b"; x.fillRect(0,0,COLS*CW,ROWS*CH);
-    const fg=css.getPropertyValue("--crt-fg").trim()||"#ffb000", dim=css.getPropertyValue("--crt-dim").trim()||"#8c6200";
-    x.font=CH+"px VT323, monospace"; x.textBaseline="top";
-    for(let r=0;r<ROWS;r++){ x.fillStyle=r<this.sysRows?dim:fg;
-      for(let c=0;c<COLS;c++){ const ch=this.buf[r][c]; if(ch!==" "&&ch!=="\0") x.fillText(ch,c*CW,r*CH+1); } }
-    if(cursor){ x.fillStyle=fg; x.fillRect(this.col*CW,this.row*CH+CH-3,CW-1,2); }
-  }
-}
-
-/* =====================  CPU  ===================== */
-const hex=(v,w)=>(v>>>0).toString(16).toUpperCase().padStart(w||4,"0");
-class CPU{
-  constructor(prog,screen,keys){
-    this.p=prog; this.mem=prog.mem.slice(); this.scr=screen; this.keys=keys;
-    this.r={ax:0,bx:0,cx:0,dx:0x0080,si:0,di:0,sp:0x7000,bp:0};
-    this.seg={cs:0,ds:0,es:0,ss:0,fs:0,gs:0};
-    this.f={ZF:0,CF:0,SF:0}; this.ip=prog.start; this.state="ready"; this.steps=0; this.msg="";
-  }
-  ea(o){ return ((o.base?this.r[o.base]:0)+o.dval)&0xffff; }
-  get(o,S){
-    if(o.t==="reg"){ if(o.size===16) return this.r[o.name]; const [b,sh]=R8[o.name]; return (this.r[b]>>sh)&0xff; }
-    if(o.t==="seg") return this.seg[o.name];
-    if(o.t==="imm") return o.val&(S===8?0xff:0xffff);
-    const e=this.ea(o); return S===8?this.mem[e]:(this.mem[e]|(this.mem[(e+1)&0xffff]<<8));
-  }
-  set(o,v,S){
-    if(o.t==="reg"){ if(o.size===16){ this.r[o.name]=v&0xffff; return; } const [b,sh]=R8[o.name]; this.r[b]=((this.r[b]&~(0xff<<sh))|((v&0xff)<<sh))&0xffff; return; }
-    if(o.t==="seg"){ this.seg[o.name]=v&0xffff; return; }
-    const e=this.ea(o); this.mem[e]=v&0xff; if(S===16) this.mem[(e+1)&0xffff]=(v>>8)&0xff;
-  }
-  zs(v,S){ const M=S===8?0xff:0xffff; this.f.ZF=(v&M)===0?1:0; this.f.SF=(v>>(S-1))&1; }
-  push(v){ this.r.sp=(this.r.sp-2)&0xffff; this.mem[this.r.sp]=v&0xff; this.mem[(this.r.sp+1)&0xffff]=(v>>8)&0xff; }
-  pop(){ const v=this.mem[this.r.sp]|(this.mem[(this.r.sp+1)&0xffff]<<8); this.r.sp=(this.r.sp+2)&0xffff; return v; }
-  fault(m){ this.state="fault"; this.msg=m; }
-  target(a){ return a.t==="imm"?a.val&0xffff:this.get(a,16); }
-  step(){
-    const ins=this.p.code.get(this.ip);
-    if(!ins){
-      const inData = this.ip>=this.p.start && this.ip<this.p.end;
-      this.fault(inData ? "The CPU ran into your data at 0x"+hex(this.ip)+" and is trying to run text as code. Add jmp $ (or a jump) before your data."
-                        : "The CPU jumped to 0x"+hex(this.ip)+", where there is no code. Check your jumps and ret.");
-      return;
-    }
-    this.cur=ins; this.steps++;
-    let next=(ins.addr+ins.len)&0xffff; const [a,b]=ins.args, S=ins.size||16, M=S===8?0xff:0xffff;
-    switch(ins.op){
-      case "mov": this.set(a,this.get(b,S),S); break;
-      case "add": { const x=this.get(a,S),y=this.get(b,S),r=x+y; this.zs(r,S); this.f.CF=r>M?1:0; this.set(a,r,S); break; }
-      case "sub": case "cmp": { const x=this.get(a,S),y=this.get(b,S),r=(x-y)&M; this.zs(r,S); this.f.CF=x<y?1:0; if(ins.op==="sub") this.set(a,r,S); break; }
-      case "and": case "or": case "xor": { const x=this.get(a,S),y=this.get(b,S); const r=ins.op==="and"?x&y:ins.op==="or"?x|y:x^y; this.zs(r,S); this.f.CF=0; this.set(a,r,S); break; }
-      case "shl": case "shr": { const x=this.get(a,S),n=this.get(b,8)&31; const r=ins.op==="shl"?(x<<n):(x>>n); this.zs(r&M,S); this.set(a,r&M,S); break; }
-      case "inc": case "dec": { const r=(this.get(a,S)+(ins.op==="inc"?1:-1))&M; this.zs(r,S); this.set(a,r,S); break; }
-      case "push": this.push(this.get(a,16)); break;
-      case "pop": this.set(a,this.pop(),16); break;
-      case "jmp": next=this.target(a); if(next===ins.addr){ this.state="idle"; } break;
-      case "call": if(this.r.sp<0x0600){ this.fault("Stack overflow: too many calls without ret."); return; } this.push(next); next=this.target(a); break;
-      case "ret": next=this.pop(); break;
-      case "loop": this.r.cx=(this.r.cx-1)&0xffff; if(this.r.cx!==0) next=this.target(a); break;
-      case "lodsb": this.set({t:"reg",name:"al",size:8},this.mem[this.r.si],8); this.r.si=(this.r.si+1)&0xffff; break;
-      case "stosb": this.mem[this.r.di]=this.r.ax&0xff; this.r.di=(this.r.di+1)&0xffff; break;
-      case "cmpsb": { const x=this.mem[this.r.si],y=this.mem[this.r.di],r=(x-y)&0xff; this.zs(r,8); this.f.CF=x<y?1:0; this.r.si=(this.r.si+1)&0xffff; this.r.di=(this.r.di+1)&0xffff; break; }
-      case "int": if(!this.interrupt(a.val&0xff)) { this.steps--; return; } break;
-      case "hlt": this.state="halted"; break;
-      case "cli": case "sti": case "cld": case "std": case "nop": break;
-      default:
-        if(JCC[ins.op]){ if(JCC[ins.op](this.f)) next=this.target(a); }
-    }
-    this.ip=next;
-  }
-  interrupt(n){
-    const ah=(this.r.ax>>8)&0xff, al=this.r.ax&0xff;
-    if(n===0x10){
-      if(ah===0x0e){ this.scr.tty(al); return true; }
-      if(ah===0x00){ this.scr.clear(); return true; }
-      if(ah===0x02){ const dh=(this.r.dx>>8)&0xff, dl=this.r.dx&0xff; this.scr.row=Math.min(dh,ROWS-1); this.scr.col=Math.min(dl,COLS-1); return true; }
-      return true; // other video calls ignored
-    }
-    if(n===0x16){
-      if(ah===0x00||ah===0x10){
-        if(!this.keys.length){ this.state="waitkey"; return false; }
-        const k=this.keys.shift(); this.r.ax=((k.scan&0xff)<<8)|(k.code&0xff); return true;
-      }
-      if(ah===0x01||ah===0x11){
-        if(!this.keys.length){ this.f.ZF=1; } else { this.f.ZF=0; const k=this.keys[0]; this.r.ax=((k.scan&0xff)<<8)|(k.code&0xff); }
-        return true;
-      }
-      return true;
-    }
-    if(n===0x13){ this.fault("int 0x13 (disk) arrives in Phase 2. Run it in QEMU for now."); return false; }
-    this.fault("int 0x"+hex(n,2)+" isn't simulated here.");
-    return false;
-  }
-}
-
+return { assemble, Machine, explain, flagReasons, hex, VGA, COLS, ROWS, INITIAL_SP, FLAG_NAMES, SUPPORTED, R8_PARENT };
+})();
 /* =====================  LESSONS (Learn step)  ===================== */
 const escH=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const snip=s=>'<pre class="snip">'+escH(s)+'</pre>';
@@ -1242,15 +2062,122 @@ const LESSONS = [
 ]
 ];
 
+/* =====================  PROGRESS (saved in this browser)  ===================== */
+/*
+  One versioned record under "osforge:v2". Every read is validated, so a damaged or
+  hand-edited save can't break the app; unreadable data is kept aside under
+  "osforge:v2:damaged" and the app starts fresh. Storage that throws (private mode,
+  blocked site data) is treated as unavailable and the app keeps working in memory.
+*/
+const Progress = (function(){
+  const KEY = "osforge:v2", VERSION = 2, MAX_CODE = 20000;
+  function empty(n){ return {v:VERSION, cur:0, done:[], learned:[], quiz:[], lessonPos:{}, code:{}, prefs:{debugOpen:null}}; }
+  const isInt = (x, lo, hi) => Number.isInteger(x) && x >= lo && x <= hi;
+  function sanitize(o, n, lessonCounts){
+    const out = empty(n), notes = [];
+    if (!o || typeof o !== "object" || Array.isArray(o)) return {data:out, notes:["Saved progress was not in the expected format."]};
+    if (o.v !== undefined && o.v !== VERSION) notes.push("Saved progress came from a different version (" + o.v + ").");
+    if (isInt(o.cur, 0, n - 1)) out.cur = o.cur;
+    const ints = (arr, name) => { if (!Array.isArray(arr)) return []; const ok = [...new Set(arr.filter(x => isInt(x, 0, n - 1)))].sort((a, b) => a - b); if (ok.length !== arr.length) notes.push("Ignored invalid entries in " + name + "."); return ok; };
+    out.done = ints(o.done, "completed missions");
+    out.learned = ints(o.learned, "finished lessons");
+    if (Array.isArray(o.quiz)) out.quiz = [...new Set(o.quiz.filter(k => typeof k === "string" && /^\d+-\d+$/.test(k) && (() => { const [a, b] = k.split("-").map(Number); return a < n && b < (lessonCounts ? lessonCounts[a] : 99); })()))];
+    if (o.lessonPos && typeof o.lessonPos === "object") for (const [k, v] of Object.entries(o.lessonPos)) {
+      const i = Number(k); if (isInt(i, 0, n - 1) && isInt(v, 0, (lessonCounts ? lessonCounts[i] : 99) - 1)) out.lessonPos[i] = v;
+    }
+    if (o.code && typeof o.code === "object") for (const [k, v] of Object.entries(o.code)) {
+      const i = Number(k);
+      if (isInt(i, 0, n - 1) && typeof v === "string") { if (v.length > MAX_CODE) notes.push("Code for mission " + (i + 1) + " was too long and was skipped."); else out.code[i] = v; }
+    }
+    if (o.prefs && typeof o.prefs === "object" && (typeof o.prefs.debugOpen === "boolean" || o.prefs.debugOpen === null)) out.prefs.debugOpen = o.prefs.debugOpen;
+    return {data:out, notes};
+  }
+  function migrateV1(storage, n){
+    // v1 (first published version) used one key per item.
+    const g = k => { const v = storage.getItem("osforge:" + k); return v === null ? undefined : JSON.parse(v); };
+    const o = {v:VERSION, cur:g("cur"), done:g("done"), learned:g("learned"), quiz:g("quiz"), code:{}};
+    let any = o.cur !== undefined || o.done || o.learned || o.quiz;
+    for (let i = 0; i < n; i++) { const c = g("code" + i); if (typeof c === "string") { o.code[i] = c; any = true; } }
+    return any ? o : null;
+  }
+  function load(storage, n, lessonCounts){
+    if (!storage) return {data:empty(n), available:false, notes:["This browser isn't letting the page save, so progress lasts until you close the tab."]};
+    let raw;
+    try { raw = storage.getItem(KEY); }
+    catch (e) { return {data:empty(n), available:false, notes:["This browser isn't letting the page save, so progress lasts until you close the tab."]}; }
+    if (raw === null) {
+      try { const old = migrateV1(storage, n); if (old) { const r = sanitize(old, n, lessonCounts); return {data:r.data, available:true, migrated:true, notes:r.notes}; } } catch (e) {}
+      return {data:empty(n), available:true, notes:[]};
+    }
+    let parsed;
+    try { parsed = JSON.parse(raw); }
+    catch (e) {
+      try { storage.setItem(KEY + ":damaged", raw); } catch (e2) {}
+      return {data:empty(n), available:true, notes:["Your saved progress was damaged and couldn't be read, so the app started fresh. A copy was kept aside."]};
+    }
+    const r = sanitize(parsed, n, lessonCounts);
+    return {data:r.data, available:true, notes:r.notes};
+  }
+  function save(storage, data){
+    if (!storage) return false;
+    try { storage.setItem(KEY, JSON.stringify(data)); return true; } catch (e) { return false; }
+  }
+  function exportText(data){
+    return JSON.stringify(Object.assign({app:"os-forge", exported:new Date().toISOString()}, data), null, 2);
+  }
+  function importText(text, n, lessonCounts){
+    let o;
+    try { o = JSON.parse(text); } catch (e) { return {ok:false, error:"That isn't valid JSON. Paste the whole text you exported, from { to }."}; }
+    if (!o || o.app !== "os-forge") return {ok:false, error:"That text wasn't exported from OS Forge."};
+    const r = sanitize(o, n, lessonCounts);
+    return {ok:true, data:r.data, notes:r.notes};
+  }
+  function clear(storage){
+    if (!storage) return;
+    try {
+      storage.removeItem(KEY);
+      const old = []; for (let i = 0; i < storage.length; i++) { const k = storage.key(i); if (k && k.startsWith("osforge:") && k !== KEY + ":damaged") old.push(k); }
+      old.forEach(k => storage.removeItem(k));
+    } catch (e) {}
+  }
+  return {load, save, exportText, importText, clear, sanitize, empty, KEY, VERSION};
+})();
 /* =====================  APP  ===================== */
 const $=id=>document.getElementById(id);
-const store={ get(k,d){ try{ const v=localStorage.getItem("osforge:"+k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
-              set(k,v){ try{ localStorage.setItem("osforge:"+k,JSON.stringify(v)); }catch(e){} } };
-let cur=Math.min(store.get("cur",0),M.length-1);
-let done=new Set(store.get("done",[]));
+/* progress: one validated record (see progress.js) */
+let storage=null; try{ storage=window.localStorage; storage.getItem(Progress.KEY); }catch(e){ storage=null; }
+const LCOUNTS=LESSONS.map(l=>l.length);
+const loaded=Progress.load(storage, M.length, LCOUNTS);
+let P=loaded.data, saveWarned=false;
+function persist(){
+  P.done=[...done].sort((a,b)=>a-b); P.learned=[...learned].sort((a,b)=>a-b); P.quiz=[...quizDone]; P.cur=cur;
+  if(!Progress.save(storage,P)&&!saveWarned&&loaded.available){ saveWarned=true; notice("Your progress couldn't be saved in this browser (storage may be full or blocked). Use Progress → Export to keep a copy."); }
+}
+function notice(text){ const n=$("notice"); n.textContent=text; n.hidden=!text; }
+let cur=P.cur;
+let done=new Set(P.done);
+const learned=new Set(P.learned);
+const quizDone=new Set(P.quiz);
+const {assemble, Machine, hex} = ForgeCore;
 const codeEl=$("code"), gutter=$("gutter"), consoleEl=$("console"), canvas=$("screen");
-const screen=new Screen(canvas);
-let cpu=null, prog=null, keys=[], autoRun=false, raf=0, dirty=true, typedCount=0, wonThisRun=false, booted=false, solArmed=false;
+let cpu=null, prog=null, autoRun=false, raf=0, dirty=true, wonThisRun=false, booted=false, solArmed=false;
+
+/* CRT: draws the simulated VGA text memory (0xB8000) onto the canvas */
+const CW=9, CH=16, crt=canvas.getContext("2d");
+function drawScreen(cursorOn){
+  const css=getComputedStyle(document.documentElement);
+  crt.fillStyle=css.getPropertyValue("--crt-bg").trim()||"#0a0d0b"; crt.fillRect(0,0,ForgeCore.COLS*CW,ForgeCore.ROWS*CH);
+  if(!cpu) return;
+  const fg=css.getPropertyValue("--crt-fg").trim()||"#ffb000", dim=css.getPropertyValue("--crt-dim").trim()||"#8c6200";
+  crt.font=CH+"px VT323, monospace"; crt.textBaseline="top";
+  for(let r=0;r<ForgeCore.ROWS;r++){ crt.fillStyle=r<cpu.sysRows?dim:fg;
+    for(let c=0;c<ForgeCore.COLS;c++){ const ch=cpu.mem[ForgeCore.VGA+2*(r*ForgeCore.COLS+c)]; if(ch>32&&ch!==255) crt.fillText(cp437(ch),c*CW,r*CH+1); } }
+  if(cursorOn){ const k=cpu.cursor(); crt.fillStyle=fg; crt.fillRect(k.col*CW,k.row*CH+CH-3,CW-1,2); }
+  const st=$("screenText"); if(st&&st.parentElement.open){ const t=cpu.screenLines().join("\n").replace(/\n+$/,""); if(st.textContent!==t) st.textContent=t; }
+}
+const CP437_HI="ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ";
+const CP437_LO=" ☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼";
+function cp437(c){ return c<32?CP437_LO[c]:c<127?String.fromCharCode(c):c===127?"⌂":CP437_HI[c-128]; }
 
 function log(text,cls,line){
   const d=document.createElement("div"); d.className=cls||"info";
@@ -1297,7 +2224,7 @@ function renderRoad(){
   });
 }
 function openMission(i){
-  stopRun(); cur=i; store.set("cur",i);
+  stopRun(); cur=i; persist();
   const m=M[i];
   $("eyebrow").textContent="Mission "+(i+1)+" of "+M.length+" · Phase 1 · Boot sector";
   $("mTitle").textContent=m.title; $("mStory").textContent=m.story; $("mTask").textContent=m.task;
@@ -1305,31 +2232,27 @@ function openMission(i){
   m.learn.forEach(([k,v])=>{ const d=document.createElement("div"); const b=document.createElement("b"); b.textContent=k; const p=document.createElement("p"); p.innerHTML=v; d.appendChild(b); d.appendChild(p); L.appendChild(d); });
   $("hintBox").hidden=true; $("hintBox").innerHTML=m.hint; $("hintBtn").textContent="Hint";
   solArmed=false; $("solBtn").textContent="Load solution";
-  codeEl.value=store.get("code"+i,m.starter); renderGutter(); codeEl.scrollTop=0;
-  $("win").hidden=true;
-  cpu=null; dirty=true; screen.clear(); screen.draw(false); clearLog();
+  codeEl.value=typeof P.code[i]==="string"?P.code[i]:m.starter; renderGutter(); codeEl.scrollTop=0;
+  $("win").hidden=true; wonThisRun=false; renderChecks(null);
+  cpu=null; lastTrace=null; renderStep(null); dirty=true; drawScreen(false); clearLog();
   log("Press Boot to power on the PC with your code as its disk.");
   setLed("off"); renderRegs(); renderNav(); renderRoad();
-  lessonIdx=0; renderLesson(); showView(learned.has(i)?"build":"learn");
+  lessonIdx=P.lessonPos[i]||0; renderLesson(); showView(learned.has(i)?"build":"learn");
 }
 
 function boot(){
-  stopRun(); clearLog(); toldKeys=false; keys=[]; typedCount=0; wonThisRun=false; booted=false;
+  stopRun(); clearLog(); toldKeys=false; wonThisRun=false; booted=false; memFollow="code"; memBase=-1;
   prog=assemble(codeEl.value);
-  if(prog.errors.length){
+  if(!prog.ok){
     prog.errors.slice(0,8).forEach(e=>log(e.msg,"err",e.line));
     if(prog.errors.length>8) log("…and "+(prog.errors.length-8)+" more","err");
-    cpu=null; setLed("err","ASSEMBLY ERROR"); screen.clear(); screen.draw(false); renderRegs(); return false;
+    cpu=null; setLed("err","ASSEMBLY ERROR"); drawScreen(false); renderRegs(); return false;
   }
-  log("Assembled "+prog.count+" instructions into a "+(prog.end-prog.start)+"-byte disk image.","info");
-  screen.clear(); screen.sys("Booting from Hard Disk...");
-  cpu=new CPU(prog,screen,keys); dirty=false;
-  const sig0=cpu.mem[(prog.start+510)&0xffff], sig1=cpu.mem[(prog.start+511)&0xffff];
-  if(prog.end-prog.start<512 || sig0!==0x55 || sig1!==0xAA){
-    screen.sys("Boot failed: not a bootable disk"); screen.sys("No bootable device.");
-    cpu.state="nobootable";
-    log("The BIOS found no 55 AA signature at bytes 510-511"+(prog.end-prog.start<512?" (your image is only "+(prog.end-prog.start)+" bytes)":"")+".","err");
-    screen.draw(false); setLed("err","NO BOOT DEVICE"); renderRegs(); return false;
+  log("Assembled "+prog.count+" instructions ("+prog.codeBytes+" bytes of machine code) into a "+prog.size+"-byte disk image.","info");
+  prog.warnings.forEach(w=>log(w.msg,"warn",w.line));
+  cpu=new Machine(prog); dirty=false;
+  if(!cpu.boot()){
+    log(cpu.msg,"err"); drawScreen(false); setLed("err","NO BOOT DEVICE"); renderRegs(); return false;
   }
   booted=true;
   return true;
@@ -1339,8 +2262,8 @@ function setLed(kind,text){
   $("ledText").textContent=text||(kind==="off"?"POWER OFF":"");
 }
 function runLoop(){
-  raf=0; if(!cpu) return;
-  let n=0; while(cpu.state==="run" && n<4000){ cpu.step(); n++; }
+  raf=0; if(!cpu) return; lastTrace=null; renderStep(null);
+  cpu.run(4000);
   afterExec();
   if(cpu.state==="run") raf=requestAnimationFrame(runLoop);
 }
@@ -1349,7 +2272,7 @@ let lastState="", toldKeys=false;
 function afterExec(){
   if(!cpu) return;
   const st=cpu.state;
-  screen.draw(blinkOn && (st==="run"||st==="waitkey"||st==="idle"||st==="ready"));
+  drawScreen(blinkOn && (st==="run"||st==="waitkey"||st==="idle"||st==="ready"));
   renderRegs();
   if(st!==lastState){
     lastState=st;
@@ -1360,48 +2283,122 @@ function afterExec(){
     if(st==="halted") { setLed("on","HALTED"); log("CPU halted (hlt).","ok"); }
     if(st==="fault") { setLed("err","CRASHED"); log(cpu.msg,"err",cpu.cur?cpu.cur.line+1:null); }
   }
-  checkMission();
 }
-function checkMission(){
-  if(!cpu||wonThisRun) return;
-  const lines=screen.lines(screen.sysRows);
-  const c={booted, state:cpu.state, lines, prog:lines.join("\n"), typedCount};
-  let ok=false; try{ ok=!!M[cur].check(c); }catch(e){ ok=false; }
-  if(ok){
-    wonThisRun=true; done.add(cur); store.set("done",[...done]);
+/* Mission checks: behavioral tests run on a separate, hidden simulated PC */
+function renderChecks(results){
+  const L=$("checkList"); L.textContent="";
+  const specs=MissionTests.SPECS[cur];
+  specs.forEach((t,i)=>{
+    const r=results&&results[i], li=document.createElement("li");
+    li.className=r?(r.pass?"pass":"fail"):"";
+    const ic=document.createElement("i"); ic.textContent=r?(r.pass?"✓":"✗"):"·"; ic.setAttribute("aria-hidden","true");
+    const tx=document.createElement("div"); tx.textContent=(r?(r.pass?"Passed: ":"Failed: "):"")+t.name;
+    if(r&&!r.pass){ const sm=document.createElement("small"); sm.textContent=r.msg; tx.appendChild(sm); }
+    li.appendChild(ic); li.appendChild(tx); L.appendChild(li);
+  });
+  const n=results?results.filter(r=>r.pass).length:0;
+  $("checkSummary").textContent=results?n+" of "+specs.length+" checks pass":"Not checked yet";
+}
+function runChecks(){
+  const results=MissionTests.run(cur, codeEl.value);
+  renderChecks(results);
+  if(results.every(r=>r.pass)&&!wonThisRun){
+    wonThisRun=true; done.add(cur); persist();
     $("winText").textContent=M[cur].win;
     $("nextBtn").hidden = cur>=M.length-1;
     $("win").hidden=false; renderNav(); renderRoad();
-    log("Mission complete.","ok");
-  }
+    log("All mission checks pass. Mission complete.","ok");
+  } else if(!results.every(r=>r.pass)) log("Mission checks: "+results.filter(r=>r.pass).length+" of "+results.length+" pass. See the list under the task.","info");
 }
+$("checkBtn").addEventListener("click",()=>{ wonThisRun=false; runChecks(); });
+let lastTrace=null;
 function renderRegs(){
   const R=$("regs"); R.textContent="";
   const r=cpu?cpu.r:{ax:0,bx:0,cx:0,dx:0,si:0,di:0,sp:0,bp:0};
-  const items=[["AX",r.ax,true],["BX",r.bx,true],["CX",r.cx,true],["DX",r.dx,true],["SI",r.si],["DI",r.di],["SP",r.sp],["IP",cpu?cpu.ip:0]];
-  for(const [k,v,split] of items){
-    const d=document.createElement("div"); d.className="reg";
+  const prev=lastTrace&&lastTrace.before;
+  const items=[["AX","ax",true],["BX","bx",true],["CX","cx",true],["DX","dx",true],["SI","si"],["DI","di"],["SP","sp"],["BP","bp"]];
+  for(const [k,key,split] of items){
+    const v=r[key], old=prev?prev.r[key]:v, changed=prev&&old!==v;
+    const d=document.createElement("div"); d.className="reg"+(changed?" chg":"");
     const s=document.createElement("span"); s.textContent=split?k+" ("+k[0]+"H "+k[0]+"L)":k;
     const b=document.createElement("b");
-    if(split){ b.innerHTML=hex(v>>8,2)+" <em>"+hex(v&0xff,2)+"</em>"; const al=v&0xff; if(al>=32&&al<127){ b.title="Low byte as character: '"+String.fromCharCode(al)+"'"; b.innerHTML+=' <span style="display:inline;font-size:12px;letter-spacing:0">\''+escapeHtml(String.fromCharCode(al))+'\'</span>'; } }
-    else b.textContent=hex(v);
+    const fmt=x=>split?hex(x>>8,2)+" <em>"+hex(x&0xff,2)+"</em>":hex(x);
+    b.innerHTML=(changed?"<del>"+fmt(old)+" → </del>":"")+fmt(v);
+    if(split){ const lo=v&0xff; if(lo>=32&&lo<127) b.innerHTML+=' <span style="display:inline;font-size:12px;letter-spacing:0">\''+escapeHtml(String.fromCharCode(lo))+'\'</span>'; }
+    if(changed) d.setAttribute("aria-label",k+" changed from "+hex(old)+" to "+hex(v));
     d.appendChild(s); d.appendChild(b); R.appendChild(d);
   }
+  const sr=document.createElement("div"); sr.className="sregs";
+  sr.textContent=cpu?"IP "+hex(cpu.ip)+" · CS "+hex(cpu.sr.cs)+" · DS "+hex(cpu.sr.ds)+" · ES "+hex(cpu.sr.es)+" · SS "+hex(cpu.sr.ss):"IP 0000 · CS 0000 · DS 0000 · ES 0000 · SS 0000";
+  R.appendChild(sr);
   const F=$("flags"); F.textContent="Flags";
-  for(const k of ["ZF","CF","SF"]){ const e=document.createElement("span"); e.className="flag"+(cpu&&cpu.f[k]?" on":""); e.textContent=k+"="+(cpu?cpu.f[k]:0); F.appendChild(e); }
+  for(const k of ["ZF","CF","SF","OF","PF","AF","DF","IF"]){
+    const on=cpu?cpu.f[k]:0, was=prev?prev.f[k]:on;
+    const e=document.createElement("span"); e.className="flag"+(on?" on":"")+(was!==on?" chg":""); e.textContent=k+"="+on;
+    e.title={ZF:"zero",CF:"carry",SF:"sign",OF:"overflow",PF:"parity",AF:"aux carry",DF:"direction",IF:"interrupts enabled"}[k];
+    F.appendChild(e);
+  }
   const steps=document.createElement("span"); steps.textContent=cpu?" · "+cpu.steps.toLocaleString()+" instructions run":""; F.appendChild(steps);
+  renderNext(); renderMem();
+}
+function renderNext(){
   const nx=$("nextins");
-  if(cpu&&(cpu.state==="ready"||cpu.state==="waitkey")){ const ins=cpu.p.code.get(cpu.ip); nx.textContent=ins?"Next → line "+(ins.line+1)+":  "+ins.src:""; }
-  else nx.textContent="";
+  if(!(cpu&&(cpu.state==="ready"||cpu.state==="waitkey"))){ nx.textContent=""; return; }
+  const ins=cpu.nextIns(); if(!ins){ nx.textContent=""; return; }
+  let why="";
+  if(ins.op in {jo:1,jno:1,jb:1,jc:1,jnae:1,jae:1,jnb:1,jnc:1,je:1,jz:1,jne:1,jnz:1,jbe:1,jna:1,ja:1,jnbe:1,js:1,jns:1,jp:1,jpe:1,jnp:1,jpo:1,jl:1,jnge:1,jge:1,jnl:1,jle:1,jng:1,jg:1,jnle:1}) why="\n   "+cpu.condWhy(ins.op,cpu.cond(ins.op));
+  else if(ins.op==="loop") why="\n   loop will make CX "+((cpu.r.cx-1)&0xffff)+(((cpu.r.cx-1)&0xffff)?", not 0, so it will jump back.":", so it will fall through.");
+  else if(cpu.state==="waitkey") why="\n   Waiting for you to type a key.";
+  nx.textContent="Next → line "+(ins.line+1)+":  "+ins.src+why;
+}
+function renderStep(t){
+  const S=$("stepInfo"); S.textContent="";
+  if(!t||!t.ins) return;
+  const add=(tag,cls,text)=>{ const e=document.createElement(tag); if(cls) e.className=cls; if(text!==undefined) e.textContent=text; S.appendChild(e); return e; };
+  add("div","lbl","Just ran");
+  add("div","what","line "+(t.ins.line+1)+":  "+t.ins.src+"   ("+[...t.ins.bytes].map(b=>hex(b,2)).join(" ")+")");
+  if(t.fault){ add("p","why",t.fault); return; }
+  add("p","why",ForgeCore.explain(t,cpu));
+  const changedRegs=Object.keys(t.after.r).filter(k=>t.after.r[k]!==t.before.r[k]).concat(Object.keys(t.after.sr).filter(k=>t.after.sr[k]!==t.before.sr[k]));
+  if(changedRegs.length){ add("div","lbl","Registers changed"); const ul=add("ul"); changedRegs.forEach(k=>{ const a=t.before.r[k]!==undefined?t.before.r[k]:t.before.sr[k], b=t.after.r[k]!==undefined?t.after.r[k]:t.after.sr[k]; const li=document.createElement("li"); li.textContent=k.toUpperCase()+": 0x"+hex(a)+" → 0x"+hex(b); ul.appendChild(li); }); }
+  const fr=ForgeCore.flagReasons(t);
+  if(fr.length){ add("div","lbl","Flags changed"); const ul=add("ul"); fr.forEach(f=>{ const li=document.createElement("li"); li.textContent=f.flag+" ("+f.name+"): "+f.from+" → "+f.to+" because "+f.why+"."; ul.appendChild(li); }); }
+  else if(["cmp","test","add","sub","and","or","xor","inc","dec","shl","shr","sal","cmpsb"].includes(t.ins.op)) add("p",null,"Flags were updated but none changed value.");
+  if(t.writes&&t.writes.length){ add("div","lbl","Memory changed"); const ul=add("ul"); t.writes.slice(0,8).forEach(w=>{ const li=document.createElement("li"); li.textContent="0x"+hex(w[0],5)+": "+hex(w[1],2)+" → "+hex(w[2],2)+(w[2]>=32&&w[2]<127?" ('"+String.fromCharCode(w[2])+"')":""); ul.appendChild(li); }); if(t.writes.length>8){ const li=document.createElement("li"); li.textContent="…and "+(t.writes.length-8)+" more bytes"; ul.appendChild(li); } }
+  (t.notes||[]).forEach(n=>add("p",null,n));
+}
+let memBase=0x07C00, memFollow="code";
+function renderMem(){
+  const D=$("memDump");
+  const mem=cpu?cpu.mem:null;
+  if(cpu&&memFollow){ const t={code:cpu.phys("cs",cpu.ip),si:cpu.phys("ds",cpu.r.si),di:cpu.phys("es",cpu.r.di),sp:cpu.phys("ss",cpu.r.sp),vga:ForgeCore.VGA}[memFollow]; if(t!==undefined&&(t<memBase||t>=memBase+128)) memBase=Math.max(0,(t&~15)-(memFollow==="code"?16:0)); }
+  const marks={};
+  if(cpu){ marks[cpu.phys("ds",cpu.r.si)]="si"; marks[cpu.phys("es",cpu.r.di)]=(marks[cpu.phys("es",cpu.r.di)]?marks[cpu.phys("es",cpu.r.di)]+" ":"")+"di"; const spp=cpu.phys("ss",cpu.r.sp); marks[spp]=(marks[spp]?marks[spp]+" ":"")+"sp"; }
+  const written=new Set(lastTrace&&lastTrace.writes?lastTrace.writes.map(w=>w[0]):[]);
+  let html="";
+  for(let row=0;row<8;row++){
+    const a=(memBase+row*16)&0xFFFFF;
+    html+='<span class="a">'+hex(a,5)+'</span>  ';
+    let asc="";
+    for(let i=0;i<16;i++){
+      const p=(a+i)&0xFFFFF, v=mem?mem[p]:0;
+      const cls=[marks[p]||"", written.has(p)?"w":""].join(" ").trim();
+      html+=(cls?'<span class="'+cls+'">'+hex(v,2)+'</span>':hex(v,2))+(i===7?"  ":" ");
+      asc+=v>=32&&v<127?escapeHtml(String.fromCharCode(v)):".";
+    }
+    html+=" "+asc+"\n";
+  }
+  D.innerHTML=html;
+  $("memAddr").value=hex(memBase,5);
 }
 function escapeHtml(s){ return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
 /* keyboard into the simulated PC */
-const SCAN={13:0x1C,8:0x0E,32:0x39};
 function sendKey(code){
-  if(!cpu||["fault","nobootable","idle","halted"].includes(cpu.state)) return;
-  keys.push({code,scan:SCAN[code]||0x1E}); if(code>=32) typedCount++;
-  if(cpu.state==="waitkey"){ cpu.state=autoRun?"run":"ready"; if(autoRun) { afterExec(); if(!raf) raf=requestAnimationFrame(runLoop); } else afterExec(); }
+  if(!cpu||["fault","nobootable","idle","halted","off"].includes(cpu.state)) return;
+  const waiting=cpu.state==="waitkey";
+  cpu.pressKey(code);
+  if(waiting){ if(autoRun){ cpu.state="run"; afterExec(); if(!raf) raf=requestAnimationFrame(runLoop); } else afterExec(); }
 }
 canvas.addEventListener("click",()=>canvas.focus());
 canvas.addEventListener("keydown",e=>{
@@ -1419,28 +2416,31 @@ $("bsKey").addEventListener("click",()=>sendKey(8));
 /* toolbar */
 $("runBtn").addEventListener("click",()=>{
   if(cpu&&cpu.state==="ready"&&!dirty&&cpu.steps>0){ autoRun=true; cpu.state="run"; afterExec(); raf=requestAnimationFrame(runLoop); return; }
-  if(!boot()) return; autoRun=true; cpu.state="run"; lastState=""; afterExec(); raf=requestAnimationFrame(runLoop);
+  const okBoot=boot(); setTimeout(runChecks,0); if(!okBoot) return; autoRun=true; cpu.state="run"; lastState=""; afterExec(); raf=requestAnimationFrame(runLoop);
 });
 $("stepBtn").addEventListener("click",()=>{
   if(!cpu||dirty||["fault","nobootable","idle","halted"].includes(cpu.state)){
-    if(!boot()) return; cpu.state="ready"; lastState=""; log("Step mode. Each press runs one instruction. Watch the registers.","info"); afterExec(); return;
+    if(!boot()) return; cpu.state="ready"; lastState=""; lastTrace=null; renderStep(null); log("Step mode. Each press runs one instruction. The debugger explains what changed.","info"); afterExec(); return;
   }
   if(cpu.state==="run") stopRun();
-  if(cpu.state==="ready"){ cpu.step(); afterExec(); }
+  if(cpu.state==="ready"){ lastTrace=cpu.step(); renderStep(lastTrace); afterExec(); }
 });
+$("powerBtn").addEventListener("click",()=>{ stopRun(); cpu=null; lastTrace=null; dirty=true; lastState=""; renderStep(null); drawScreen(false); setLed("off"); renderRegs(); log("The PC is off. Your code is unchanged. Press Boot or Step to start it again.","info"); });
+$("memAddr").addEventListener("change",()=>{ const v=parseInt($("memAddr").value.replace(/^0x/i,""),16); if(!Number.isNaN(v)){ memBase=(v&0xFFFFF)&~15; memFollow=null; renderMem(); } else $("memAddr").value=hex(memBase,5); });
+document.querySelectorAll("[data-mem]").forEach(b=>b.addEventListener("click",()=>{ memFollow=b.dataset.mem; memBase=-1; if(!cpu){ memBase={code:0x7C00,vga:ForgeCore.VGA}[memFollow]||0; } renderMem(); }));
 $("stopBtn").addEventListener("click",()=>{ if(cpu&&cpu.state==="waitkey"){ autoRun=false; } stopRun(); });
-$("resetBtn").addEventListener("click",()=>{ codeEl.value=M[cur].starter; store.set("code"+cur,codeEl.value); renderGutter(); dirty=true; log("Code reset to the mission starter.","info"); });
+$("resetBtn").addEventListener("click",()=>{ codeEl.value=M[cur].starter; delete P.code[cur]; persist(); renderGutter(); dirty=true; log("Code restored to the mission starter.","info"); });
 $("hintBtn").addEventListener("click",()=>{ const h=$("hintBox"); h.hidden=!h.hidden; $("hintBtn").textContent=h.hidden?"Hint":"Hide hint"; });
 $("solBtn").addEventListener("click",()=>{
   if(!solArmed){ solArmed=true; $("solBtn").textContent="Click again to replace your code"; return; }
   solArmed=false; $("solBtn").textContent="Load solution";
-  codeEl.value=M[cur].solution; store.set("code"+cur,codeEl.value); renderGutter(); dirty=true; log("Solution loaded. Read it line by line, then press Boot.","info");
+  codeEl.value=M[cur].solution; P.code[cur]=codeEl.value; persist(); renderGutter(); dirty=true; log("Solution loaded. Read it line by line, then press Boot.","info");
 });
 $("nextBtn").addEventListener("click",()=>{ if(cur<M.length-1){ openMission(cur+1); window.scrollTo({top:0,behavior:"smooth"}); } });
 
 /* editor behaviour */
 let saveT=0;
-codeEl.addEventListener("input",()=>{ dirty=true; renderGutter(); clearTimeout(saveT); saveT=setTimeout(()=>store.set("code"+cur,codeEl.value),400); });
+codeEl.addEventListener("input",()=>{ dirty=true; renderGutter(); clearTimeout(saveT); saveT=setTimeout(()=>{ P.code[cur]=codeEl.value; persist(); },400); });
 codeEl.addEventListener("scroll",()=>{ gutter.scrollTop=codeEl.scrollTop; });
 codeEl.addEventListener("keydown",e=>{
   if(e.key==="Tab"&&!e.shiftKey){ e.preventDefault(); const s=codeEl.selectionStart, en=codeEl.selectionEnd; codeEl.setRangeText("    ",s,en,"end"); codeEl.dispatchEvent(new Event("input")); }
@@ -1449,19 +2449,18 @@ codeEl.addEventListener("keydown",e=>{
 
 /* cursor blink */
 let blinkOn=true;
-setInterval(()=>{ blinkOn=!blinkOn; if(cpu&&["run","waitkey","idle","ready"].includes(cpu.state)) screen.draw(blinkOn); },480);
+setInterval(()=>{ blinkOn=!blinkOn; if(cpu&&["run","waitkey","idle","ready"].includes(cpu.state)) drawScreen(blinkOn); },480);
 
-if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>screen.draw(false));
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>drawScreen(false));
 
 /* =====================  LEARN VIEW  ===================== */
 let lessonIdx=0;
-const learned=new Set(store.get("learned",[]));
-const quizDone=new Set(store.get("quiz",[]));
 function showView(v){
   const learn=v==="learn";
   $("learnView").hidden=!learn; $("buildView").hidden=learn;
   $("tabLearn").setAttribute("aria-selected",String(learn)); $("tabBuild").setAttribute("aria-selected",String(!learn));
-  if(!learn){ screen.draw(false); renderGutter(); }
+  $("tabLearn").tabIndex=learn?0:-1; $("tabBuild").tabIndex=learn?-1:0;
+  if(!learn){ drawScreen(false); renderGutter(); }
 }
 function renderLesson(){
   const L=LESSONS[cur], c=L[lessonIdx], key=cur+"-"+lessonIdx;
@@ -1480,7 +2479,7 @@ function renderLesson(){
       const b=document.createElement("button"); b.type="button"; b.className="opt"; b.textContent=t;
       if(answered&&i===c.quiz.a) b.classList.add("right");
       b.addEventListener("click",()=>{
-        if(i===c.quiz.a){ b.classList.add("right"); fb.className="fb right"; fb.textContent="Right! "+c.quiz.why; quizDone.add(key); store.set("quiz",[...quizDone]); $("lNext").disabled=false; }
+        if(i===c.quiz.a){ b.classList.add("right"); fb.className="fb right"; fb.textContent="Right! "+c.quiz.why; quizDone.add(key); persist(); $("lNext").disabled=false; }
         else { b.classList.add("wrong"); fb.className="fb wrong"; fb.textContent="Not quite. Read the card again and try another answer."; }
       });
       os.appendChild(b);
@@ -1494,23 +2493,60 @@ function renderLesson(){
 }
 function lessonGo(d){
   const L=LESSONS[cur];
-  if(d>0&&lessonIdx===L.length-1){ learned.add(cur); store.set("learned",[...learned]); showView("build"); window.scrollTo({top:0}); return; }
-  lessonIdx=Math.max(0,Math.min(L.length-1,lessonIdx+d)); renderLesson();
+  if(d>0&&lessonIdx===L.length-1){ learned.add(cur); persist(); showView("build"); window.scrollTo({top:0}); return; }
+  lessonIdx=Math.max(0,Math.min(L.length-1,lessonIdx+d)); P.lessonPos[cur]=lessonIdx; persist(); renderLesson();
   const t=$("learnView").getBoundingClientRect().top; if(t<0) window.scrollTo({top:window.scrollY+t-10});
 }
 $("lNext").addEventListener("click",()=>lessonGo(1));
 $("lPrev").addEventListener("click",()=>lessonGo(-1));
 $("tabLearn").addEventListener("click",()=>{ stopRun(); showView("learn"); });
 $("tabBuild").addEventListener("click",()=>showView("build"));
+/* arrow keys move between the two tabs (WAI-ARIA tabs pattern) */
+[$("tabLearn"),$("tabBuild")].forEach((t,i,arr)=>t.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"||e.key==="ArrowLeft"){ e.preventDefault(); e.stopPropagation(); const o=arr[1-i]; o.click(); o.focus(); } }));
 document.addEventListener("keydown",e=>{
   if($("learnView").hidden) return;
   const tg=e.target.tagName; if(tg==="TEXTAREA"||tg==="INPUT"||e.target===canvas) return;
   if(e.key==="ArrowRight"&&!$("lNext").disabled&&lessonIdx<LESSONS[cur].length-1) lessonGo(1);
   if(e.key==="ArrowLeft"&&lessonIdx>0) lessonGo(-1);
 });
+/* debugger open/closed preference (default: open on wide screens, closed on phones) */
+const debugDefault=()=>P.prefs.debugOpen===null||P.prefs.debugOpen===undefined?!window.matchMedia("(max-width: 700px)").matches:P.prefs.debugOpen;
+$("debugPanel").open=debugDefault();
+document.querySelector(".screentext").addEventListener("toggle",()=>drawScreen(false));
+$("debugPanel").addEventListener("toggle",()=>{ P.prefs.debugOpen=$("debugPanel").open; persist(); });
+
+/* Progress panel: export, import, reset */
+const progPanel=$("progPanel");
+$("progBtn").addEventListener("click",()=>{ const open=progPanel.hidden; progPanel.hidden=!open; $("progBtn").setAttribute("aria-expanded",String(open)); if(open){ $("exportText").value=Progress.exportText(P); $("progMsg").textContent=""; resetArm(false); } });
+$("progClose").addEventListener("click",()=>{ progPanel.hidden=true; $("progBtn").setAttribute("aria-expanded","false"); $("progBtn").focus(); });
+$("copyExport").addEventListener("click",()=>{
+  const t=$("exportText"); t.value=Progress.exportText(P);
+  const done_=()=>{ $("progMsg").textContent="Copied. Paste it somewhere safe, like a note or an email to yourself."; };
+  try{ navigator.clipboard.writeText(t.value).then(done_,()=>{ t.focus(); t.select(); $("progMsg").textContent="Your browser blocked copying. The text is selected: press Ctrl+C (or long-press → Copy)."; }); }
+  catch(e){ t.focus(); t.select(); $("progMsg").textContent="The text is selected: press Ctrl+C (or long-press → Copy)."; }
+});
+function applyImport(text){
+  const r=Progress.importText(text, M.length, LCOUNTS);
+  if(!r.ok){ $("progMsg").textContent=r.error; return; }
+  P=r.data; done=new Set(P.done); learned.clear(); P.learned.forEach(x=>learned.add(x)); quizDone.clear(); P.quiz.forEach(x=>quizDone.add(x));
+  cur=P.cur; persist(); $("debugPanel").open=debugDefault(); openMission(cur);
+  $("progMsg").textContent="Imported: "+P.done.length+" completed mission"+(P.done.length===1?"":"s")+", "+Object.keys(P.code).length+" saved code file"+(Object.keys(P.code).length===1?"":"s")+"."+(r.notes.length?" "+r.notes.join(" "):"");
+  $("exportText").value=Progress.exportText(P);
+}
+$("importBtn").addEventListener("click",()=>applyImport($("importText").value));
+$("importFile").addEventListener("change",()=>{ const f=$("importFile").files[0]; if(!f) return; if(f.size>500000){ $("progMsg").textContent="That file is too big to be an OS Forge export."; return; } const rd=new FileReader(); rd.onload=()=>applyImport(String(rd.result)); rd.onerror=()=>{ $("progMsg").textContent="Couldn't read that file."; }; rd.readAsText(f); $("importFile").value=""; });
+function resetArm(on){ $("resetAll").hidden=on; $("resetConfirm").hidden=!on; }
+$("resetAll").addEventListener("click",()=>{ resetArm(true); $("resetYes").focus(); });
+$("resetNo").addEventListener("click",()=>{ resetArm(false); $("resetAll").focus(); });
+$("resetYes").addEventListener("click",()=>{
+  Progress.clear(storage); P=Progress.empty(M.length); done=new Set(); learned.clear(); quizDone.clear(); cur=0; persist();
+  $("debugPanel").open=debugDefault(); resetArm(false); openMission(0); $("exportText").value=Progress.exportText(P);
+  $("progMsg").textContent="All progress was deleted. You're back at Mission 1.";
+});
+
+if(loaded.notes.length) notice(loaded.notes.join(" "));
 openMission(cur);
 })();
 </script>
 
-</body>
-</html>
+</body></html>
